@@ -1,12 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 export default function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
 
   if (pathname === '/login') return null
+
+  async function handleLogout() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
     <header
@@ -43,6 +51,15 @@ export default function Navbar() {
           >
             + 새 결정
           </Link>
+          <button
+            onClick={handleLogout}
+            className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
+            style={{ color: '#3a4a30' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
+          >
+            로그아웃
+          </button>
         </nav>
 
       </div>
