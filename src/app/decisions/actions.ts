@@ -26,3 +26,23 @@ export async function createDecision(formData: FormData) {
 
   redirect('/decisions')
 }
+
+export async function createReview(decisionId: string, formData: FormData) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { error } = await supabase.from('decision_reviews').insert({
+    decision_id: decisionId,
+    actual_result: formData.get('actual_result') as string,
+    satisfaction_score: Number(formData.get('satisfaction_score')),
+    unexpected_things: formData.get('unexpected_things') as string || null,
+    lesson_learned: formData.get('lesson_learned') as string || null,
+    would_choose_again: formData.get('would_choose_again') === 'true',
+  })
+
+  if (error) throw new Error(error.message)
+
+  redirect(`/decisions/${decisionId}`)
+}
