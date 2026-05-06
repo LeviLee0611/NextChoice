@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { IMPORTANCE_LABELS, type Decision, type ImportanceLevel } from '@/types/decision'
+import DeleteButton from './DeleteButton'
 
 export const runtime = 'edge'
 
@@ -35,10 +36,14 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
   const { id } = await params
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
   const { data: decision } = await supabase
     .from('decisions')
     .select('*, decision_reviews(*)')
     .eq('id', id)
+    .eq('user_id', user.id)
     .single()
 
   if (!decision) notFound()
@@ -67,14 +72,26 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
     <div className="min-h-screen px-4 py-16">
       <div className="max-w-xl mx-auto">
 
-        {/* Back */}
-        <Link
-          href="/decisions"
-          className="inline-flex items-center gap-2 text-xs tracking-widest uppercase mb-10 transition-colors hover:text-[#8a9478]"
-          style={{ color: '#4a5a3a' }}
-        >
-          ← 목록으로
-        </Link>
+        {/* Back + actions */}
+        <div className="flex items-center justify-between mb-10">
+          <Link
+            href="/decisions"
+            className="inline-flex items-center gap-2 text-xs tracking-widest uppercase transition-colors hover:text-[#8a9478]"
+            style={{ color: '#4a5a3a' }}
+          >
+            ← 목록으로
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/decisions/${d.id}/edit`}
+              className="text-xs tracking-widest uppercase transition-colors hover:text-[#d4a84b]"
+              style={{ color: '#4a5a3a' }}
+            >
+              수정
+            </Link>
+            <DeleteButton id={d.id} />
+          </div>
+        </div>
 
         {/* Header */}
         <div className="mb-8">
