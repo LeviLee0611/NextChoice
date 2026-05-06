@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createReview } from '../../actions'
 import type { Decision, ImportanceLevel } from '@/types/decision'
 import { IMPORTANCE_LABELS } from '@/types/decision'
+import type { ExistingReview } from './page'
 
 const inputStyle = {
   background: '#141c12',
@@ -25,9 +26,9 @@ function satisfactionColor(score: number) {
   return '#8aad7a'
 }
 
-export default function ReviewForm({ decision }: { decision: Decision }) {
-  const [satisfaction, setSatisfaction] = useState(7)
-  const [wouldChooseAgain, setWouldChooseAgain] = useState<boolean | null>(null)
+export default function ReviewForm({ decision, existing }: { decision: Decision; existing: ExistingReview | null }) {
+  const [satisfaction, setSatisfaction] = useState(existing?.satisfaction_score ?? 7)
+  const [wouldChooseAgain, setWouldChooseAgain] = useState<boolean | null>(existing?.would_choose_again ?? null)
 
   const imp = IMPORTANCE_LABELS[decision.importance_level as ImportanceLevel]
   const action = createReview.bind(null, decision.id)
@@ -42,7 +43,7 @@ export default function ReviewForm({ decision }: { decision: Decision }) {
             Review
           </p>
           <h1 className="text-2xl mb-4" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
-            결과를 돌아보다
+            {existing ? '기록을 수정하다' : '결과를 돌아보다'}
           </h1>
           <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
         </div>
@@ -87,6 +88,7 @@ export default function ReviewForm({ decision }: { decision: Decision }) {
               required
               rows={3}
               placeholder="그 선택 이후 실제로 일어난 일을 적어주세요"
+              defaultValue={existing?.actual_result ?? ''}
               className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
               style={{ ...inputStyle, caretColor: '#d4a84b' }}
               onFocus={e => { e.currentTarget.style.borderColor = '#b8892a' }}
@@ -165,6 +167,7 @@ export default function ReviewForm({ decision }: { decision: Decision }) {
               name="unexpected_things"
               rows={2}
               placeholder="생각과 다르게 흘러간 부분이 있었나요?"
+              defaultValue={existing?.unexpected_things ?? ''}
               className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
               style={{ ...inputStyle, caretColor: '#d4a84b' }}
               onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
@@ -182,6 +185,7 @@ export default function ReviewForm({ decision }: { decision: Decision }) {
               name="lesson_learned"
               rows={2}
               placeholder="이 경험에서 얻은 것이 있다면"
+              defaultValue={existing?.lesson_learned ?? ''}
               className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
               style={{ ...inputStyle, caretColor: '#d4a84b' }}
               onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
@@ -214,7 +218,7 @@ export default function ReviewForm({ decision }: { decision: Decision }) {
               ;(e.currentTarget as HTMLButtonElement).style.background = '#141c12'
             }}
           >
-            기록을 마치다
+            {existing ? '수정을 마치다' : '기록을 마치다'}
           </button>
 
         </form>
