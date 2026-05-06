@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { IMPORTANCE_LABELS, type ImportanceLevel } from '@/types/decision'
 
@@ -43,10 +44,17 @@ function StatCard({ label, value, sub, color = '#d4a84b' }: {
 export default async function DashboardPage() {
   const supabase = await createClient()
 
-  const { data: decisions } = await supabase
+  // 1. 인증 확인
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  // 2. 쿼리 + 에러 처리 / 불필요한 필드 제거
+  const { data: decisions, error } = await supabase
     .from('decisions')
-    .select('id, title, category, importance_level, chosen_option, option_a, option_b, created_at, decision_reviews(satisfaction_score)')
+    .select('id, title, category, importance_level, created_at, decision_reviews(satisfaction_score)')
     .order('created_at', { ascending: false })
+
+  if (error) throw new Error(error.message)
 
   if (!decisions || decisions.length === 0) {
     return (
@@ -84,7 +92,6 @@ export default async function DashboardPage() {
   }
   const categoryStats = Object.entries(categoryMap).sort((a, b) => b[1].count - a[1].count)
 
-  // 최근 결정 3개
   const recent = decisions.slice(0, 3)
 
   return (
@@ -142,16 +149,11 @@ export default async function DashboardPage() {
                     <span className="text-sm font-medium" style={{ color: CATEGORY_COLORS[cat] ?? '#8a9478' }}>
                       {cat}
                     </span>
-                    <span className="text-xs" style={{ color: '#3a4a30' }}>
-                      {count}개
-                    </span>
+                    <span className="text-xs" style={{ color: '#3a4a30' }}>{count}개</span>
                   </div>
                   <span
                     className="text-sm font-semibold"
-                    style={{
-                      fontFamily: 'var(--font-cinzel)',
-                      color: avg ? satisfactionColor(avg) : '#3a4a30',
-                    }}
+                    style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#3a4a30' }}
                   >
                     {avg ?? '—'}
                   </span>
@@ -177,7 +179,8 @@ export default async function DashboardPage() {
           </div>
           <div className="space-y-2">
             {recent.map(d => {
-              const imp = IMPORTANCE_LABELS[d.importance_level as ImportanceLevel]
+              // 5. IMPORTANCE_LABELS fallback
+              const imp = IMPORTANCE_LABELS[d.importance_level as ImportanceLevel] ?? { emoji: '•', label: '' }
               const hasReview = (d.decision_reviews as unknown[])?.length > 0
               return (
                 <Link
