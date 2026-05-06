@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-cinzel);
+  --font-serif: var(--font-cormorant);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(ellipse at 10% 60%, rgba(100, 40, 180, 0.13) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(80, 20, 140, 0.10) 0%, transparent 45%),
+    #0e0a1e;
+  color: #e4d9c8;
+  min-height: 100vh;
+  font-family: var(--font-geist-sans);
+}
+
+::selection {
+  background: rgba(139, 111, 212, 0.35);
+}
+
+input, textarea, select {
+  color-scheme: dark;
+  font-family: var(--font-geist-sans);
 }
