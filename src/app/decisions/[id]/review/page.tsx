@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ReviewForm from './ReviewForm'
 import type { Decision } from '@/types/decision'
@@ -18,10 +18,14 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
   const { id } = await params
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
   const { data: decision } = await supabase
     .from('decisions')
     .select('*, decision_reviews(*)')
     .eq('id', id)
+    .eq('user_id', user.id)
     .single()
 
   if (!decision) notFound()

@@ -52,6 +52,7 @@ export default async function DashboardPage() {
   const { data: decisions, error } = await supabase
     .from('decisions')
     .select('id, title, category, importance_level, created_at, decision_reviews(satisfaction_score)')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)

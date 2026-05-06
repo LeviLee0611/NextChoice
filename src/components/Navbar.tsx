@@ -1,16 +1,19 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
+  const [loggingOut, setLoggingOut] = useState(false)
 
   if (pathname === '/login') return null
 
   async function handleLogout() {
+    setLoggingOut(true)
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/login')
@@ -53,12 +56,13 @@ export default function Navbar() {
           </Link>
           <button
             onClick={handleLogout}
-            className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
-            style={{ color: '#3a4a30' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
+            disabled={loggingOut}
+            className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
+            style={{ color: loggingOut ? '#3a4a30' : '#3a4a30' }}
+            onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
             onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
           >
-            로그아웃
+            {loggingOut ? '…' : '로그아웃'}
           </button>
         </nav>
 
