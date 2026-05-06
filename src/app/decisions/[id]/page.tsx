@@ -80,7 +80,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
         <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
 
         {/* Detail card */}
-        <div className="rounded-2xl border overflow-hidden" style={{ background: '#0e1410', borderColor: '#2d3e28' }}>
+        <div className="rounded-2xl border overflow-hidden" style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}>
           <div className="px-6">
 
             <Row label="중요도" color="#c47a4a">

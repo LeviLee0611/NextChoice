@@ -76,7 +76,7 @@ export default async function DecisionsPage() {
                 key={decision.id}
                 href={`/decisions/${decision.id}`}
                 className="block rounded-xl border p-5 transition-colors"
-                style={{ background: '#0e1410', borderColor: '#2d3e28' }}
+                style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#4a5e3a' }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#2d3e28' }}
               >

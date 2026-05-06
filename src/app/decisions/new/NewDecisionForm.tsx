@@ -67,7 +67,7 @@ export default function NewDecisionForm() {
           action={createDecision}
           className="rounded-2xl p-8 space-y-7 border"
           style={{
-            background: '#0e1410',
+            background: 'linear-gradient(to right, #1a2016, #0a0e08)',
             borderColor: '#2d3e28',
             boxShadow: '0 0 60px rgba(184,137,42,0.08)',
           }}
