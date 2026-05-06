@@ -1,6 +1,9 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { IMPORTANCE_LABELS, type Decision, type ImportanceLevel } from '@/types/decision'
+import FilterBar from './FilterBar'
 
 export const runtime = 'edge'
 
@@ -13,12 +16,29 @@ const CATEGORY_COLORS: Record<string, string> = {
   '기타':   '#8a9478',
 }
 
-export default async function DecisionsPage() {
+type SearchParams = { category?: string; reviewed?: string; sort?: string }
+
+export default async function DecisionsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const { category = 'all', reviewed = 'all', sort = 'newest' } = await searchParams
+
   const supabase = await createClient()
-  const { data: decisions } = await supabase
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  let query = supabase
     .from('decisions')
-    .select('*')
-    .order('created_at', { ascending: false })
+    .select('*, decision_reviews(id)')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: sort === 'oldest' })
+
+  if (category !== 'all') query = query.eq('category', category)
+
+  const { data: raw } = await query
+
+  let decisions = (raw ?? []) as (Decision & { decision_reviews: { id: string }[] })[]
+  if (reviewed === 'yes') decisions = decisions.filter(d => d.decision_reviews?.length > 0)
+  if (reviewed === 'no') decisions = decisions.filter(d => !d.decision_reviews?.length)
 
   return (
     <div className="min-h-screen px-4 py-16">
@@ -38,7 +58,6 @@ export default async function DecisionsPage() {
             href="/decisions/new"
             className="text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-colors"
             style={{ background: '#141c12', border: '1px solid #6a4e1a', color: '#d4a84b' }}
-            onMouseEnter={undefined}
           >
             + 새 결정
           </Link>
@@ -46,11 +65,25 @@ export default async function DecisionsPage() {
 
         <div className="w-full h-px mb-8" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
 
+        {/* Filter bar */}
+        <Suspense fallback={null}>
+          <FilterBar
+            activeCategory={category}
+            activeReviewed={reviewed}
+            activeSort={sort}
+            total={decisions.length}
+          />
+        </Suspense>
+
         {/* Empty state */}
-        {(!decisions || decisions.length === 0) && (
+        {decisions.length === 0 && (
           <div className="text-center py-24">
             <p className="text-4xl mb-4">✦</p>
-            <p className="text-sm mb-1" style={{ color: '#d4c9a8' }}>아직 기록된 결정이 없어요</p>
+            <p className="text-sm mb-1" style={{ color: '#d4c9a8' }}>
+              {category !== 'all' || reviewed !== 'all'
+                ? '조건에 맞는 결정이 없어요'
+                : '아직 기록된 결정이 없어요'}
+            </p>
             <p className="text-xs mb-8" style={{ color: '#3a4a30' }}>첫 번째 결정을 기록해보세요</p>
             <Link
               href="/decisions/new"
@@ -64,12 +97,14 @@ export default async function DecisionsPage() {
 
         {/* Decision list */}
         <div className="space-y-3">
-          {(decisions as Decision[])?.map(decision => {
+          {decisions.map(decision => {
             const imp = IMPORTANCE_LABELS[decision.importance_level as ImportanceLevel]
             const catColor = CATEGORY_COLORS[decision.category] ?? '#8a9478'
             const date = new Date(decision.created_at).toLocaleDateString('ko-KR', {
               year: 'numeric', month: 'short', day: 'numeric',
             })
+            const hasReview = decision.decision_reviews?.length > 0
+            const reviewOverdue = !hasReview && decision.review_date && new Date(decision.review_date) <= new Date()
 
             return (
               <Link
@@ -98,17 +133,22 @@ export default async function DecisionsPage() {
                     </div>
                   </div>
 
-                  <div className="shrink-0">
+                  <div className="flex flex-col items-end gap-2 shrink-0">
                     <span
                       className="text-xs font-medium px-2.5 py-1 rounded-lg"
                       style={{ background: '#141c12', border: '1px solid #2d3e28', color: '#a09060' }}
                     >
                       {decision.chosen_option === 'A' ? decision.option_a : decision.option_b}
                     </span>
+                    {hasReview && (
+                      <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6b8f5e' }}>
+                        ✓ 리뷰 완료
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                {decision.review_date && new Date(decision.review_date) <= new Date() && (
+                {reviewOverdue && (
                   <div className="mt-3 pt-3 border-t" style={{ borderColor: '#1e2a1a' }}>
                     <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: '#c4903e' }}>
                       ✦ 리뷰할 시간이에요
