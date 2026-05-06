@@ -34,14 +34,23 @@ export async function createReview(decisionId: string, formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { error } = await supabase.from('decision_reviews').upsert({
-    decision_id: decisionId,
+  const reviewData = {
     actual_result: formData.get('actual_result') as string,
     satisfaction_score: Number(formData.get('satisfaction_score')),
     unexpected_things: formData.get('unexpected_things') as string || null,
     lesson_learned: formData.get('lesson_learned') as string || null,
     would_choose_again: formData.get('would_choose_again') === 'true',
-  }, { onConflict: 'decision_id' })
+  }
+
+  const { data: existing } = await supabase
+    .from('decision_reviews')
+    .select('id')
+    .eq('decision_id', decisionId)
+    .maybeSingle()
+
+  const { error } = existing
+    ? await supabase.from('decision_reviews').update(reviewData).eq('id', existing.id)
+    : await supabase.from('decision_reviews').insert({ decision_id: decisionId, ...reviewData })
 
   if (error) throw new Error(error.message)
 
