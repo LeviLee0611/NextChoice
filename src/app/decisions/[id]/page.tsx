@@ -55,10 +55,8 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
         {/* Back */}
         <Link
           href="/decisions"
-          className="inline-flex items-center gap-2 text-xs tracking-widest uppercase mb-10 transition-colors"
+          className="inline-flex items-center gap-2 text-xs tracking-widest uppercase mb-10 transition-colors hover:text-[#8a9478]"
           style={{ color: '#4a5a3a' }}
-          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#8a9478' }}
-          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#4a5a3a' }}
         >
           ← 목록으로
         </Link>
@@ -128,6 +126,12 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
               </Row>
             )}
 
+            {d.reason_not_chosen && (
+              <Row label="선택 안 한 이유" color="#c47a4a">
+                <p className="leading-relaxed" style={{ color: '#c8bc98' }}>{d.reason_not_chosen}</p>
+              </Row>
+            )}
+
             <div className="py-4">
               <p className="text-xs font-semibold tracking-widest uppercase mb-1.5" style={{ color: '#7a9a8a' }}>
                 리뷰 날짜
@@ -160,8 +164,6 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
               color: reviewOverdue ? '#c4903e' : '#4a5a3a',
               fontFamily: 'var(--font-cinzel)',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#b8892a' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = reviewOverdue ? '#c4903e' : '#2d3e28' }}
           >
             {reviewOverdue ? '결과 기록하기 →' : '리뷰 작성하기'}
           </Link>

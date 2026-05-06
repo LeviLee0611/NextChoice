@@ -18,6 +18,7 @@ export async function createDecision(formData: FormData) {
     option_b: formData.get('option_b') as string,
     chosen_option: formData.get('chosen_option') as string,
     reason: formData.get('reason') as string || null,
+    reason_not_chosen: formData.get('reason_not_chosen') as string || null,
     confidence: Number(formData.get('confidence')),
     review_date: formData.get('review_date') as string || null,
   })

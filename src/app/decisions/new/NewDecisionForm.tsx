@@ -158,20 +158,37 @@ export default function NewDecisionForm() {
           </div>
 
           {/* 이유 */}
-          <div>
-            <Label color="#8aad7a">
-              선택 이유{' '}
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
-            </Label>
-            <textarea
-              name="reason"
-              rows={3}
-              placeholder="지금의 생각을 남겨두세요. 미래의 당신이 읽을 거예요."
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
-              style={{ ...inputStyle, caretColor: '#d4a84b' }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label color="#8aad7a">
+                선택 이유{' '}
+                <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+              </Label>
+              <textarea
+                name="reason"
+                rows={3}
+                placeholder="왜 이 선택을 했나요?"
+                className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
+                style={{ ...inputStyle, caretColor: '#d4a84b' }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
+                onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
+              />
+            </div>
+            <div>
+              <Label color="#c47a4a">
+                선택 안 한 이유{' '}
+                <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+              </Label>
+              <textarea
+                name="reason_not_chosen"
+                rows={3}
+                placeholder="왜 다른 선택을 하지 않았나요?"
+                className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
+                style={{ ...inputStyle, caretColor: '#d4a84b' }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#b8892a' }}
+                onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
+              />
+            </div>
           </div>
 
           {/* 확신도 */}

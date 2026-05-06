@@ -22,6 +22,7 @@ export interface Decision {
   option_b: string
   chosen_option: 'A' | 'B'
   reason: string | null
+  reason_not_chosen: string | null
   confidence: number
   review_date: string | null
   created_at: string

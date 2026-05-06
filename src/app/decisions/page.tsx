@@ -75,10 +75,8 @@ export default async function DecisionsPage() {
               <Link
                 key={decision.id}
                 href={`/decisions/${decision.id}`}
-                className="block rounded-xl border p-5 transition-colors"
-                style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#4a5e3a' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#2d3e28' }}
+                className="block rounded-xl border border-[#2d3e28] hover:border-[#4a5e3a] p-5 transition-colors"
+                style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)' }}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
