@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { IMPORTANCE_LABELS, type Decision, type ImportanceLevel } from '@/types/decision'
+import { IMPORTANCE_LABELS, CATEGORIES, type Decision, type ImportanceLevel } from '@/types/decision'
 import FilterBar from './FilterBar'
 
 export const runtime = 'edge'
@@ -19,7 +19,12 @@ const CATEGORY_COLORS: Record<string, string> = {
 type SearchParams = { category?: string; reviewed?: string; sort?: string }
 
 export default async function DecisionsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
-  const { category = 'all', reviewed = 'all', sort = 'newest' } = await searchParams
+  const raw = await searchParams
+  const category = (raw.category && (raw.category === 'all' || CATEGORIES.includes(raw.category as never)))
+    ? raw.category : 'all'
+  const reviewed = (['all', 'yes', 'no'] as const).includes(raw.reviewed as never)
+    ? raw.reviewed as 'all' | 'yes' | 'no' : 'all'
+  const sort = raw.sort === 'oldest' ? 'oldest' : 'newest'
 
   const supabase = await createClient()
 
@@ -34,9 +39,9 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
 
   if (category !== 'all') query = query.eq('category', category)
 
-  const { data: raw } = await query
+  const { data: queryData } = await query
 
-  let decisions = (raw ?? []) as (Decision & { decision_reviews: { id: string }[] })[]
+  let decisions = (queryData ?? []) as (Decision & { decision_reviews: { id: string }[] })[]
   if (reviewed === 'yes') decisions = decisions.filter(d => d.decision_reviews?.length > 0)
   if (reviewed === 'no') decisions = decisions.filter(d => !d.decision_reviews?.length)
 
