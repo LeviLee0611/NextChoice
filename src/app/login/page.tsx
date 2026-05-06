@@ -17,16 +17,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
+
         {/* Logo */}
         <div className="text-center mb-10">
           <h1
             className="text-3xl tracking-[0.2em] uppercase mb-3"
-            style={{ fontFamily: 'var(--font-cinzel)', color: '#a78bfa' }}
+            style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b' }}
           >
             NextChoice
           </h1>
-          <div className="w-12 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent mx-auto mb-4" />
-          <p className="text-sm text-[#8b7aa0] tracking-wide">
+          <div className="w-12 h-px mx-auto mb-4" style={{ background: 'linear-gradient(to right, transparent, #b8892a, transparent)' }} />
+          <p className="text-sm tracking-wide" style={{ color: '#8a9478' }}>
             당신의 결정이 당신을 만든다
           </p>
         </div>
@@ -35,31 +36,24 @@ export default function LoginPage() {
         <div
           className="rounded-2xl p-8 border text-center"
           style={{
-            background: '#0d0820',
-            borderColor: '#271747',
-            boxShadow: '0 0 60px rgba(124,58,237,0.12)',
+            background: '#0e1410',
+            borderColor: '#2d3e28',
+            boxShadow: '0 0 60px rgba(184,137,42,0.08)',
           }}
         >
-          <p className="text-[#8b7aa0] text-sm mb-6 leading-relaxed">
-            매 선택의 순간을 기록하고<br />
-            패턴을 발견하세요
+          <p className="text-sm mb-6 leading-relaxed" style={{ color: '#8a9478' }}>
+            매 선택의 순간을 기록하고<br />패턴을 발견하세요
           </p>
 
           <button
             onClick={signInWithGoogle}
             className="w-full flex items-center justify-center gap-3 rounded-xl px-6 py-3 text-sm font-medium transition-all"
-            style={{
-              background: '#140c2e',
-              border: '1px solid #271747',
-              color: '#ede9fe',
-            }}
+            style={{ background: '#141c12', border: '1px solid #2d3e28', color: '#e8dfc8' }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#7c3aed'
-              ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px rgba(124,58,237,0.2)'
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#b8892a'
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#271747'
-              ;(e.currentTarget as HTMLButtonElement).style.boxShadow = 'none'
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#2d3e28'
             }}
           >
             <svg width="18" height="18" viewBox="0 0 48 48">
@@ -71,6 +65,7 @@ export default function LoginPage() {
             Google로 계속하기
           </button>
         </div>
+
       </div>
     </div>
   )

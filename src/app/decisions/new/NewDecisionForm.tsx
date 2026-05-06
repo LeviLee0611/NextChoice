@@ -4,12 +4,30 @@ import { useState } from 'react'
 import { createDecision } from '../actions'
 import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel } from '@/types/decision'
 
-function Input({ name, required, placeholder, type = 'text', className = '' }: {
-  name: string
-  required?: boolean
-  placeholder?: string
-  type?: string
-  className?: string
+const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
+  1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },
+  2: { border: '#2d4a3e', bg: 'rgba(45,74,62,0.25)',  text: '#5a9078', glow: 'rgba(45,74,62,0.3)' },
+  3: { border: '#6a4e1a', bg: 'rgba(106,78,26,0.25)', text: '#c4903e', glow: 'rgba(106,78,26,0.35)' },
+  4: { border: '#6a3518', bg: 'rgba(106,53,24,0.25)', text: '#c47040', glow: 'rgba(106,53,24,0.35)' },
+  5: { border: '#6a1a1a', bg: 'rgba(106,26,26,0.3)',  text: '#c44040', glow: 'rgba(106,26,26,0.4)' },
+}
+
+const inputStyle = {
+  background: '#141c12',
+  border: '1px solid #2d3e28',
+  color: '#e8dfc8',
+}
+
+function Label({ children, color = '#d4c9a8' }: { children: React.ReactNode; color?: string }) {
+  return (
+    <label className="block text-xs font-semibold tracking-widest uppercase mb-2" style={{ color }}>
+      {children}
+    </label>
+  )
+}
+
+function TextInput({ name, required, placeholder, type = 'text' }: {
+  name: string; required?: boolean; placeholder?: string; type?: string
 }) {
   return (
     <input
@@ -17,18 +35,11 @@ function Input({ name, required, placeholder, type = 'text', className = '' }: {
       type={type}
       required={required}
       placeholder={placeholder}
-      className={`w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors
-        bg-[#1e1340] border border-[#3d2470] text-[#e4d9c8] placeholder-[#5b4a7a]
-        focus:border-[#7c3aed] ${className}`}
+      className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
+      style={{ ...inputStyle, caretColor: '#d4a84b' }}
+      onFocus={e => { e.currentTarget.style.borderColor = '#b8892a' }}
+      onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
     />
-  )
-}
-
-function Label({ children, color = '#c4b5fd' }: { children: React.ReactNode; color?: string }) {
-  return (
-    <label className="block text-xs font-semibold tracking-widest uppercase mb-2" style={{ color }}>
-      {children}
-    </label>
   )
 }
 
@@ -42,13 +53,13 @@ export default function NewDecisionForm() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <p className="text-xs tracking-[0.3em] uppercase mb-3" style={{ color: '#7c3aed' }}>
+          <p className="text-xs tracking-[0.3em] uppercase mb-3" style={{ color: '#8a9478' }}>
             New Decision
           </p>
-          <h1 className="text-2xl mb-4" style={{ fontFamily: 'var(--font-cinzel)', color: '#c4b5fd', letterSpacing: '0.08em' }}>
+          <h1 className="text-2xl mb-4" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
             결정을 기록하다
           </h1>
-          <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(to right, transparent, #7c3aed, #c4903e, transparent)' }} />
+          <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
         </div>
 
         {/* Form Card */}
@@ -56,27 +67,28 @@ export default function NewDecisionForm() {
           action={createDecision}
           className="rounded-2xl p-8 space-y-7 border"
           style={{
-            background: '#160e30',
-            borderColor: '#3d2470',
-            boxShadow: '0 0 60px rgba(124,58,237,0.12)',
+            background: '#0e1410',
+            borderColor: '#2d3e28',
+            boxShadow: '0 0 60px rgba(184,137,42,0.08)',
           }}
         >
 
           {/* 제목 */}
           <div>
             <Label>어떤 결정인가요</Label>
-            <Input name="title" required placeholder="예: 이직 제안을 수락할까" />
+            <TextInput name="title" required placeholder="예: 이직 제안을 수락할까" />
           </div>
 
           {/* 카테고리 */}
           <div>
-            <Label color="#9ab87d">카테고리</Label>
+            <Label color="#8aad7a">카테고리</Label>
             <select
               name="category"
               required
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors
-                bg-[#1e1340] border border-[#3d2470] text-[#e4d9c8]
-                focus:border-[#9ab87d]"
+              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
+              style={inputStyle}
+              onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
+              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
             >
               {CATEGORIES.map(c => (
                 <option key={c} value={c}>{c}</option>
@@ -86,10 +98,11 @@ export default function NewDecisionForm() {
 
           {/* 중요도 */}
           <div>
-            <Label color="#d47a8a">이 결정, 얼마나 무거운가요</Label>
+            <Label color="#c47a4a">이 결정, 얼마나 무거운가요</Label>
             <div className="grid grid-cols-5 gap-2">
               {([1, 2, 3, 4, 5] as ImportanceLevel[]).map(level => {
                 const { emoji, label, desc } = IMPORTANCE_LABELS[level]
+                const col = IMPORTANCE_COLORS[level]
                 const selected = importance === level
                 return (
                   <button
@@ -98,16 +111,16 @@ export default function NewDecisionForm() {
                     onClick={() => setImportance(level)}
                     className="flex flex-col items-center p-3 rounded-xl border text-center transition-all"
                     style={{
-                      background: selected ? 'rgba(124,58,237,0.25)' : '#1e1340',
-                      borderColor: selected ? '#a78bfa' : '#3d2470',
-                      boxShadow: selected ? '0 0 20px rgba(124,58,237,0.3)' : 'none',
+                      background: selected ? col.bg : '#141c12',
+                      borderColor: selected ? col.border : '#2d3e28',
+                      boxShadow: selected ? `0 0 18px ${col.glow}` : 'none',
                     }}
                   >
                     <span className="text-lg">{emoji}</span>
-                    <span className="text-[11px] font-semibold mt-1" style={{ color: selected ? '#c4b5fd' : '#9d8fbc' }}>
+                    <span className="text-[11px] font-semibold mt-1" style={{ color: selected ? col.text : '#5a6a50' }}>
                       {label}
                     </span>
-                    <span className="text-[9px] mt-0.5 leading-tight" style={{ color: selected ? '#a78bfa' : '#5b4a7a' }}>
+                    <span className="text-[9px] mt-0.5 leading-tight" style={{ color: selected ? col.text : '#3a4a30', opacity: selected ? 0.85 : 1 }}>
                       {desc}
                     </span>
                   </button>
@@ -119,11 +132,11 @@ export default function NewDecisionForm() {
 
           {/* 선택지 A / B */}
           <div>
-            <Label color="#7d92c9">선택지</Label>
+            <Label color="#7a9a8a">선택지</Label>
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-              <Input name="option_a" required placeholder="A — 예: 이직한다" />
-              <span className="text-[#3d2d58] text-sm font-medium">vs</span>
-              <Input name="option_b" required placeholder="B — 예: 현직 유지" />
+              <TextInput name="option_a" required placeholder="A — 예: 이직한다" />
+              <span className="text-sm font-medium" style={{ color: '#2d3e28' }}>vs</span>
+              <TextInput name="option_b" required placeholder="B — 예: 현직 유지" />
             </div>
           </div>
 
@@ -135,9 +148,9 @@ export default function NewDecisionForm() {
                 <label
                   key={opt}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl border py-3 cursor-pointer transition-colors text-sm font-medium"
-                  style={{ background: '#1e1340', borderColor: '#3d2470', color: '#c4b5fd' }}
+                  style={{ background: '#141c12', borderColor: '#2d3e28', color: '#d4c9a8' }}
                 >
-                  <input type="radio" name="chosen_option" value={opt} required className="accent-[#7c3aed]" />
+                  <input type="radio" name="chosen_option" value={opt} required className="accent-[#b8892a]" />
                   선택지 {opt}
                 </label>
               ))}
@@ -146,17 +159,18 @@ export default function NewDecisionForm() {
 
           {/* 이유 */}
           <div>
-            <Label color="#9ab87d">
+            <Label color="#8aad7a">
               선택 이유{' '}
-              <span className="normal-case tracking-normal font-normal text-[#5b4a7a]">(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
             </Label>
             <textarea
               name="reason"
               rows={3}
               placeholder="지금의 생각을 남겨두세요. 미래의 당신이 읽을 거예요."
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors
-                bg-[#1e1340] border border-[#3d2470] text-[#e4d9c8] placeholder-[#5b4a7a]
-                focus:border-[#9ab87d]"
+              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
+              style={{ ...inputStyle, caretColor: '#d4a84b' }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
+              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
             />
           </div>
 
@@ -164,10 +178,10 @@ export default function NewDecisionForm() {
           <div>
             <Label color="#c4903e">
               확신도{' '}
-              <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: '#c4903e' }}>
+              <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: '#d4a84b' }}>
                 {confidence}
               </span>
-              <span className="normal-case tracking-normal font-normal text-[#5b4a7a]"> / 10</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}> / 10</span>
             </Label>
             <input
               type="range"
@@ -176,9 +190,9 @@ export default function NewDecisionForm() {
               max={10}
               value={confidence}
               onChange={e => setConfidence(Number(e.target.value))}
-              className="w-full accent-[#c4903e]"
+              className="w-full accent-[#b8892a]"
             />
-            <div className="flex justify-between text-[11px] mt-1.5 text-[#5b4a7a]">
+            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#3a4a30' }}>
               <span>반신반의</span>
               <span>완전한 확신</span>
             </div>
@@ -186,28 +200,34 @@ export default function NewDecisionForm() {
 
           {/* 리뷰 날짜 */}
           <div>
-            <Label color="#7d92c9">
+            <Label color="#7a9a8a">
               결과를 돌아볼 날{' '}
-              <span className="normal-case tracking-normal font-normal text-[#5b4a7a]">(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
             </Label>
-            <Input name="review_date" type="date" />
+            <TextInput name="review_date" type="date" />
           </div>
 
           {/* Divider */}
-          <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, #3d2470, transparent)' }} />
+          <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, #2d3e28, transparent)' }} />
 
           {/* Submit */}
           <button
             type="submit"
             className="w-full rounded-xl py-3.5 text-sm font-semibold tracking-[0.15em] uppercase transition-colors"
             style={{
-              background: '#2a1548',
-              border: '1px solid #6b4a8a',
-              color: '#c4b5fd',
+              background: '#141c12',
+              border: '1px solid #6a4e1a',
+              color: '#d4a84b',
               fontFamily: 'var(--font-cinzel)',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#a78bfa' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#6b4a8a' }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#b8892a'
+              ;(e.currentTarget as HTMLButtonElement).style.background = '#1a2416'
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = '#6a4e1a'
+              ;(e.currentTarget as HTMLButtonElement).style.background = '#141c12'
+            }}
           >
             결정을 새기다
           </button>
