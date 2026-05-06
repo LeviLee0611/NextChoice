@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { createDecision } from '../actions'
-import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel } from '@/types/decision'
+import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Category } from '@/types/decision'
+import type { CategoryStats } from './page'
 
 const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
   1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },
@@ -43,9 +44,97 @@ function TextInput({ name, required, placeholder, type = 'text' }: {
   )
 }
 
-export default function NewDecisionForm() {
+function satisfactionColor(score: number) {
+  if (score <= 4) return '#c44040'
+  if (score <= 6) return '#c4903e'
+  return '#8aad7a'
+}
+
+function CategoryInsightPanel({ category, stats }: { category: Category; stats: CategoryStats }) {
+  const insight = stats[category]
+  if (!insight || insight.total === 0) return null
+
+  return (
+    <div
+      className="rounded-xl border px-4 py-3 mt-3 space-y-2"
+      style={{ background: '#0c1209', borderColor: '#1e2e1a' }}
+    >
+      <p className="text-[10px] font-semibold tracking-[0.25em] uppercase" style={{ color: '#4a5a3a' }}>
+        {category} 카테고리 과거 기록
+      </p>
+
+      <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+        {/* 결정 수 */}
+        <span className="text-xs" style={{ color: '#6a7a5a' }}>
+          결정{' '}
+          <span style={{ fontFamily: 'var(--font-cinzel)', color: '#8aad7a' }}>{insight.total}</span>
+          회
+        </span>
+
+        {/* 리뷰 완료 */}
+        {insight.reviewed > 0 && (
+          <span className="text-xs" style={{ color: '#6a7a5a' }}>
+            리뷰{' '}
+            <span style={{ fontFamily: 'var(--font-cinzel)', color: '#8aad7a' }}>{insight.reviewed}</span>
+            회 완료
+          </span>
+        )}
+
+        {/* 평균 만족도 */}
+        {insight.avgSatisfaction !== null && (
+          <span className="text-xs" style={{ color: '#6a7a5a' }}>
+            평균 만족도{' '}
+            <span
+              style={{
+                fontFamily: 'var(--font-cinzel)',
+                color: satisfactionColor(insight.avgSatisfaction),
+              }}
+            >
+              {insight.avgSatisfaction}
+            </span>
+            <span style={{ color: '#3a4a30' }}>/10</span>
+          </span>
+        )}
+
+        {/* 같은 선택 다시 할 비율 */}
+        {insight.wouldChooseAgainRate !== null && (
+          <span className="text-xs" style={{ color: '#6a7a5a' }}>
+            재선택{' '}
+            <span
+              style={{
+                fontFamily: 'var(--font-cinzel)',
+                color: insight.wouldChooseAgainRate >= 60 ? '#8aad7a' : '#c47a4a',
+              }}
+            >
+              {insight.wouldChooseAgainRate}%
+            </span>
+          </span>
+        )}
+      </div>
+
+      {/* 확신도-만족도 패턴 */}
+      {insight.highConfAvgSat !== null && insight.lowConfAvgSat !== null && (
+        <div className="pt-1 border-t" style={{ borderColor: '#1e2e1a' }}>
+          <p className="text-[10px]" style={{ color: '#4a5a3a' }}>
+            확신도 높을 때 만족도{' '}
+            <span style={{ fontFamily: 'var(--font-cinzel)', color: satisfactionColor(insight.highConfAvgSat) }}>
+              {insight.highConfAvgSat}
+            </span>
+            {' '}·{' '}낮을 때{' '}
+            <span style={{ fontFamily: 'var(--font-cinzel)', color: satisfactionColor(insight.lowConfAvgSat) }}>
+              {insight.lowConfAvgSat}
+            </span>
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function NewDecisionForm({ categoryStats }: { categoryStats: CategoryStats }) {
   const [importance, setImportance] = useState<ImportanceLevel>(3)
   const [confidence, setConfidence] = useState(5)
+  const [category, setCategory] = useState<Category>(CATEGORIES[0])
 
   return (
     <div className="min-h-screen flex items-start justify-center px-4 py-16">
@@ -85,6 +174,8 @@ export default function NewDecisionForm() {
             <select
               name="category"
               required
+              value={category}
+              onChange={e => setCategory(e.target.value as Category)}
               className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
               style={inputStyle}
               onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
@@ -94,6 +185,7 @@ export default function NewDecisionForm() {
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
+            <CategoryInsightPanel category={category} stats={categoryStats} />
           </div>
 
           {/* 중요도 */}
