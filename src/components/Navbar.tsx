@@ -36,7 +36,7 @@ export default function Navbar() {
           className="text-xl tracking-[0.3em] uppercase"
           style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.3em' }}
         >
-          NC
+          NextChoice
         </Link>
 
         {/* Nav links */}
