@@ -88,7 +88,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
                 ? '조건에 맞는 결정이 없어요'
                 : '아직 기록된 결정이 없어요'}
             </p>
-            <p className="text-xs mb-8" style={{ color: '#3a4a30' }}>첫 번째 결정을 기록해보세요</p>
+            <p className="text-xs mb-8" style={{ color: '#5a6a50' }}>첫 번째 결정을 기록해보세요</p>
             <Link
               href="/decisions/new"
               className="text-xs font-semibold tracking-widest uppercase px-6 py-3 rounded-lg transition-colors"
@@ -115,7 +115,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
                 key={decision.id}
                 href={`/decisions/${decision.id}`}
                 className="block rounded-xl border border-[#2d3e28] hover:border-[#4a5e3a] p-5 transition-colors"
-                style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)' }}
+                style={{ background: '#0f1a0d' }}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -131,7 +131,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
                         {imp.emoji} {imp.label}
                       </span>
                       <span style={{ color: '#2d3e28' }}>·</span>
-                      <span className="text-xs" style={{ color: '#4a5a3a' }}>
+                      <span className="text-xs" style={{ color: '#8a9478' }}>
                         {date}
                       </span>
                     </div>

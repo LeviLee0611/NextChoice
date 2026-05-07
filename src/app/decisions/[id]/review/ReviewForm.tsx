@@ -53,7 +53,7 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
           className="rounded-xl border p-4 mb-8"
           style={{ background: '#0e1410', borderColor: '#2d3e28' }}
         >
-          <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#4a5a3a' }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#8a9478' }}>
             기록한 결정
           </p>
           <p className="text-sm font-medium mb-2" style={{ color: '#e8dfc8' }}>{decision.title}</p>
@@ -74,7 +74,7 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
           action={action}
           className="rounded-2xl p-8 space-y-7 border"
           style={{
-            background: 'linear-gradient(to right, #1a2016, #0a0e08)',
+            background: '#0f1a0d',
             borderColor: '#2d3e28',
             boxShadow: '0 0 60px rgba(184,137,42,0.08)',
           }}
@@ -98,12 +98,12 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
 
           {/* 만족도 */}
           <div>
-            <Label color="#c4903e">
+            <Label color="#8a9478">
               만족도{' '}
               <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: satisfactionColor(satisfaction) }}>
                 {satisfaction}
               </span>
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}> / 10</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}> / 10</span>
             </Label>
             <input
               type="range"
@@ -115,7 +115,7 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
               className="w-full"
               style={{ accentColor: satisfactionColor(satisfaction) }}
             />
-            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#3a4a30' }}>
+            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#5a6a50' }}>
               <span>후회된다</span>
               <span>그럭저럭</span>
               <span>잘했다</span>
@@ -124,7 +124,7 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
 
           {/* 다시 선택할지 */}
           <div>
-            <Label color="#7a9a8a">
+            <Label color="#8a9478">
               다시 선택한다면
             </Label>
             <div className="flex gap-3">
@@ -159,9 +159,9 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
 
           {/* 예상과 달랐던 점 */}
           <div>
-            <Label color="#8aad7a">
+            <Label color="#8a9478">
               예상과 달랐던 점{' '}
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>
             <textarea
               name="unexpected_things"
@@ -177,9 +177,9 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
 
           {/* 배운 점 */}
           <div>
-            <Label color="#8aad7a">
+            <Label color="#8a9478">
               배운 점{' '}
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>
             <textarea
               name="lesson_learned"

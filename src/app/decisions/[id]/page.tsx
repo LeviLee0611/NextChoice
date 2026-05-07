@@ -109,15 +109,15 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
         <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
 
         {/* Decision card */}
-        <div className="rounded-2xl border overflow-hidden mb-6" style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}>
+        <div className="rounded-2xl border overflow-hidden mb-6" style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}>
           <div className="px-6">
-            <Row label="중요도" color="#c47a4a">
+            <Row label="중요도" color="#8a9478">
               <span className="mr-2">{imp.emoji}</span>
               <span className="font-medium">{imp.label}</span>
               <span className="ml-2 text-xs" style={{ color: '#5a6a50' }}>— {imp.desc}</span>
             </Row>
 
-            <Row label="선택지" color="#7a9a8a">
+            <Row label="선택지" color="#8a9478">
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="px-3 py-1 rounded-lg text-sm" style={{
                   background: d.chosen_option === 'A' ? 'rgba(184,137,42,0.15)' : '#141c12',
@@ -137,7 +137,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
               </div>
             </Row>
 
-            <Row label="확신도" color="#c4903e">
+            <Row label="확신도" color="#8a9478">
               <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.1rem', color: '#d4a84b' }}>
                 {d.confidence}
               </span>
@@ -145,13 +145,13 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
             </Row>
 
             {d.reason && (
-              <Row label="선택 이유" color="#8aad7a">
+              <Row label="선택 이유" color="#8a9478">
                 <p className="leading-relaxed" style={{ color: '#c8bc98' }}>{d.reason}</p>
               </Row>
             )}
 
             {d.reason_not_chosen && (
-              <Row label="선택 안 한 이유" color="#c47a4a">
+              <Row label="선택 안 한 이유" color="#8a9478">
                 <p className="leading-relaxed" style={{ color: '#c8bc98' }}>{d.reason_not_chosen}</p>
               </Row>
             )}
@@ -189,27 +189,27 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
                 수정하기 →
               </Link>
             </div>
-            <div className="rounded-2xl border overflow-hidden" style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}>
+            <div className="rounded-2xl border overflow-hidden" style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}>
               <div className="px-6">
-                <Row label="실제 결과" color="#d4c9a8">
+                <Row label="실제 결과" color="#8a9478">
                   <p className="leading-relaxed" style={{ color: '#c8bc98' }}>{review.actual_result}</p>
                 </Row>
 
-                <Row label="만족도" color="#c4903e">
+                <Row label="만족도" color="#8a9478">
                   <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.1rem', color: satisfactionColor(review.satisfaction_score) }}>
                     {review.satisfaction_score}
                   </span>
                   <span className="text-xs ml-1" style={{ color: '#5a6a50' }}>/ 10</span>
                 </Row>
 
-                <Row label="다시 선택한다면" color="#7a9a8a">
+                <Row label="다시 선택한다면" color="#8a9478">
                   <span style={{ color: review.would_choose_again ? '#8aad7a' : '#c47a7a' }}>
                     {review.would_choose_again ? '같은 선택을 할 것이다' : '다른 선택을 할 것이다'}
                   </span>
                 </Row>
 
                 {review.unexpected_things && (
-                  <Row label="예상과 달랐던 점" color="#8aad7a">
+                  <Row label="예상과 달랐던 점" color="#8a9478">
                     <p className="leading-relaxed" style={{ color: '#c8bc98' }}>{review.unexpected_things}</p>
                   </Row>
                 )}

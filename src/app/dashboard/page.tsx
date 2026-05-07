@@ -25,16 +25,16 @@ function StatCard({ label, value, sub, color = '#d4a84b' }: {
   return (
     <div
       className="rounded-xl border p-5"
-      style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}
+      style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}
     >
-      <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#4a5a3a' }}>
+      <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#8a9478' }}>
         {label}
       </p>
       <p className="text-3xl font-semibold" style={{ fontFamily: 'var(--font-cinzel)', color }}>
         {value}
       </p>
       {sub && (
-        <p className="text-xs mt-1.5" style={{ color: '#4a5a3a' }}>{sub}</p>
+        <p className="text-xs mt-1.5" style={{ color: '#5a6a50' }}>{sub}</p>
       )}
     </div>
   )
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
       <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
         <p className="text-4xl mb-4">✦</p>
         <p className="text-sm mb-1" style={{ color: '#d4c9a8' }}>아직 기록된 결정이 없어요</p>
-        <p className="text-xs mb-8" style={{ color: '#3a4a30' }}>첫 번째 결정을 기록해보세요</p>
+        <p className="text-xs mb-8" style={{ color: '#5a6a50' }}>첫 번째 결정을 기록해보세요</p>
         <Link
           href="/decisions/new"
           className="text-xs font-semibold tracking-widest uppercase px-6 py-3 rounded-lg transition-colors"
@@ -121,18 +121,18 @@ export default async function DashboardPage() {
             label="평균 만족도"
             value={avgSatisfaction ?? '—'}
             sub={avgSatisfaction ? '10점 만점' : '리뷰 후 집계'}
-            color={avgSatisfaction ? satisfactionColor(avgSatisfaction) : '#4a5a3a'}
+            color={avgSatisfaction ? satisfactionColor(avgSatisfaction) : '#5a6a50'}
           />
         </div>
 
         {/* 카테고리별 */}
         <div className="mb-10">
-          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#4a5a3a' }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#8a9478' }}>
             카테고리별
           </p>
           <div
             className="rounded-xl border overflow-hidden"
-            style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)', borderColor: '#2d3e28' }}
+            style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}
           >
             {categoryStats.map(([cat, { count, scores }], i) => {
               const avg = scores.length > 0
@@ -149,11 +149,11 @@ export default async function DashboardPage() {
                     <span className="text-sm font-medium" style={{ color: CATEGORY_COLORS[cat] ?? '#8a9478' }}>
                       {cat}
                     </span>
-                    <span className="text-xs" style={{ color: '#3a4a30' }}>{count}개</span>
+                    <span className="text-xs" style={{ color: '#5a6a50' }}>{count}개</span>
                   </div>
                   <span
                     className="text-sm font-semibold"
-                    style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#3a4a30' }}
+                    style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#5a6a50' }}
                   >
                     {avg ?? '—'}
                   </span>
@@ -166,13 +166,13 @@ export default async function DashboardPage() {
         {/* 최근 결정 */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#4a5a3a' }}>
+            <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#8a9478' }}>
               최근 결정
             </p>
             <Link
               href="/decisions"
-              className="text-xs tracking-widest uppercase transition-colors hover:text-[#8a9478]"
-              style={{ color: '#3a4a30' }}
+              className="text-xs tracking-widest uppercase transition-colors hover:text-[#d4a84b]"
+              style={{ color: '#8a9478' }}
             >
               전체 보기 →
             </Link>
@@ -187,7 +187,7 @@ export default async function DashboardPage() {
                   key={d.id}
                   href={`/decisions/${d.id}`}
                   className="flex items-center justify-between rounded-xl border px-5 py-3.5 transition-colors border-[#2d3e28] hover:border-[#4a5e3a]"
-                  style={{ background: 'linear-gradient(to right, #1a2016, #0a0e08)' }}
+                  style={{ background: '#0f1a0d' }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <span className="text-sm">{imp.emoji}</span>
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
                   </div>
                   <span
                     className="shrink-0 text-[11px] font-semibold tracking-widest uppercase ml-3"
-                    style={{ color: hasReview ? '#8aad7a' : '#3a4a30' }}
+                    style={{ color: hasReview ? '#8aad7a' : '#5a6a50' }}
                   >
                     {hasReview ? '완료' : '미완료'}
                   </span>

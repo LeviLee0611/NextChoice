@@ -156,7 +156,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
           action={createDecision}
           className="rounded-2xl p-8 space-y-7 border"
           style={{
-            background: 'linear-gradient(to right, #1a2016, #0a0e08)',
+            background: '#0f1a0d',
             borderColor: '#2d3e28',
             boxShadow: '0 0 60px rgba(184,137,42,0.08)',
           }}
@@ -170,7 +170,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
 
           {/* 카테고리 */}
           <div>
-            <Label color="#8aad7a">카테고리</Label>
+            <Label color="#8a9478">카테고리</Label>
             <select
               name="category"
               required
@@ -190,7 +190,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
 
           {/* 중요도 */}
           <div>
-            <Label color="#c47a4a">이 결정, 얼마나 무거운가요</Label>
+            <Label color="#8a9478">이 결정, 얼마나 무거운가요</Label>
             <div className="grid grid-cols-5 gap-2">
               {([1, 2, 3, 4, 5] as ImportanceLevel[]).map(level => {
                 const { emoji, label, desc } = IMPORTANCE_LABELS[level]
@@ -224,7 +224,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
 
           {/* 선택지 A / B */}
           <div>
-            <Label color="#7a9a8a">선택지</Label>
+            <Label color="#8a9478">선택지</Label>
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
               <TextInput name="option_a" required placeholder="A — 예: 이직한다" />
               <span className="text-sm font-medium" style={{ color: '#2d3e28' }}>vs</span>
@@ -252,7 +252,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
           {/* 이유 */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label color="#8aad7a">
+              <Label color="#8a9478">
                 선택 이유{' '}
                 <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
               </Label>
@@ -267,7 +267,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
               />
             </div>
             <div>
-              <Label color="#c47a4a">
+              <Label color="#8a9478">
                 선택 안 한 이유{' '}
                 <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
               </Label>
@@ -285,7 +285,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
 
           {/* 확신도 */}
           <div>
-            <Label color="#c4903e">
+            <Label color="#8a9478">
               확신도{' '}
               <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: '#d4a84b' }}>
                 {confidence}
@@ -309,7 +309,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
 
           {/* 리뷰 날짜 */}
           <div>
-            <Label color="#7a9a8a">
+            <Label color="#8a9478">
               결과를 돌아볼 날{' '}
               <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>

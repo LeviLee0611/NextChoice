@@ -33,8 +33,8 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/dashboard"
-          className="text-sm tracking-[0.2em] uppercase"
-          style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b' }}
+          className="text-xl tracking-[0.3em] uppercase"
+          style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.3em' }}
         >
           NC
         </Link>
@@ -58,7 +58,7 @@ export default function Navbar() {
             onClick={handleLogout}
             disabled={loggingOut}
             className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-            style={{ color: loggingOut ? '#4a5a3a' : '#6a7a60' }}
+            style={{ color: loggingOut ? '#5a6a50' : '#8a9478' }}
             onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
             onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
           >
@@ -78,7 +78,7 @@ function NavLink({ href, label, pathname }: { href: string; label: string; pathn
       href={href}
       className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
       style={{
-        color: active ? '#d4a84b' : '#7a8a6a',
+        color: active ? '#d4a84b' : '#9aaa8a',
         background: active ? 'rgba(184,137,42,0.08)' : 'transparent',
       }}
     >
