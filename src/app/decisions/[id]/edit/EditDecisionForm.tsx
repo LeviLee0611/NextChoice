@@ -170,7 +170,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
             <div>
               <Label color="#8aad7a">
                 선택 이유{' '}
-                <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+                <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
               </Label>
               <textarea
                 name="reason"
@@ -185,7 +185,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
             <div>
               <Label color="#c47a4a">
                 선택 안 한 이유{' '}
-                <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+                <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
               </Label>
               <textarea
                 name="reason_not_chosen"
@@ -206,7 +206,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
               <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: '#d4a84b' }}>
                 {confidence}
               </span>
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}> / 10</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}> / 10</span>
             </Label>
             <input
               type="range"
@@ -217,7 +217,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
               onChange={e => setConfidence(Number(e.target.value))}
               className="w-full accent-[#b8892a]"
             />
-            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#3a4a30' }}>
+            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#5a6a50' }}>
               <span>반신반의</span>
               <span>완전한 확신</span>
             </div>
@@ -227,7 +227,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
           <div>
             <Label color="#7a9a8a">
               결과를 돌아볼 날{' '}
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>
             <TextInput name="review_date" type="date" defaultValue={decision.review_date ?? ''} />
           </div>

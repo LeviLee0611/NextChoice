@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48">
+  <text
+    x="0"
+    y="36"
+    font-family="Cinzel, Georgia, serif"
+    font-size="28"
+    font-weight="400"
+    fill="#d4a84b"
+    letter-spacing="8"
+  >NC</text>
+  <line x1="0" y1="44" x2="72" y2="44" stroke="#d4a84b" stroke-width="0.5" opacity="0.4"/>
+</svg>

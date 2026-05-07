@@ -76,7 +76,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
           <Link
             href="/decisions"
             className="inline-flex items-center gap-2 text-xs tracking-widest uppercase transition-colors hover:text-[#8a9478]"
-            style={{ color: '#4a5a3a' }}
+            style={{ color: '#8a9478' }}
           >
             ← 목록으로
           </Link>
@@ -84,7 +84,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
             <Link
               href={`/decisions/${d.id}/edit`}
               className="text-xs tracking-widest uppercase transition-colors hover:text-[#d4a84b]"
-              style={{ color: '#4a5a3a' }}
+              style={{ color: '#8a9478' }}
             >
               수정
             </Link>
@@ -99,7 +99,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
               {d.category}
             </span>
             <span style={{ color: '#2d3e28' }}>·</span>
-            <span className="text-xs" style={{ color: '#4a5a3a' }}>{createdAt}</span>
+            <span className="text-xs" style={{ color: '#5a6a50' }}>{createdAt}</span>
           </div>
           <h1 className="text-xl font-medium leading-snug" style={{ color: '#e8dfc8' }}>
             {d.title}
@@ -141,7 +141,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
               <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.1rem', color: '#d4a84b' }}>
                 {d.confidence}
               </span>
-              <span className="text-xs ml-1" style={{ color: '#3a4a30' }}>/ 10</span>
+              <span className="text-xs ml-1" style={{ color: '#5a6a50' }}>/ 10</span>
             </Row>
 
             {d.reason && (
@@ -178,13 +178,13 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
         {review ? (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#4a5a3a' }}>
+              <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#8a9478' }}>
                 리뷰 기록
               </p>
               <Link
                 href={`/decisions/${d.id}/review`}
-                className="text-xs tracking-widest uppercase transition-colors hover:text-[#8a9478]"
-                style={{ color: '#3a4a30' }}
+                className="text-xs tracking-widest uppercase transition-colors hover:text-[#d4a84b]"
+                style={{ color: '#8a9478' }}
               >
                 수정하기 →
               </Link>
@@ -199,7 +199,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
                   <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1.1rem', color: satisfactionColor(review.satisfaction_score) }}>
                     {review.satisfaction_score}
                   </span>
-                  <span className="text-xs ml-1" style={{ color: '#3a4a30' }}>/ 10</span>
+                  <span className="text-xs ml-1" style={{ color: '#5a6a50' }}>/ 10</span>
                 </Row>
 
                 <Row label="다시 선택한다면" color="#7a9a8a">
@@ -232,7 +232,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
             style={{
               background: '#141c12',
               border: `1px solid ${reviewOverdue ? '#c4903e' : '#2d3e28'}`,
-              color: reviewOverdue ? '#c4903e' : '#4a5a3a',
+              color: reviewOverdue ? '#c4903e' : '#8a9478',
               fontFamily: 'var(--font-cinzel)',
             }}
           >

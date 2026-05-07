@@ -28,9 +28,9 @@ export default function DeleteButton({ id }: { id: string }) {
         <button
           onClick={() => setConfirming(false)}
           className="text-xs tracking-widest uppercase transition-colors"
-          style={{ color: '#3a4a30' }}
+          style={{ color: '#6a7a60' }}
           onMouseEnter={e => { e.currentTarget.style.color = '#8a9478' }}
-          onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
         >
           취소
         </button>
@@ -42,9 +42,9 @@ export default function DeleteButton({ id }: { id: string }) {
     <button
       onClick={() => setConfirming(true)}
       className="text-xs tracking-widest uppercase transition-colors"
-      style={{ color: '#3a4a30' }}
+      style={{ color: '#6a7a60' }}
       onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
-      onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
+      onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
     >
       삭제
     </button>

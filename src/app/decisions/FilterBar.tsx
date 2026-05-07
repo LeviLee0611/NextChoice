@@ -18,7 +18,7 @@ function Pill({ label, active, onClick }: { label: string; active: boolean; onCl
       style={{
         background: active ? 'rgba(184,137,42,0.12)' : 'transparent',
         border: `1px solid ${active ? '#b8892a' : '#2d3e28'}`,
-        color: active ? '#d4a84b' : '#4a5a3a',
+        color: active ? '#d4a84b' : '#6a7a60',
       }}
     >
       {label}
@@ -60,7 +60,7 @@ export default function FilterBar({ activeCategory, activeReviewed, activeSort, 
       </div>
 
       {/* 결과 수 */}
-      <p className="text-[11px]" style={{ color: '#3a4a30' }}>
+      <p className="text-[11px]" style={{ color: '#5a6a50' }}>
         {total}개의 결정
       </p>
     </div>

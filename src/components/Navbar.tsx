@@ -58,7 +58,7 @@ export default function Navbar() {
             onClick={handleLogout}
             disabled={loggingOut}
             className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-            style={{ color: loggingOut ? '#3a4a30' : '#3a4a30' }}
+            style={{ color: loggingOut ? '#4a5a3a' : '#6a7a60' }}
             onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
             onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
           >
@@ -78,7 +78,7 @@ function NavLink({ href, label, pathname }: { href: string; label: string; pathn
       href={href}
       className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
       style={{
-        color: active ? '#d4a84b' : '#4a5a3a',
+        color: active ? '#d4a84b' : '#7a8a6a',
         background: active ? 'rgba(184,137,42,0.08)' : 'transparent',
       }}
     >
