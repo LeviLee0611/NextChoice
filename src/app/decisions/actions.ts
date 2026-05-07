@@ -22,9 +22,12 @@ function parseDecisionFields(formData: FormData) {
   if (!title || title.length > 200) throw new Error('Invalid title')
   if (!VALID_CATEGORIES.has(category as never)) throw new Error('Invalid category')
   if (!Number.isInteger(importanceLevel) || importanceLevel < 1 || importanceLevel > 5) throw new Error('Invalid importance')
-  if (!optionA || !optionB) throw new Error('Options required')
+  if (!optionA || optionA.length > 200 || !optionB || optionB.length > 200) throw new Error('Options required')
   if (!VALID_OPTIONS.has(chosenOption as never)) throw new Error('Invalid chosen option')
   if (!Number.isInteger(confidence) || confidence < 1 || confidence > 10) throw new Error('Invalid confidence')
+  if (reason && reason.length > 1000) throw new Error('Reason too long')
+  if (reasonNotChosen && reasonNotChosen.length > 1000) throw new Error('Reason not chosen too long')
+  if (reviewDate && !/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) throw new Error('Invalid review date')
 
   return { title, category, importance_level: importanceLevel, option_a: optionA, option_b: optionB, chosen_option: chosenOption, confidence, reason, reason_not_chosen: reasonNotChosen, review_date: reviewDate }
 }
@@ -61,11 +64,19 @@ export async function createReview(decisionId: string, formData: FormData) {
   const wouldChooseAgain = formData.get('would_choose_again')
   if (wouldChooseAgain !== 'true' && wouldChooseAgain !== 'false') throw new Error('Invalid would_choose_again')
 
+  const actualResult = (formData.get('actual_result') as string).trim()
+  const unexpectedThings = (formData.get('unexpected_things') as string).trim() || null
+  const lessonLearned = (formData.get('lesson_learned') as string).trim() || null
+
+  if (!actualResult || actualResult.length > 2000) throw new Error('Invalid actual result')
+  if (unexpectedThings && unexpectedThings.length > 1000) throw new Error('Unexpected things too long')
+  if (lessonLearned && lessonLearned.length > 1000) throw new Error('Lesson learned too long')
+
   const reviewData = {
-    actual_result: (formData.get('actual_result') as string).trim(),
+    actual_result: actualResult,
     satisfaction_score: satisfactionScore,
-    unexpected_things: (formData.get('unexpected_things') as string).trim() || null,
-    lesson_learned: (formData.get('lesson_learned') as string).trim() || null,
+    unexpected_things: unexpectedThings,
+    lesson_learned: lessonLearned,
     would_choose_again: wouldChooseAgain === 'true',
   }
 

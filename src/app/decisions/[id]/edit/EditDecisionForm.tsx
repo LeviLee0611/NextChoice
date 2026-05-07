@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { updateDecision } from '../../actions'
-import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Category, type Decision } from '@/types/decision'
+import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Decision } from '@/types/decision'
 
 const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
   1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },

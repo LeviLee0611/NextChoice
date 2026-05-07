@@ -23,8 +23,8 @@ export default function Navbar() {
     <header
       className="sticky top-0 z-50 w-full border-b"
       style={{
-        background: 'rgba(8, 12, 7, 0.85)',
-        borderColor: '#2d3e28',
+        background: 'linear-gradient(to right, rgba(184,137,42,0.2), rgba(184,137,42,0.12), rgba(184,137,42,0.2)), rgba(8,12,7,0.92)',
+        borderColor: '#6a5020',
         backdropFilter: 'blur(12px)',
       }}
     >
@@ -33,8 +33,8 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/dashboard"
-          className="text-xl tracking-[0.3em] uppercase"
-          style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.3em' }}
+          className="text-xl"
+          style={{ fontFamily: 'var(--font-lobster)', color: '#d4a84b' }}
         >
           NextChoice
         </Link>
@@ -60,7 +60,7 @@ export default function Navbar() {
             className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
             style={{ color: loggingOut ? '#5a6a50' : '#8a9478' }}
             onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#3a4a30' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#8a9478' }}
           >
             {loggingOut ? '…' : '로그아웃'}
           </button>

@@ -33,11 +33,17 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# claude local settings
+.claude/settings.local.json
+
 # vercel
 .vercel
 
 # opennext
 .open-next
+
+# wrangler
+/.wrangler/
 
 # typescript
 *.tsbuildinfo
