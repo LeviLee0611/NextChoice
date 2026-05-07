@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase/server'
 import ReviewForm from './ReviewForm'
 import type { Decision } from '@/types/decision'
 
-export const runtime = 'edge'
 
 export interface ExistingReview {
   id: string

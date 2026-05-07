@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/server'
 import { IMPORTANCE_LABELS, CATEGORIES, type Decision, type ImportanceLevel } from '@/types/decision'
 import FilterBar from './FilterBar'
 
-export const runtime = 'edge'
 
 const CATEGORY_COLORS: Record<string, string> = {
   '커리어': '#7a9a8a',

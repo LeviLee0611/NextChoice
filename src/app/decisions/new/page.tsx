@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase/server'
 import NewDecisionForm from './NewDecisionForm'
 import type { Category } from '@/types/decision'
 
-export const runtime = 'edge'
 
 export type CategoryInsight = {
   total: number

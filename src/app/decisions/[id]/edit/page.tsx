@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase/server'
 import EditDecisionForm from './EditDecisionForm'
 import type { Decision } from '@/types/decision'
 
-export const runtime = 'edge'
 
 export default async function EditDecisionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
