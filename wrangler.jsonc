@@ -8,7 +8,7 @@
     "binding": "ASSETS"
   },
   "vars": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://zexirzgjvgmnuzsemseo.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpleGlyemdqdmdtbnV6c2Vtc2VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NjI0ODgsImV4cCI6MjA5MzEzODQ4OH0.Rw2sfX_rqq4sdaGMz-MPP4yR1_5tLbBwbqGZQOSWF-E"
+    "NEXT_PUBLIC_SUPABASE_URL": "https://xacewbsxbnbknlapmvxr.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhY2V3YnN4Ym5ia25sYXBtdnhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0OTUxNTEsImV4cCI6MjA5MzA3MTE1MX0.3y5CIJJneir15g_8zOtmlzlXZgxEaNZrM-99aJr3Sw8"
   }
 }
