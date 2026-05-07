@@ -147,3 +147,62 @@ decision_reviews
 
 ### 다음에 할 것
 - 아직 미정 (유저에게 확인)
+
+---
+
+## 2026.05.07
+
+### 오늘 한 것
+
+**배포 스택 전환 (Cloudflare Pages → Workers)**
+- `@cloudflare/next-on-pages` 제거 → `@opennextjs/cloudflare` 도입
+- Next.js 16.2.4 → 16.2.5 업그레이드 (OpenNext 호환 요구사항)
+- `proxy.ts` 삭제 — OpenNext가 Node.js 미들웨어 미지원, 각 페이지 auth check으로 대체
+- `wrangler.jsonc` 생성, `open-next.config.ts` 생성
+- `package.json`에 `deploy` / `preview` 스크립트 추가
+- **GitHub Actions** (`.github/workflows/deploy.yml`) 설정 — main push 시 자동 배포
+- Workers URL: `https://nextchoice.levilee-dev.workers.dev`
+
+**환경/인증 문제 해결**
+- `.env.local` Supabase 프로젝트 불일치 수정 (구 프로젝트 → `xacewbsxbnbknlapmvxr`)
+- Google OAuth consent screen `Internal` → `External` 변경
+- Google OAuth redirect URI에 Supabase callback URL 추가
+- Supabase Google provider 활성화
+- 새 Supabase 프로젝트 누락 컬럼 `reason_not_chosen` 등 SQL로 추가
+
+**UI 개선 (디자인 통일)**
+- 카드 배경 그라데이션 → 단일 `#0f1a0d`로 통일 (dashboard, decisions, 상세, 폼 전체)
+- 섹션 레이블 색상 `#8a9478`으로 통일, 힌트 텍스트 `#5a6a50`으로 통일
+- 날짜 텍스트 밝기 개선 (`#4a5a3a` → `#8a9478`)
+- Navbar 로고 NC → `NextChoice` (Lobster 폰트)
+- Navbar 배경 골드 틴트 그라데이션 적용
+- 대시보드 / 결정 목록 nav 링크 가시성 개선
+
+**코드 리뷰 (Codex) 피드백 반영**
+- ESLint: `.open-next/**` globalIgnores 추가 (빌드 산출물 검사 방지)
+- `.gitignore`: `/.wrangler/`, `.claude/settings.local.json` 추가
+- `settings.local.json` git tracking 제거
+- Navbar 로그아웃 버튼 `onMouseLeave` 색 버그 수정 (`#3a4a30` → `#8a9478`)
+- `EditDecisionForm` unused `Category` import 제거
+- `actions.ts` 서버 입력 검증 강화: option 200자, reason 1000자, actual_result 2000자, 날짜 형식 regex
+
+### 수정된 버그 및 이슈
+
+| 문제 | 원인 | 해결 |
+|------|------|------|
+| Cloudflare 빌드 실패 | `next-on-pages`가 proxy.ts(Node.js) 미지원 | OpenNext(Workers)로 전환, proxy.ts 삭제 |
+| 로그인 후 localhost로 리다이렉트 | `.env.local` 구 Supabase 프로젝트 참조 | 프로젝트 URL/key 수정 |
+| `403 org_internal` OAuth 에러 | Google consent screen이 Internal | External로 변경 |
+| `400 redirect_uri_mismatch` | Google OAuth redirect URI 미등록 | Supabase callback URL 추가 |
+| `/decisions/new` 서버 에러 | 새 Supabase 프로젝트에 컬럼 누락 | SQL로 컬럼 추가 |
+| `npm run lint` 실패 | `.open-next` 빌드 산출물까지 검사 | eslint globalIgnores에 추가 |
+
+### 현재 규칙 업데이트
+
+- `proxy.ts` 없음 — 인증은 각 page/action의 `getUser()` 체크에 의존
+- 새 protected route 추가 시 반드시 `getUser()` + `redirect('/login')` 포함
+- 배포는 main push 시 GitHub Actions 자동 실행
+
+### 다음에 할 것
+- 대시보드 인사이트 강화
+- 커스텀 도메인 연결
