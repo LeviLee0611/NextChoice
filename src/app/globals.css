@@ -2,7 +2,8 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
-  --font-display: var(--font-cinzel);
+  --font-display: var(--font-cormorant);
+  --font-cinzel: var(--font-cormorant);
 }
 
 body {

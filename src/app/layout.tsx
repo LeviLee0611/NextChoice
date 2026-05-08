@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
-import { Geist, Lobster } from "next/font/google"
-import { Cinzel } from "next/font/google"
+import { Geist } from "next/font/google"
+import { Cormorant_Garamond } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 
@@ -9,16 +9,11 @@ const geist = Geist({
   subsets: ["latin"],
 })
 
-const lobster = Lobster({
-  variable: "--font-lobster",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["400"],
-})
-
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
-  subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
 })
 
 export const metadata: Metadata = {
@@ -32,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" className={`${geist.variable} ${cinzel.variable} ${lobster.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="ko" className={`${geist.variable} ${cormorant.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         <Navbar />
         {children}

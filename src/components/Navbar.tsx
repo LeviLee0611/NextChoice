@@ -34,7 +34,7 @@ export default function Navbar() {
         <Link
           href="/dashboard"
           className="text-xl"
-          style={{ fontFamily: 'var(--font-lobster)', color: '#d4a84b' }}
+          style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 500, letterSpacing: '0.04em', color: '#d4a84b' }}
         >
           NextChoice
         </Link>
