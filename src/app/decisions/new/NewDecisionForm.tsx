@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { createDecision } from '../actions'
 import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Category } from '@/types/decision'
-import type { CategoryStats } from './page'
 
 const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
   1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },
@@ -44,97 +43,20 @@ function TextInput({ name, required, placeholder, type = 'text' }: {
   )
 }
 
-function satisfactionColor(score: number) {
-  if (score <= 4) return '#c44040'
-  if (score <= 6) return '#c4903e'
-  return '#8aad7a'
-}
+const OPTION_LETTERS = ['A', 'B', 'C', 'D'] as const
 
-function CategoryInsightPanel({ category, stats }: { category: Category; stats: CategoryStats }) {
-  const insight = stats[category]
-  if (!insight || insight.total === 0) return null
-
-  return (
-    <div
-      className="rounded-xl border px-4 py-3 mt-3 space-y-2"
-      style={{ background: '#0c1209', borderColor: '#1e2e1a' }}
-    >
-      <p className="text-[10px] font-semibold tracking-[0.25em] uppercase" style={{ color: '#4a5a3a' }}>
-        {category} 카테고리 과거 기록
-      </p>
-
-      <div className="flex flex-wrap gap-x-5 gap-y-1.5">
-        {/* 결정 수 */}
-        <span className="text-xs" style={{ color: '#6a7a5a' }}>
-          결정{' '}
-          <span style={{ fontFamily: 'var(--font-cinzel)', color: '#8aad7a' }}>{insight.total}</span>
-          회
-        </span>
-
-        {/* 리뷰 완료 */}
-        {insight.reviewed > 0 && (
-          <span className="text-xs" style={{ color: '#6a7a5a' }}>
-            리뷰{' '}
-            <span style={{ fontFamily: 'var(--font-cinzel)', color: '#8aad7a' }}>{insight.reviewed}</span>
-            회 완료
-          </span>
-        )}
-
-        {/* 평균 만족도 */}
-        {insight.avgSatisfaction !== null && (
-          <span className="text-xs" style={{ color: '#6a7a5a' }}>
-            평균 만족도{' '}
-            <span
-              style={{
-                fontFamily: 'var(--font-cinzel)',
-                color: satisfactionColor(insight.avgSatisfaction),
-              }}
-            >
-              {insight.avgSatisfaction}
-            </span>
-            <span style={{ color: '#5a6a50' }}>/10</span>
-          </span>
-        )}
-
-        {/* 같은 선택 다시 할 비율 */}
-        {insight.wouldChooseAgainRate !== null && (
-          <span className="text-xs" style={{ color: '#6a7a5a' }}>
-            재선택{' '}
-            <span
-              style={{
-                fontFamily: 'var(--font-cinzel)',
-                color: insight.wouldChooseAgainRate >= 60 ? '#8aad7a' : '#c47a4a',
-              }}
-            >
-              {insight.wouldChooseAgainRate}%
-            </span>
-          </span>
-        )}
-      </div>
-
-      {/* 확신도-만족도 패턴 */}
-      {insight.highConfAvgSat !== null && insight.lowConfAvgSat !== null && (
-        <div className="pt-1 border-t" style={{ borderColor: '#1e2e1a' }}>
-          <p className="text-[10px]" style={{ color: '#4a5a3a' }}>
-            확신도 높을 때 만족도{' '}
-            <span style={{ fontFamily: 'var(--font-cinzel)', color: satisfactionColor(insight.highConfAvgSat) }}>
-              {insight.highConfAvgSat}
-            </span>
-            {' '}·{' '}낮을 때{' '}
-            <span style={{ fontFamily: 'var(--font-cinzel)', color: satisfactionColor(insight.lowConfAvgSat) }}>
-              {insight.lowConfAvgSat}
-            </span>
-          </p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default function NewDecisionForm({ categoryStats }: { categoryStats: CategoryStats }) {
+export default function NewDecisionForm() {
   const [importance, setImportance] = useState<ImportanceLevel>(3)
   const [confidence, setConfidence] = useState(5)
   const [category, setCategory] = useState<Category>(CATEGORIES[0])
+  const [optionCount, setOptionCount] = useState<2 | 3 | 4>(2)
+  const [chosenOption, setChosenOption] = useState<string>('')
+
+  function removeLastOption() {
+    const removedLetter = OPTION_LETTERS[optionCount - 1]
+    if (chosenOption === removedLetter) setChosenOption('')
+    setOptionCount(prev => (prev - 1) as 2 | 3)
+  }
 
   return (
     <div className="min-h-screen flex items-start justify-center px-4 py-16">
@@ -185,7 +107,6 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
-            <CategoryInsightPanel category={category} stats={categoryStats} />
           </div>
 
           {/* 중요도 */}
@@ -222,27 +143,77 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
             <input type="hidden" name="importance_level" value={importance} />
           </div>
 
-          {/* 선택지 A / B */}
+          {/* 선택지 */}
           <div>
             <Label color="#8a9478">선택지</Label>
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-              <TextInput name="option_a" required placeholder="A — 예: 이직한다" />
-              <span className="text-sm font-medium" style={{ color: '#2d3e28' }}>vs</span>
-              <TextInput name="option_b" required placeholder="B — 예: 현직 유지" />
+            <div className="space-y-2">
+              {/* A, B — 항상 표시 */}
+              {(['A', 'B'] as const).map(letter => (
+                <div key={letter} className="flex items-center gap-2">
+                  <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>{letter}</span>
+                  <TextInput name={`option_${letter.toLowerCase()}`} required placeholder={letter === 'A' ? '예: 이직한다' : '예: 현직 유지'} />
+                </div>
+              ))}
+              {/* C — 선택적 */}
+              {optionCount >= 3 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>C</span>
+                  <TextInput name="option_c" placeholder="예: 6개월 후 재검토" />
+                  {optionCount === 3 && (
+                    <button type="button" onClick={removeLastOption} className="shrink-0 text-sm px-2 py-1 rounded-lg transition-colors" style={{ color: '#5a6a50' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}>×</button>
+                  )}
+                </div>
+              )}
+              {/* D — 선택적 */}
+              {optionCount >= 4 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>D</span>
+                  <TextInput name="option_d" placeholder="또 다른 선택지" />
+                  <button type="button" onClick={removeLastOption} className="shrink-0 text-sm px-2 py-1 rounded-lg transition-colors" style={{ color: '#5a6a50' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
+                    onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}>×</button>
+                </div>
+              )}
             </div>
+            {optionCount < 4 && (
+              <button
+                type="button"
+                onClick={() => setOptionCount(prev => (prev + 1) as 3 | 4)}
+                className="mt-2 text-xs tracking-widest uppercase transition-colors"
+                style={{ color: '#5a6a50' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#8a9478' }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}
+              >
+                + 선택지 추가
+              </button>
+            )}
           </div>
 
-          {/* 내 선택 */}
+          {/* 나의 선택 */}
           <div>
             <Label>나의 선택</Label>
-            <div className="flex gap-3">
-              {(['A', 'B'] as const).map(opt => (
+            <div className="flex gap-3 flex-wrap">
+              {OPTION_LETTERS.slice(0, optionCount).map(opt => (
                 <label
                   key={opt}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl border py-3 cursor-pointer transition-colors text-sm font-medium"
-                  style={{ background: '#141c12', borderColor: '#2d3e28', color: '#d4c9a8' }}
+                  style={{
+                    background: chosenOption === opt ? 'rgba(184,137,42,0.1)' : '#141c12',
+                    borderColor: chosenOption === opt ? '#b8892a' : '#2d3e28',
+                    color: chosenOption === opt ? '#d4a84b' : '#d4c9a8',
+                  }}
                 >
-                  <input type="radio" name="chosen_option" value={opt} required className="accent-[#b8892a]" />
+                  <input
+                    type="radio"
+                    name="chosen_option"
+                    value={opt}
+                    required
+                    checked={chosenOption === opt}
+                    onChange={() => setChosenOption(opt)}
+                    className="sr-only"
+                  />
                   선택지 {opt}
                 </label>
               ))}
@@ -250,7 +221,7 @@ export default function NewDecisionForm({ categoryStats }: { categoryStats: Cate
           </div>
 
           {/* 이유 */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
               <Label color="#8a9478">
                 선택 이유{' '}

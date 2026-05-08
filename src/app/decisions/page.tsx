@@ -142,7 +142,10 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
                       className="text-xs font-medium px-2.5 py-1 rounded-lg"
                       style={{ background: '#141c12', border: '1px solid #2d3e28', color: '#a09060' }}
                     >
-                      {decision.chosen_option === 'A' ? decision.option_a : decision.option_b}
+                      {decision.chosen_option === 'A' ? decision.option_a
+                        : decision.chosen_option === 'B' ? decision.option_b
+                        : decision.chosen_option === 'C' ? (decision.option_c ?? '')
+                        : (decision.option_d ?? '')}
                     </span>
                     {hasReview && (
                       <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6b8f5e' }}>

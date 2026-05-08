@@ -118,22 +118,25 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
             </Row>
 
             <Row label="선택지" color="#8a9478">
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="px-3 py-1 rounded-lg text-sm" style={{
-                  background: d.chosen_option === 'A' ? 'rgba(184,137,42,0.15)' : '#141c12',
-                  border: `1px solid ${d.chosen_option === 'A' ? '#b8892a' : '#2d3e28'}`,
-                  color: d.chosen_option === 'A' ? '#d4a84b' : '#3a4a30',
-                }}>
-                  A — {d.option_a}
-                </span>
-                <span style={{ color: '#2d3e28' }}>vs</span>
-                <span className="px-3 py-1 rounded-lg text-sm" style={{
-                  background: d.chosen_option === 'B' ? 'rgba(184,137,42,0.15)' : '#141c12',
-                  border: `1px solid ${d.chosen_option === 'B' ? '#b8892a' : '#2d3e28'}`,
-                  color: d.chosen_option === 'B' ? '#d4a84b' : '#3a4a30',
-                }}>
-                  B — {d.option_b}
-                </span>
+              <div className="flex flex-col gap-2">
+                {([
+                  { key: 'A', text: d.option_a },
+                  { key: 'B', text: d.option_b },
+                  ...(d.option_c ? [{ key: 'C', text: d.option_c }] : []),
+                  ...(d.option_d ? [{ key: 'D', text: d.option_d }] : []),
+                ] as { key: string; text: string }[]).map(({ key, text }) => (
+                  <span key={key} className="px-3 py-1.5 rounded-lg text-sm" style={{
+                    background: d.chosen_option === key ? 'rgba(184,137,42,0.15)' : '#141c12',
+                    border: `1px solid ${d.chosen_option === key ? '#b8892a' : '#2d3e28'}`,
+                    color: d.chosen_option === key ? '#d4a84b' : '#3a4a30',
+                  }}>
+                    <span className="font-semibold mr-2" style={{ color: d.chosen_option === key ? '#d4a84b' : '#4a5a3a' }}>{key}</span>
+                    {text}
+                    {d.chosen_option === key && (
+                      <span className="ml-2 text-[10px] tracking-widest uppercase" style={{ color: '#b8892a' }}>✓ 선택</span>
+                    )}
+                  </span>
+                ))}
               </div>
             </Row>
 

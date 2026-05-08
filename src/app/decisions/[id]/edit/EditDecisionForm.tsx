@@ -44,10 +44,22 @@ function TextInput({ name, required, placeholder, type = 'text', defaultValue }:
   )
 }
 
+const OPTION_LETTERS = ['A', 'B', 'C', 'D'] as const
+
 export default function EditDecisionForm({ decision }: { decision: Decision }) {
   const [importance, setImportance] = useState<ImportanceLevel>(decision.importance_level)
   const [confidence, setConfidence] = useState(decision.confidence)
+  const [optionCount, setOptionCount] = useState<2 | 3 | 4>(
+    decision.option_d ? 4 : decision.option_c ? 3 : 2
+  )
+  const [chosenOption, setChosenOption] = useState<string>(decision.chosen_option)
   const action = updateDecision.bind(null, decision.id)
+
+  function removeLastOption() {
+    const removedLetter = OPTION_LETTERS[optionCount - 1]
+    if (chosenOption === removedLetter) setChosenOption('')
+    setOptionCount(prev => (prev - 1) as 2 | 3)
+  }
 
   return (
     <div className="min-h-screen flex items-start justify-center px-4 py-16">
@@ -131,33 +143,77 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
             <input type="hidden" name="importance_level" value={importance} />
           </div>
 
-          {/* 선택지 A / B */}
+          {/* 선택지 */}
           <div>
             <Label color="#8a9478">선택지</Label>
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-              <TextInput name="option_a" required defaultValue={decision.option_a} placeholder="A" />
-              <span className="text-sm font-medium" style={{ color: '#2d3e28' }}>vs</span>
-              <TextInput name="option_b" required defaultValue={decision.option_b} placeholder="B" />
+            <div className="space-y-2">
+              {(['A', 'B'] as const).map(letter => (
+                <div key={letter} className="flex items-center gap-2">
+                  <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>{letter}</span>
+                  <TextInput
+                    name={`option_${letter.toLowerCase()}`}
+                    required
+                    defaultValue={letter === 'A' ? decision.option_a : decision.option_b}
+                  />
+                </div>
+              ))}
+              {optionCount >= 3 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>C</span>
+                  <TextInput name="option_c" defaultValue={decision.option_c ?? ''} />
+                  {optionCount === 3 && (
+                    <button type="button" onClick={removeLastOption} className="shrink-0 text-sm px-2 py-1 rounded-lg transition-colors" style={{ color: '#5a6a50' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}>×</button>
+                  )}
+                </div>
+              )}
+              {optionCount >= 4 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>D</span>
+                  <TextInput name="option_d" defaultValue={decision.option_d ?? ''} />
+                  <button type="button" onClick={removeLastOption} className="shrink-0 text-sm px-2 py-1 rounded-lg transition-colors" style={{ color: '#5a6a50' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
+                    onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}>×</button>
+                </div>
+              )}
             </div>
+            {optionCount < 4 && (
+              <button
+                type="button"
+                onClick={() => setOptionCount(prev => (prev + 1) as 3 | 4)}
+                className="mt-2 text-xs tracking-widest uppercase transition-colors"
+                style={{ color: '#5a6a50' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#8a9478' }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}
+              >
+                + 선택지 추가
+              </button>
+            )}
           </div>
 
-          {/* 내 선택 */}
+          {/* 나의 선택 */}
           <div>
             <Label>나의 선택</Label>
-            <div className="flex gap-3">
-              {(['A', 'B'] as const).map(opt => (
+            <div className="flex gap-3 flex-wrap">
+              {OPTION_LETTERS.slice(0, optionCount).map(opt => (
                 <label
                   key={opt}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl border py-3 cursor-pointer transition-colors text-sm font-medium"
-                  style={{ background: '#141c12', borderColor: '#2d3e28', color: '#d4c9a8' }}
+                  style={{
+                    background: chosenOption === opt ? 'rgba(184,137,42,0.1)' : '#141c12',
+                    borderColor: chosenOption === opt ? '#b8892a' : '#2d3e28',
+                    color: chosenOption === opt ? '#d4a84b' : '#d4c9a8',
+                  }}
                 >
                   <input
                     type="radio"
                     name="chosen_option"
                     value={opt}
                     required
-                    defaultChecked={decision.chosen_option === opt}
-                    className="accent-[#b8892a]"
+                    checked={chosenOption === opt}
+                    onChange={() => setChosenOption(opt)}
+                    className="sr-only"
                   />
                   선택지 {opt}
                 </label>
@@ -166,7 +222,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
           </div>
 
           {/* 이유 */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
               <Label color="#8a9478">
                 선택 이유{' '}

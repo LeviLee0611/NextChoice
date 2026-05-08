@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES } from '@/types/decision'
 
 const VALID_CATEGORIES = new Set(CATEGORIES)
-const VALID_OPTIONS = new Set(['A', 'B'])
 
 function parseDecisionFields(formData: FormData) {
   const title = (formData.get('title') as string).trim()
@@ -13,6 +12,8 @@ function parseDecisionFields(formData: FormData) {
   const importanceLevel = Number(formData.get('importance_level'))
   const optionA = (formData.get('option_a') as string).trim()
   const optionB = (formData.get('option_b') as string).trim()
+  const optionC = ((formData.get('option_c') as string | null) ?? '').trim() || null
+  const optionD = ((formData.get('option_d') as string | null) ?? '').trim() || null
   const chosenOption = formData.get('chosen_option') as string
   const confidence = Number(formData.get('confidence'))
   const reason = (formData.get('reason') as string).trim() || null
@@ -23,13 +24,19 @@ function parseDecisionFields(formData: FormData) {
   if (!VALID_CATEGORIES.has(category as never)) throw new Error('Invalid category')
   if (!Number.isInteger(importanceLevel) || importanceLevel < 1 || importanceLevel > 5) throw new Error('Invalid importance')
   if (!optionA || optionA.length > 200 || !optionB || optionB.length > 200) throw new Error('Options required')
-  if (!VALID_OPTIONS.has(chosenOption as never)) throw new Error('Invalid chosen option')
+  if (optionC && optionC.length > 200) throw new Error('Option C too long')
+  if (optionD && optionD.length > 200) throw new Error('Option D too long')
+  if (optionD && !optionC) throw new Error('Option D requires option C')
+
+  const validChosenOptions = new Set(['A', 'B', ...(optionC ? ['C'] : []), ...(optionD ? ['D'] : [])])
+  if (!validChosenOptions.has(chosenOption)) throw new Error('Invalid chosen option')
+
   if (!Number.isInteger(confidence) || confidence < 1 || confidence > 10) throw new Error('Invalid confidence')
   if (reason && reason.length > 1000) throw new Error('Reason too long')
   if (reasonNotChosen && reasonNotChosen.length > 1000) throw new Error('Reason not chosen too long')
   if (reviewDate && !/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) throw new Error('Invalid review date')
 
-  return { title, category, importance_level: importanceLevel, option_a: optionA, option_b: optionB, chosen_option: chosenOption, confidence, reason, reason_not_chosen: reasonNotChosen, review_date: reviewDate }
+  return { title, category, importance_level: importanceLevel, option_a: optionA, option_b: optionB, option_c: optionC, option_d: optionD, chosen_option: chosenOption, confidence, reason, reason_not_chosen: reasonNotChosen, review_date: reviewDate }
 }
 
 export async function createDecision(formData: FormData) {

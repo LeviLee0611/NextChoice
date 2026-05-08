@@ -12,6 +12,9 @@ export const IMPORTANCE_LABELS: Record<ImportanceLevel, { emoji: string; label: 
 
 export const CATEGORIES: Category[] = ['커리어', '관계', '재정', '건강', '생활', '기타']
 
+export const OPTION_KEYS = ['A', 'B', 'C', 'D'] as const
+export type OptionKey = typeof OPTION_KEYS[number]
+
 export interface Decision {
   id: string
   user_id: string
@@ -20,7 +23,9 @@ export interface Decision {
   importance_level: ImportanceLevel
   option_a: string
   option_b: string
-  chosen_option: 'A' | 'B'
+  option_c: string | null
+  option_d: string | null
+  chosen_option: OptionKey
   reason: string | null
   reason_not_chosen: string | null
   confidence: number
