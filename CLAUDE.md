@@ -5,17 +5,24 @@
 - **Framework**: Next.js 16.2.4 — App Router, TypeScript, Tailwind CSS v4
 - **Database / Auth**: Supabase (PostgreSQL + RLS + Google OAuth)
 - **Deployment**: Cloudflare Pages — all dynamic routes require `export const runtime = 'edge'`
-- **Fonts**: Cinzel (display/titles), Geist (body)
-- **Routing convention**: `src/proxy.ts` (not `middleware.ts`) — Next.js 16 requirement
+- **Fonts**: Cormorant Garamond (display/titles/logo), Geist (body)
+- **Routing convention**: 각 page/action의 `getUser()` + `redirect('/login')` — proxy.ts 없음
 - **Server Actions**: defined in `src/app/decisions/actions.ts` with `'use server'`
 
 ## workflow
 
 코드 작업은 아래 순서를 따른다.
 
-1. **Claude** — 기능 구현 + 빌드 확인 + git push
-2. **Codex** — 1차 검토 (보안, 로직 오류, 개선점)
-3. **Claude** — Codex 피드백 반영 여부 판단 + 2차 검토
+1. **Claude** — 기능 구현 + 빌드 확인
+2. **사용자** — 로컬(`npm run dev`)에서 직접 확인
+3. **사용자가 push 요청 시** — Claude가 git push (명시적으로 요청할 때만)
+4. **Codex** — 1차 검토 (보안, 로직 오류, 개선점)
+5. **Claude** — Codex 피드백 반영 여부 판단 + 2차 검토
+
+**배포 룰:**
+- push ≠ 배포. push는 코드 공유, 배포는 별도 수동 트리거
+- 배포는 GitHub Actions → `workflow_dispatch` 수동 실행으로만 (자동 배포 없음)
+- 배포 타이밍: 기능 단위로 완성됐을 때, 사용자가 배포 요청할 때
 
 **Codex 검토 시점** (이때만 돌린다):
 - 새 페이지/기능 완성됐을 때
