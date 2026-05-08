@@ -29,6 +29,8 @@ export interface Decision {
   reason: string | null
   reason_not_chosen: string | null
   confidence: number
+  gut_vs_logic: number | null
+  time_pressure: number | null
   review_date: string | null
   created_at: string
 }

@@ -36,7 +36,15 @@ function parseDecisionFields(formData: FormData) {
   if (reasonNotChosen && reasonNotChosen.length > 1000) throw new Error('Reason not chosen too long')
   if (reviewDate && !/^\d{4}-\d{2}-\d{2}$/.test(reviewDate)) throw new Error('Invalid review date')
 
-  return { title, category, importance_level: importanceLevel, option_a: optionA, option_b: optionB, option_c: optionC, option_d: optionD, chosen_option: chosenOption, confidence, reason, reason_not_chosen: reasonNotChosen, review_date: reviewDate }
+  const gutVsLogicRaw = formData.get('gut_vs_logic')
+  const gutVsLogic = gutVsLogicRaw ? Number(gutVsLogicRaw) : null
+  if (gutVsLogic !== null && (!Number.isInteger(gutVsLogic) || gutVsLogic < 1 || gutVsLogic > 5)) throw new Error('Invalid gut_vs_logic')
+
+  const timePressureRaw = formData.get('time_pressure')
+  const timePressure = timePressureRaw ? Number(timePressureRaw) : null
+  if (timePressure !== null && (!Number.isInteger(timePressure) || timePressure < 1 || timePressure > 3)) throw new Error('Invalid time_pressure')
+
+  return { title, category, importance_level: importanceLevel, option_a: optionA, option_b: optionB, option_c: optionC, option_d: optionD, chosen_option: chosenOption, confidence, gut_vs_logic: gutVsLogic, time_pressure: timePressure, reason, reason_not_chosen: reasonNotChosen, review_date: reviewDate }
 }
 
 export async function createDecision(formData: FormData) {

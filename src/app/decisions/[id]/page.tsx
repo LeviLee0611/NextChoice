@@ -147,6 +147,30 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
               <span className="text-xs ml-1" style={{ color: '#5a6a50' }}>/ 10</span>
             </Row>
 
+            {d.gut_vs_logic != null && (
+              <Row label="결정 방식" color="#8a9478">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs" style={{ color: '#7050b0' }}>직감</span>
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(i => (
+                      <div key={i} className="w-3 h-3 rounded-full" style={{
+                        background: i <= d.gut_vs_logic! ? (d.gut_vs_logic! <= 2 ? '#7050b0' : d.gut_vs_logic! >= 4 ? '#b8892a' : '#8a9478') : '#1e2a1a'
+                      }} />
+                    ))}
+                  </div>
+                  <span className="text-xs" style={{ color: '#b8892a' }}>논리</span>
+                </div>
+              </Row>
+            )}
+
+            {d.time_pressure != null && (
+              <Row label="시간 압박" color="#8a9478">
+                <span style={{ color: d.time_pressure === 1 ? '#8aad7a' : d.time_pressure === 2 ? '#c4903e' : '#c44040' }}>
+                  {d.time_pressure === 1 ? '충분함' : d.time_pressure === 2 ? '빠듯함' : '급박함'}
+                </span>
+              </Row>
+            )}
+
             {d.reason && (
               <Row label="선택 이유" color="#8a9478">
                 <p className="leading-relaxed" style={{ color: '#c8bc98' }}>{d.reason}</p>

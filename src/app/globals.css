@@ -24,3 +24,51 @@ input, textarea, select {
   color-scheme: dark;
   font-family: var(--font-geist-sans);
 }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 16px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(to right,
+    #7050b0,
+    var(--fill-color, #b8892a) var(--progress, 0%),
+    #1e2a1a var(--progress, 0%),
+    #1e2a1a
+  );
+  height: 4px;
+  border-radius: 2px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-top: -6px;
+  background: var(--thumb-color, #8a7898);
+  border: 2px solid rgba(8, 12, 7, 0.6);
+  transition: background 0.15s;
+}
+input[type="range"]::-moz-range-track {
+  background: linear-gradient(to right,
+    #7050b0,
+    var(--fill-color, #b8892a) var(--progress, 0%),
+    #1e2a1a var(--progress, 0%),
+    #1e2a1a
+  );
+  height: 4px;
+  border-radius: 2px;
+  border: none;
+}
+input[type="range"]::-moz-range-thumb {
+  appearance: none;
+  border: 2px solid rgba(8, 12, 7, 0.6);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--thumb-color, #8a7898);
+  transition: background 0.15s;
+}

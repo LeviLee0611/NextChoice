@@ -18,6 +18,15 @@ const inputStyle = {
   color: '#e8dfc8',
 }
 
+// 1=violet(신비), 10=amber gold(확신) — smooth interpolation
+function confidenceColor(value: number): string {
+  const t = (value - 1) / 9
+  const r = Math.round(112 + t * 72)  // 112 → 184
+  const g = Math.round(80 + t * 57)   // 80  → 137
+  const b = Math.round(176 - t * 134) // 176 → 42
+  return `rgb(${r},${g},${b})`
+}
+
 function Label({ children, color = '#d4c9a8' }: { children: React.ReactNode; color?: string }) {
   return (
     <label className="block text-xs font-semibold tracking-widest uppercase mb-2" style={{ color }}>
@@ -41,6 +50,11 @@ function TextInput({ name, required, placeholder, type = 'text' }: {
       onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
     />
   )
+}
+
+function timePressureColor(value: number): string {
+  const t = (value - 1) / 2
+  return `rgb(${Math.round(112 + t * 72)},${Math.round(80 + t * 57)},${Math.round(176 - t * 134)})`
 }
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'] as const
@@ -70,7 +84,10 @@ export default function NewDecisionForm() {
           <h1 className="text-2xl mb-4" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
             결정을 기록하다
           </h1>
-          <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
+          <div className="w-20 h-px mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
+          <p className="text-xs italic" style={{ color: '#5a6a50' }}>
+            지금의 감정이 아닌, 6개월 후의 내가 어떻게 볼지 생각하며 적어보세요
+          </p>
         </div>
 
         {/* Form Card */}
@@ -258,7 +275,7 @@ export default function NewDecisionForm() {
           <div>
             <Label color="#8a9478">
               확신도{' '}
-              <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: '#d4a84b' }}>
+              <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: confidenceColor(confidence) }}>
                 {confidence}
               </span>
               <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}> / 10</span>
@@ -270,11 +287,79 @@ export default function NewDecisionForm() {
               max={10}
               value={confidence}
               onChange={e => setConfidence(Number(e.target.value))}
-              className="w-full accent-[#b8892a]"
+              className="w-full"
+              style={{
+                '--progress': `${((confidence - 1) / 9) * 100}%`,
+                '--fill-color': confidenceColor(confidence),
+                '--thumb-color': confidenceColor(confidence),
+              } as React.CSSProperties}
             />
-            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#5a6a50' }}>
-              <span>반신반의</span>
-              <span>완전한 확신</span>
+            <div className="flex justify-between text-xs mt-1.5 font-medium">
+              <span style={{ color: confidenceColor(1) }}>불확실</span>
+              <span style={{ color: '#8a9478' }}>반신반의</span>
+              <span style={{ color: confidenceColor(10) }}>확신</span>
+            </div>
+          </div>
+
+          {/* 직감 vs 논리 */}
+          <div>
+            <Label color="#8a9478">
+              이 선택, 어떻게 내렸나요{' '}
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
+            </Label>
+            <input
+              type="range"
+              name="gut_vs_logic"
+              min={1}
+              max={5}
+              defaultValue={3}
+              className="w-full"
+              style={{ '--progress': '50%', '--fill-color': '#8a9478', '--thumb-color': '#8a9478' } as React.CSSProperties}
+              onChange={e => {
+                const t = (Number(e.target.value) - 1) / 4
+                const color = `rgb(${Math.round(112 + t * 72)},${Math.round(144 - t * 16)},${Math.round(160 - t * 118)})`
+                e.currentTarget.style.setProperty('--progress', `${t * 100}%`)
+                e.currentTarget.style.setProperty('--fill-color', color)
+                e.currentTarget.style.setProperty('--thumb-color', color)
+              }}
+            />
+            <div className="flex justify-between text-xs mt-1.5 font-medium">
+              <span style={{ color: '#7050b0' }}>직감</span>
+              <span style={{ color: '#8a9478' }}>반반</span>
+              <span style={{ color: '#b8892a' }}>논리</span>
+            </div>
+          </div>
+
+          {/* 시간 압박 */}
+          <div>
+            <Label color="#8a9478">
+              결정할 시간이 얼마나 있었나요{' '}
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
+            </Label>
+            <input
+              type="range"
+              name="time_pressure"
+              min={1}
+              max={3}
+              defaultValue={1}
+              className="w-full"
+              style={{
+                '--progress': '0%',
+                '--fill-color': timePressureColor(1),
+                '--thumb-color': timePressureColor(1),
+              } as React.CSSProperties}
+              onChange={e => {
+                const v = Number(e.target.value)
+                const color = timePressureColor(v)
+                e.currentTarget.style.setProperty('--progress', `${((v - 1) / 2) * 100}%`)
+                e.currentTarget.style.setProperty('--fill-color', color)
+                e.currentTarget.style.setProperty('--thumb-color', color)
+              }}
+            />
+            <div className="flex justify-between text-xs mt-1.5 font-medium">
+              <span style={{ color: timePressureColor(1) }}>충분함</span>
+              <span style={{ color: '#8a9478' }}>빠듯함</span>
+              <span style={{ color: timePressureColor(3) }}>급박함</span>
             </div>
           </div>
 

@@ -15,6 +15,14 @@ const CATEGORY_COLORS: Record<string, string> = {
   '기타':   '#8a9478',
 }
 
+const IMPORTANCE_ACCENT: Record<number, string> = {
+  1: '#3d5235',
+  2: '#2d5a48',
+  3: '#6a4e1a',
+  4: '#7a3a1a',
+  5: '#8a2020',
+}
+
 type SearchParams = { category?: string; reviewed?: string; sort?: string }
 
 export default async function DecisionsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -110,58 +118,57 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
             const hasReview = decision.decision_reviews?.length > 0
             const reviewOverdue = !hasReview && decision.review_date && new Date(decision.review_date) <= new Date()
 
+            const accentColor = IMPORTANCE_ACCENT[decision.importance_level] ?? '#2d3e28'
+            const chosenText = decision.chosen_option === 'A' ? decision.option_a
+              : decision.chosen_option === 'B' ? decision.option_b
+              : decision.chosen_option === 'C' ? (decision.option_c ?? '')
+              : (decision.option_d ?? '')
+
             return (
               <Link
                 key={decision.id}
                 href={`/decisions/${decision.id}`}
-                className="block rounded-xl border border-[#2d3e28] hover:border-[#4a5e3a] p-5 transition-colors"
-                style={{ background: '#0f1a0d' }}
+                className="block rounded-xl border hover:border-[#4a5e3a] transition-colors overflow-hidden"
+                style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate mb-2" style={{ color: '#e8dfc8' }}>
-                      {decision.title}
-                    </p>
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className="text-xs font-semibold" style={{ color: catColor }}>
+                <div className="flex">
+                  {/* 중요도 컬러 액센트 */}
+                  <div className="w-1 shrink-0" style={{ background: accentColor }} />
+
+                  <div className="flex-1 p-4">
+                    {/* 상단: 카테고리 + 날짜 */}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: catColor }}>
                         {decision.category}
                       </span>
-                      <span style={{ color: '#2d3e28' }}>·</span>
-                      <span className="text-xs" style={{ color: '#8a9478' }}>
-                        {imp.emoji} {imp.label}
+                      <span className="text-[11px]" style={{ color: '#4a5a3a' }}>{date}</span>
+                    </div>
+
+                    {/* 제목 */}
+                    <p className="text-sm font-medium mb-3 leading-snug" style={{ color: '#e8dfc8' }}>
+                      {decision.title}
+                    </p>
+
+                    {/* 하단: 선택지 + 상태 */}
+                    <div className="flex items-center justify-between">
+                      <span
+                        className="text-xs px-2.5 py-1 rounded-lg truncate max-w-[60%]"
+                        style={{ background: '#141c12', border: '1px solid #2d3e28', color: '#a09060' }}
+                      >
+                        {imp.emoji} {chosenText}
                       </span>
-                      <span style={{ color: '#2d3e28' }}>·</span>
-                      <span className="text-xs" style={{ color: '#8a9478' }}>
-                        {date}
-                      </span>
+                      {hasReview ? (
+                        <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6b8f5e' }}>
+                          ✓ 리뷰 완료
+                        </span>
+                      ) : reviewOverdue ? (
+                        <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#c4903e' }}>
+                          ✦ 리뷰할 시간
+                        </span>
+                      ) : null}
                     </div>
                   </div>
-
-                  <div className="flex flex-col items-end gap-2 shrink-0">
-                    <span
-                      className="text-xs font-medium px-2.5 py-1 rounded-lg"
-                      style={{ background: '#141c12', border: '1px solid #2d3e28', color: '#a09060' }}
-                    >
-                      {decision.chosen_option === 'A' ? decision.option_a
-                        : decision.chosen_option === 'B' ? decision.option_b
-                        : decision.chosen_option === 'C' ? (decision.option_c ?? '')
-                        : (decision.option_d ?? '')}
-                    </span>
-                    {hasReview && (
-                      <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6b8f5e' }}>
-                        ✓ 리뷰 완료
-                      </span>
-                    )}
-                  </div>
                 </div>
-
-                {reviewOverdue && (
-                  <div className="mt-3 pt-3 border-t" style={{ borderColor: '#1e2a1a' }}>
-                    <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: '#c4903e' }}>
-                      ✦ 리뷰할 시간이에요
-                    </span>
-                  </div>
-                )}
               </Link>
             )
           })}

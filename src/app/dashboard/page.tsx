@@ -139,24 +139,35 @@ export default async function DashboardPage() {
                 ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10
                 : null
               const isLast = i === categoryStats.length - 1
+              const catColor = CATEGORY_COLORS[cat] ?? '#8a9478'
               return (
                 <div
                   key={cat}
-                  className="flex items-center justify-between px-5 py-3.5"
+                  className="px-5 py-4"
                   style={{ borderBottom: isLast ? 'none' : '1px solid #1e2a1a' }}
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium" style={{ color: CATEGORY_COLORS[cat] ?? '#8a9478' }}>
-                      {cat}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-sm font-medium" style={{ color: catColor }}>
+                        {cat}
+                      </span>
+                      <span className="text-xs" style={{ color: '#4a5a3a' }}>{count}개</span>
+                    </div>
+                    <span
+                      className="text-sm font-semibold"
+                      style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#3a4a30' }}
+                    >
+                      {avg ? `${avg} / 10` : '—'}
                     </span>
-                    <span className="text-xs" style={{ color: '#5a6a50' }}>{count}개</span>
                   </div>
-                  <span
-                    className="text-sm font-semibold"
-                    style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#5a6a50' }}
-                  >
-                    {avg ?? '—'}
-                  </span>
+                  {avg && (
+                    <div className="w-full rounded-full h-1" style={{ background: '#1e2a1a' }}>
+                      <div
+                        className="h-1 rounded-full transition-all"
+                        style={{ width: `${(avg / 10) * 100}%`, background: satisfactionColor(avg) }}
+                      />
+                    </div>
+                  )}
                 </div>
               )
             })}
