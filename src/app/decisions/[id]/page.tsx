@@ -166,7 +166,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
             {d.time_pressure != null && (
               <Row label="시간 압박" color="#8a9478">
                 <span style={{ color: d.time_pressure === 1 ? '#8aad7a' : d.time_pressure === 2 ? '#c4903e' : '#c44040' }}>
-                  {d.time_pressure === 1 ? '충분함' : d.time_pressure === 2 ? '빠듯함' : '급박함'}
+                  {d.time_pressure === 1 ? '여유로움' : d.time_pressure === 2 ? '적당함' : '빠듯함'}
                 </span>
               </Row>
             )}

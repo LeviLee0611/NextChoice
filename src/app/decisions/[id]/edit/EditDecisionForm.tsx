@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { updateDecision } from '../../actions'
 import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Decision } from '@/types/decision'
+import DatePicker from '@/components/DatePicker'
 
 const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
   1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },
@@ -358,9 +359,9 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
               }}
             />
             <div className="flex justify-between text-xs mt-1.5 font-medium">
-              <span style={{ color: timePressureColor(1) }}>충분함</span>
-              <span style={{ color: '#8a9478' }}>빠듯함</span>
-              <span style={{ color: timePressureColor(3) }}>급박함</span>
+              <span style={{ color: timePressureColor(1) }}>여유로움</span>
+              <span style={{ color: '#8a9478' }}>적당함</span>
+              <span style={{ color: timePressureColor(3) }}>빠듯함</span>
             </div>
           </div>
 
@@ -370,7 +371,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
               리뷰해야 하는 날{' '}
               <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>
-            <TextInput name="review_date" type="date" defaultValue={decision.review_date ?? ''} />
+            <DatePicker name="review_date" defaultValue={decision.review_date} />
           </div>
 
           <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, #2d3e28, transparent)' }} />

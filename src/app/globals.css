@@ -73,23 +73,165 @@ input[type="range"]::-moz-range-thumb {
   transition: background 0.15s;
 }
 
-input[type="date"] {
-  color-scheme: dark;
+/* DatePicker wrapper */
+.react-datepicker-wrapper {
+  display: block;
+  width: 100%;
 }
-input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(10deg);
-  opacity: 0.55;
-  transition: opacity 0.15s;
+.react-datepicker__input-container {
+  display: block;
+  width: 100%;
 }
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 0.9;
+
+/* Calendar popup */
+.nc-popper {
+  z-index: 9999;
 }
-input[type="date"]::-webkit-datetime-edit-year-field:focus,
-input[type="date"]::-webkit-datetime-edit-month-field:focus,
-input[type="date"]::-webkit-datetime-edit-day-field:focus {
-  background: rgba(184, 137, 42, 0.25);
-  border-radius: 2px;
+.nc-calendar.react-datepicker {
+  background: #0d1a0b;
+  border: 1px solid #2d3e28;
+  border-radius: 1.2rem;
+  font-family: var(--font-geist-sans);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(184,137,42,0.08);
+  overflow: hidden;
+  padding: 0;
+  width: 280px;
+}
+
+/* Custom header */
+.nc-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #1e2a1a;
+}
+.nc-cal-title {
   color: #d4a84b;
-  outline: none;
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
+.nc-cal-group {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+.nc-cal-num {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.nc-cal-unit {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b8892a;
+}
+.nc-cal-nav {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  color: #5a6a50;
+  font-size: 0.85rem;
+  transition: background 0.15s, color 0.15s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.nc-cal-nav:hover:not(:disabled) {
+  background: rgba(184,137,42,0.12);
+  color: #d4a84b;
+}
+.nc-cal-nav:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+/* Header (for day names) */
+.nc-calendar .react-datepicker__header {
+  background: transparent;
+  border-bottom: none;
+  padding: 0;
+}
+.nc-calendar .react-datepicker__day-names {
+  display: flex;
+  justify-content: space-around;
+  padding: 4px 12px 8px;
+  margin: 0;
+}
+.nc-calendar .react-datepicker__day-name {
+  color: #3a4a30;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: 32px;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Days grid */
+.nc-calendar .react-datepicker__month {
+  margin: 0;
+  padding: 0 12px 12px;
+}
+.nc-calendar .react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+}
+.nc-calendar .react-datepicker__day {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 0.78rem;
+  color: #a89c7a;
+  border-radius: 0.5rem;
+  margin: 1px 0;
+  text-align: center;
+  transition: background 0.12s, color 0.12s;
+  border: 1px solid transparent;
+}
+.nc-calendar .react-datepicker__day:hover {
+  background: rgba(184,137,42,0.15);
+  color: #d4a84b;
+  border-color: rgba(184,137,42,0.3);
+}
+.nc-calendar .react-datepicker__day--selected,
+.nc-calendar .react-datepicker__day--selected:hover {
+  background: rgba(184,137,42,0.22);
+  color: #d4a84b;
+  font-weight: 700;
+  border-color: #b8892a;
+  box-shadow: 0 0 10px rgba(184,137,42,0.25);
+}
+.nc-calendar .react-datepicker__day--keyboard-selected {
+  background: rgba(184,137,42,0.1);
+  color: #d4a84b;
+  border-color: transparent;
+}
+.nc-calendar .react-datepicker__day--today {
+  color: #8aad7a;
+  font-weight: 700;
+  border-color: rgba(138,173,122,0.3);
+}
+.nc-calendar .react-datepicker__day--today.react-datepicker__day--selected {
+  color: #d4a84b;
+}
+.nc-calendar .react-datepicker__day--outside-month {
+  color: #1e2a1a;
+}
+.nc-calendar .react-datepicker__day--disabled {
+  color: #1e2a1a !important;
+  cursor: default;
+}
+.nc-calendar .react-datepicker__day--disabled:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+

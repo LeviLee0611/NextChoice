@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createDecision } from '../actions'
 import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Category } from '@/types/decision'
+import DatePicker from '@/components/DatePicker'
 
 const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
   1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },
@@ -85,8 +86,8 @@ export default function NewDecisionForm() {
             결정을 기록하다
           </h1>
           <div className="w-20 h-px mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
-          <p className="text-xs italic" style={{ color: '#5a6a50' }}>
-            지금의 감정이 아닌, 6개월 후의 내가 어떻게 볼지 생각하며 적어보세요
+          <p className="text-sm italic leading-relaxed" style={{ color: '#a8b898' }}>
+            모든 선택은 미래의 나에게 보내는 편지입니다.<br />훗날의 내게 밑거름이 되는 지금의 현명한 결정을..
           </p>
         </div>
 
@@ -357,9 +358,9 @@ export default function NewDecisionForm() {
               }}
             />
             <div className="flex justify-between text-xs mt-1.5 font-medium">
-              <span style={{ color: timePressureColor(1) }}>충분함</span>
-              <span style={{ color: '#8a9478' }}>빠듯함</span>
-              <span style={{ color: timePressureColor(3) }}>급박함</span>
+              <span style={{ color: timePressureColor(1) }}>여유로움</span>
+              <span style={{ color: '#8a9478' }}>적당함</span>
+              <span style={{ color: timePressureColor(3) }}>빠듯함</span>
             </div>
           </div>
 
@@ -369,7 +370,7 @@ export default function NewDecisionForm() {
               리뷰해야 하는 날{' '}
               <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>
-            <TextInput name="review_date" type="date" />
+            <DatePicker name="review_date" />
           </div>
 
           {/* Divider */}
