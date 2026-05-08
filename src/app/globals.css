@@ -72,3 +72,24 @@ input[type="range"]::-moz-range-thumb {
   background: var(--thumb-color, #8a7898);
   transition: background 0.15s;
 }
+
+input[type="date"] {
+  color-scheme: dark;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(10deg);
+  opacity: 0.55;
+  transition: opacity 0.15s;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.9;
+}
+input[type="date"]::-webkit-datetime-edit-year-field:focus,
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-day-field:focus {
+  background: rgba(184, 137, 42, 0.25);
+  border-radius: 2px;
+  color: #d4a84b;
+  outline: none;
+}

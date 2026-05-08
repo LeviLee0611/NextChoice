@@ -186,7 +186,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
             {reviewDate && (
               <div className="py-4">
                 <p className="text-xs font-semibold tracking-widest uppercase mb-1.5" style={{ color: '#7a9a8a' }}>
-                  리뷰 날짜
+                  리뷰해야 하는 날
                 </p>
                 <p className="text-sm" style={{ color: reviewOverdue ? '#c4903e' : '#e8dfc8' }}>
                   {reviewDate}

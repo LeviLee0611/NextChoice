@@ -367,7 +367,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
           {/* 리뷰 날짜 */}
           <div>
             <Label color="#8a9478">
-              결과를 돌아볼 날{' '}
+              리뷰해야 하는 날{' '}
               <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
             </Label>
             <TextInput name="review_date" type="date" defaultValue={decision.review_date ?? ''} />
