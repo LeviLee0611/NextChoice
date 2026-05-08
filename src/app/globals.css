@@ -36,8 +36,8 @@ input[type="range"]::-webkit-slider-runnable-track {
   background: linear-gradient(to right,
     #7050b0,
     var(--fill-color, #b8892a) var(--progress, 0%),
-    #1e2a1a var(--progress, 0%),
-    #1e2a1a
+    #243420 var(--progress, 0%),
+    #243420
   );
   height: 4px;
   border-radius: 2px;
@@ -56,8 +56,8 @@ input[type="range"]::-moz-range-track {
   background: linear-gradient(to right,
     #7050b0,
     var(--fill-color, #b8892a) var(--progress, 0%),
-    #1e2a1a var(--progress, 0%),
-    #1e2a1a
+    #243420 var(--progress, 0%),
+    #243420
   );
   height: 4px;
   border-radius: 2px;

@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { updateDecision } from '../../actions'
-import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Decision } from '@/types/decision'
+import { IMPORTANCE_LABELS, type ImportanceLevel, type Decision } from '@/types/decision'
 import DatePicker from '@/components/DatePicker'
+import CategorySelect from '@/components/CategorySelect'
 
 const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; text: string; glow: string }> = {
   1: { border: '#3d5235', bg: 'rgba(61,82,53,0.25)',  text: '#8aad7a', glow: 'rgba(61,82,53,0.3)' },
@@ -14,8 +15,8 @@ const IMPORTANCE_COLORS: Record<ImportanceLevel, { border: string; bg: string; t
 }
 
 const inputStyle = {
-  background: '#141c12',
-  border: '1px solid #2d3e28',
+  background: '#162014',
+  border: '1px solid #3d5235',
   color: '#e8dfc8',
 }
 
@@ -34,7 +35,7 @@ function timePressureColor(value: number): string {
 
 function Label({ children, color = '#d4c9a8' }: { children: React.ReactNode; color?: string }) {
   return (
-    <label className="block text-xs font-semibold tracking-widest uppercase mb-2" style={{ color }}>
+    <label className="block text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: color === '#8a9478' ? '#a8ba98' : color }}>
       {children}
     </label>
   )
@@ -108,19 +109,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
           {/* 카테고리 */}
           <div>
             <Label color="#8a9478">카테고리</Label>
-            <select
-              name="category"
-              required
-              defaultValue={decision.category}
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
-              style={inputStyle}
-              onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
-            >
-              {CATEGORIES.map(c => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+            <CategorySelect defaultValue={decision.category} />
           </div>
 
           {/* 중요도 */}
@@ -197,9 +186,9 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
                 type="button"
                 onClick={() => setOptionCount(prev => (prev + 1) as 3 | 4)}
                 className="mt-2 text-xs tracking-widest uppercase transition-colors"
-                style={{ color: '#5a6a50' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#8a9478' }}
-                onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}
+                style={{ color: '#8a9478' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#d4a84b' }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#8a9478' }}
               >
                 + 선택지 추가
               </button>

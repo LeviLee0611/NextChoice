@@ -28,9 +28,8 @@ export default function Navbar() {
         backdropFilter: 'blur(12px)',
       }}
     >
-      <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-
-        {/* Logo */}
+      {/* Mobile layout */}
+      <div className="flex md:hidden w-full px-4 h-14 items-center justify-between">
         <Link
           href="/dashboard"
           className="text-xl"
@@ -38,14 +37,12 @@ export default function Navbar() {
         >
           NextChoice
         </Link>
-
-        {/* Nav links */}
-        <nav className="flex items-center gap-1">
+        <div className="flex items-center gap-1">
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
           <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
           <Link
             href="/decisions/new"
-            className="ml-2 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-colors"
+            className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors"
             style={{
               background: pathname === '/decisions/new' ? '#1a2416' : '#141c12',
               border: `1px solid ${pathname === '/decisions/new' ? '#b8892a' : '#6a4e1a'}`,
@@ -64,7 +61,51 @@ export default function Navbar() {
           >
             {loggingOut ? '…' : '로그아웃'}
           </button>
-        </nav>
+        </div>
+      </div>
+
+      {/* Desktop layout */}
+      <div className="hidden md:flex w-full px-6 h-14 relative items-center">
+
+        {/* Logo — right-aligned in left half */}
+        <div className="flex-1 flex justify-end pr-80">
+          <Link
+            href="/dashboard"
+            className="text-xl"
+            style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 500, letterSpacing: '0.04em', color: '#d4a84b' }}
+          >
+            NextChoice
+          </Link>
+        </div>
+
+        {/* Nav — left-aligned in right half */}
+        <div className="flex-1 flex items-center gap-1 pl-24">
+          <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
+          <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
+          <Link
+            href="/decisions/new"
+            className="ml-1 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-colors"
+            style={{
+              background: pathname === '/decisions/new' ? '#1a2416' : '#141c12',
+              border: `1px solid ${pathname === '/decisions/new' ? '#b8892a' : '#6a4e1a'}`,
+              color: '#d4a84b',
+            }}
+          >
+            + 새 결정
+          </Link>
+        </div>
+
+        {/* Logout — absolutely pinned to far right */}
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="absolute right-6 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
+          style={{ color: loggingOut ? '#5a6a50' : '#8a9478' }}
+          onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#8a9478' }}
+        >
+          {loggingOut ? '…' : '로그아웃'}
+        </button>
 
       </div>
     </header>
