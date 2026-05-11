@@ -33,13 +33,14 @@ export default function Navbar() {
         <Link
           href="/dashboard"
           className="text-xl"
-          style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 500, letterSpacing: '0.04em', color: '#d4a84b' }}
+          style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 600, letterSpacing: '0.04em', color: '#d4a84b' }}
         >
           NextChoice
         </Link>
         <div className="flex items-center gap-1">
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
           <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
+          <NavLink href="/insights" label="AI 인사이트" pathname={pathname} />
           <Link
             href="/decisions/new"
             className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors"
@@ -67,21 +68,20 @@ export default function Navbar() {
       {/* Desktop layout */}
       <div className="hidden md:flex w-full px-6 h-14 relative items-center">
 
-        {/* Logo — right-aligned in left half */}
-        <div className="flex-1 flex justify-end pr-80">
-          <Link
-            href="/dashboard"
-            className="text-xl"
-            style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 500, letterSpacing: '0.04em', color: '#d4a84b' }}
-          >
-            NextChoice
-          </Link>
-        </div>
+        {/* Logo — far left */}
+        <Link
+          href="/dashboard"
+          className="text-3xl mr-6"
+          style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 600, letterSpacing: '0.04em', color: '#d4a84b' }}
+        >
+          NextChoice
+        </Link>
 
-        {/* Nav — left-aligned in right half */}
-        <div className="flex-1 flex items-center gap-1 pl-24">
+        {/* Nav — centered */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
           <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
+          <NavLink href="/insights" label="AI 인사이트" pathname={pathname} />
           <Link
             href="/decisions/new"
             className="ml-1 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-colors"
@@ -117,7 +117,7 @@ function NavLink({ href, label, pathname }: { href: string; label: string; pathn
   return (
     <Link
       href={href}
-      className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
+      className="text-sm font-medium tracking-widest uppercase px-5 py-2 rounded-lg transition-colors"
       style={{
         color: active ? '#d4a84b' : '#9aaa8a',
         background: active ? 'rgba(184,137,42,0.08)' : 'transparent',
