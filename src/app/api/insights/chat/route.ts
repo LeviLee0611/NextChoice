@@ -30,17 +30,26 @@ export async function POST(req: NextRequest) {
     ? `이 사용자의 과거 의사결정 데이터:\n${buildInsightPrompt(ctx)}`
     : '아직 충분한 결정 데이터가 없습니다.'
 
-  const systemPrompt = `당신은 NextChoice의 개인 결정 코치입니다.
+  const systemPrompt = `당신은 NextChoice의 결정 코치입니다. 사용자가 중요한 결정을 앞두고 있을 때 도움을 줍니다.
 
 ${ctxStr}
 
 역할:
-- 사용자가 고민하는 결정에 과거 패턴을 연결해 구체적인 조언을 해주세요
-- 수치를 언급할 때는 실제 데이터를 인용하세요 (예: "커리어 결정에서 평균 만족도가 8.1이었으니...")
-- 결정을 내릴 때 고려할 점과 주의할 점을 짚어주세요
-- 답변은 2-3문단, 한국어로
+- 사용자의 고민을 듣고 구체적인 시각과 선택지를 제시해주세요
+- 과거 데이터가 있다면 연결해서 언급하세요 ("이전에 커리어 결정에서 만족도가 높았으니...")
+- 딱딱한 분석보다 친구처럼 솔직하게 이야기해주세요
+- 답변 마지막에는 항상 이렇게 제안하세요: "이 결정을 NextChoice에 기록해볼까요? '네'라고 하시면 초안을 만들어드릴게요."
 
-마지막 답변에서는 자연스럽게 이 결정을 NextChoice에 기록해보길 권유하세요.`
+형식 규칙:
+- ** ** 같은 마크다운 절대 사용 금지
+- 강조는 문장 구조나 줄바꿈으로 표현하세요
+- 자연스러운 대화체로만 작성하세요
+
+사용자가 '네', '응', '좋아', 'yes' 등 긍정 응답을 하면:
+반드시 아래 형식의 JSON만 출력하고 다른 텍스트는 절대 붙이지 마세요:
+{"draft":true,"title":"결정 제목","category":"커리어|관계|재정|건강|생활|기타","option_a":"선택지 A","option_b":"선택지 B","option_c":"선택지 C(없으면 null)","context":"배경 설명","importance_level":3}
+
+JSON 외 텍스트 금지. 카테고리는 반드시 위 6개 중 하나.`
 
   const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -51,7 +60,7 @@ ${ctxStr}
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 600,
+      max_tokens: 1200,
       stream: true,
       system: systemPrompt,
       messages,

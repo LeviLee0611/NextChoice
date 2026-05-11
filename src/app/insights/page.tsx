@@ -3,23 +3,23 @@ export const runtime = 'edge'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import InsightsPanel from '@/components/InsightsPanel'
 import ChatSection from './ChatSection'
 import CompareSection from './CompareSection'
+import SessionSidebar from './SessionSidebar'
 
-type Tab = 'analyze' | 'compare' | 'chat'
-type SearchParams = { tab?: string }
+type Tab = 'chat' | 'compare'
+type SearchParams = { tab?: string; session?: string }
 
 const TAB_LABELS: Record<Tab, string> = {
-  analyze: '분석',
-  compare: '기간 비교',
   chat: '결정 코치',
+  compare: '기간 비교',
 }
 
 export default async function InsightsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const raw = await searchParams
-  const tab: Tab = (['analyze', 'compare', 'chat'] as const).includes(raw.tab as Tab)
-    ? (raw.tab as Tab) : 'analyze'
+  const tab: Tab = (['chat', 'compare'] as const).includes(raw.tab as Tab)
+    ? (raw.tab as Tab) : 'chat'
+  const sessionId = raw.session ?? null
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -27,21 +27,21 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="min-h-screen px-4 py-16">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-5xl mx-auto">
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs tracking-[0.3em] uppercase mb-2" style={{ color: '#8a9478' }}>Insights</p>
-          <h1 className="text-2xl" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
-            AI 인사이트
+          <h1 className="text-2xl mb-2" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
+            AI Choice 코치
           </h1>
+          <p className="text-sm" style={{ color: '#8a9a78' }}>더 현명한 선택을 위한 AI</p>
         </div>
 
         <div className="w-full h-px mb-8" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
 
         {/* Tab navigation */}
         <div className="flex gap-1.5 mb-8">
-          {(['analyze', 'compare', 'chat'] as Tab[]).map(t => {
+          {(['chat', 'compare'] as Tab[]).map(t => {
             const isActive = tab === t
             return (
               <Link
@@ -60,18 +60,18 @@ export default async function InsightsPage({ searchParams }: { searchParams: Pro
           })}
         </div>
 
-        {/* 분석 탭 */}
-        {tab === 'analyze' && (
-          <InsightsPanel />
+        {/* 결정 코치 탭 — sidebar fixed left, chat centered */}
+        {tab === 'chat' && (
+          <>
+            <SessionSidebar sessionId={sessionId} />
+            <div className="max-w-2xl mx-auto">
+              <ChatSection sessionId={sessionId} />
+            </div>
+          </>
         )}
 
         {/* 기간 비교 탭 */}
         {tab === 'compare' && <CompareSection />}
-
-        {/* 결정 코치 탭 */}
-        {tab === 'chat' && (
-          <ChatSection />
-        )}
 
       </div>
     </div>

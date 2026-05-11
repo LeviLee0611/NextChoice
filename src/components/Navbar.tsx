@@ -5,6 +5,47 @@ import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
+function DecisionsDropdown({ pathname }: { pathname: string }) {
+  const [open, setOpen] = useState(false)
+  const active = pathname === '/decisions' || pathname.startsWith('/decisions/')
+
+  return (
+    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button
+        className="text-sm font-medium tracking-widest uppercase px-5 py-2 rounded-lg transition-colors"
+        style={{
+          color: active ? '#d4a84b' : '#9aaa8a',
+          background: active ? 'rgba(184,137,42,0.08)' : 'transparent',
+        }}
+      >
+        결정 목록
+      </button>
+
+      {open && (
+        <div
+          className="absolute top-full left-0 mt-1 rounded-xl overflow-hidden z-50 min-w-[140px]"
+          style={{ background: '#0d150b', border: '1px solid #2d3e28', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
+        >
+          <Link
+            href="/decisions"
+            className="flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase transition-colors hover:bg-[#141c12]"
+            style={{ color: '#9aaa8a', borderBottom: '1px solid #1a2418' }}
+          >
+            나의 결정들
+          </Link>
+          <Link
+            href="/decisions?reviewed=no"
+            className="flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase transition-colors hover:bg-[#141c12]"
+            style={{ color: '#c4903e' }}
+          >
+            ✦ 리뷰 필요
+          </Link>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
@@ -40,7 +81,7 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
           <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
-          <NavLink href="/insights" label="AI 인사이트" pathname={pathname} />
+          <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
           <Link
             href="/decisions/new"
             className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors"
@@ -80,8 +121,8 @@ export default function Navbar() {
         {/* Nav — centered */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
-          <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
-          <NavLink href="/insights" label="AI 인사이트" pathname={pathname} />
+          <DecisionsDropdown pathname={pathname} />
+          <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
           <Link
             href="/decisions/new"
             className="ml-1 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-colors"
@@ -112,12 +153,12 @@ export default function Navbar() {
   )
 }
 
-function NavLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
+function NavLink({ href, label, pathname, noUppercase }: { href: string; label: string; pathname: string; noUppercase?: boolean }) {
   const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
   return (
     <Link
       href={href}
-      className="text-sm font-medium tracking-widest uppercase px-5 py-2 rounded-lg transition-colors"
+      className={`text-sm font-medium tracking-widest px-5 py-2 rounded-lg transition-colors ${noUppercase ? '' : 'uppercase'}`}
       style={{
         color: active ? '#d4a84b' : '#9aaa8a',
         background: active ? 'rgba(184,137,42,0.08)' : 'transparent',

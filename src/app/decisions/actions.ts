@@ -54,7 +54,24 @@ export async function createDecision(formData: FormData) {
 
   const fields = parseDecisionFields(formData)
 
-  const { error } = await supabase.from('decisions').insert({ user_id: user.id, ...fields })
+  const rawSessionId = (formData.get('chat_session_id') as string) || null
+  const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  let chatSessionId: string | null = null
+  if (rawSessionId && uuidRe.test(rawSessionId)) {
+    const { data: ownedSession } = await supabase
+      .from('chat_sessions')
+      .select('id')
+      .eq('id', rawSessionId)
+      .eq('user_id', user.id)
+      .single()
+    if (ownedSession) chatSessionId = rawSessionId
+  }
+
+  const { error } = await supabase.from('decisions').insert({
+    user_id: user.id,
+    ...fields,
+    ...(chatSessionId ? { chat_session_id: chatSessionId } : {}),
+  })
   if (error) throw new Error(error.message)
 
   redirect('/decisions')

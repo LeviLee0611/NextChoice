@@ -30,16 +30,16 @@ function Row({ label, aVal, bVal, unit = '', isSatisfaction = false }: {
   unit?: string
   isSatisfaction?: boolean
 }) {
-  const aColor = aVal != null && isSatisfaction ? satisfactionColor(aVal) : '#5a6a50'
+  const aColor = aVal != null && isSatisfaction ? satisfactionColor(aVal) : '#a8b898'
   const bColor = bVal != null && isSatisfaction ? satisfactionColor(bVal) : '#d4a84b'
   return (
-    <div className="flex items-center px-5 py-3.5" style={{ borderBottom: '1px solid #1a2418' }}>
-      <span className="text-xs w-24 shrink-0 font-semibold tracking-widest uppercase" style={{ color: '#4a5a3a' }}>{label}</span>
-      <span className="flex-1 text-sm font-semibold text-right" style={{ fontFamily: 'var(--font-cinzel)', color: aColor }}>
+    <div className="flex items-center px-5 py-4" style={{ borderBottom: '1px solid #1a2418' }}>
+      <span className="text-sm w-24 shrink-0 font-semibold tracking-widest uppercase" style={{ color: '#6a7a60' }}>{label}</span>
+      <span className="flex-1 text-xl font-semibold text-right" style={{ fontFamily: 'var(--font-cinzel)', color: aColor }}>
         {aVal != null ? `${aVal}${unit}` : '—'}
       </span>
-      <span className="w-16 text-center text-xs"><Delta a={aVal} b={bVal} unit={unit} /></span>
-      <span className="flex-1 text-sm font-semibold text-left" style={{ fontFamily: 'var(--font-cinzel)', color: bColor }}>
+      <span className="w-16 text-center text-sm"><Delta a={aVal} b={bVal} unit={unit} /></span>
+      <span className="flex-1 text-xl font-semibold text-left" style={{ fontFamily: 'var(--font-cinzel)', color: bColor }}>
         {bVal != null ? `${bVal}${unit}` : '—'}
       </span>
     </div>
@@ -95,18 +95,18 @@ export default function CompareSection() {
       <div className="rounded-xl border p-5" style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <p className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: '#4a5a3a' }}>기간 A (이전)</p>
+            <p className="text-sm font-semibold tracking-widest uppercase mb-2" style={{ color: '#8a9a78' }}>기간 A (이전)</p>
             <div className="flex items-center gap-2 flex-wrap">
               <input type="date" value={aFrom} onChange={e => setAFrom(e.target.value)} style={inputStyle} />
-              <span style={{ color: '#3a4a30', fontSize: '0.75rem' }}>~</span>
+              <span style={{ color: '#6a7a60', fontSize: '0.85rem' }}>~</span>
               <input type="date" value={aTo} onChange={e => setATo(e.target.value)} style={inputStyle} />
             </div>
           </div>
           <div>
-            <p className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: '#8a9478' }}>기간 B (현재)</p>
+            <p className="text-sm font-semibold tracking-widest uppercase mb-2" style={{ color: '#c4b87a' }}>기간 B (현재)</p>
             <div className="flex items-center gap-2 flex-wrap">
               <input type="date" value={bFrom} onChange={e => setBFrom(e.target.value)} style={inputStyle} />
-              <span style={{ color: '#3a4a30', fontSize: '0.75rem' }}>~</span>
+              <span style={{ color: '#6a7a60', fontSize: '0.85rem' }}>~</span>
               <input type="date" value={bTo} onChange={e => setBTo(e.target.value)} style={inputStyle} />
             </div>
           </div>
@@ -129,10 +129,10 @@ export default function CompareSection() {
         <div className="rounded-xl border overflow-hidden" style={{ background: '#0f1a0d', borderColor: '#2d3e28' }}>
           {/* Header */}
           <div className="flex items-center px-5 py-3 border-b" style={{ borderColor: '#1a2418' }}>
-            <span className="text-[10px] font-semibold tracking-widest uppercase w-24 shrink-0" style={{ color: '#3a4a30' }}>항목</span>
-            <span className="flex-1 text-[10px] font-semibold tracking-widest uppercase text-right" style={{ color: '#5a6a50' }}>기간 A</span>
-            <span className="w-16 text-center text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#3a4a30' }}>변화</span>
-            <span className="flex-1 text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#8a9478' }}>기간 B</span>
+            <span className="text-xs font-semibold tracking-widest uppercase w-24 shrink-0" style={{ color: '#5a6a50' }}>항목</span>
+            <span className="flex-1 text-xs font-semibold tracking-widest uppercase text-right" style={{ color: '#6a7a60' }}>기간 A</span>
+            <span className="w-16 text-center text-xs font-semibold tracking-widest uppercase" style={{ color: '#4a5a3a' }}>변화</span>
+            <span className="flex-1 text-xs font-semibold tracking-widest uppercase" style={{ color: '#8a9478' }}>기간 B</span>
           </div>
 
           <Row label="결정 수" aVal={result.a.total} bVal={result.b.total} />
@@ -141,11 +141,11 @@ export default function CompareSection() {
           <Row label="재선택" aVal={result.a.wouldChoosePct} bVal={result.b.wouldChoosePct} unit="%" />
 
           {/* Top category row */}
-          <div className="flex items-center px-5 py-3.5">
-            <span className="text-xs w-24 shrink-0 font-semibold tracking-widest uppercase" style={{ color: '#4a5a3a' }}>주요 카테고리</span>
-            <span className="flex-1 text-sm text-right" style={{ color: '#5a6a50' }}>{result.a.topCategory ?? '—'}</span>
-            <span className="w-16 text-center text-xs" style={{ color: '#3a4a30' }}>→</span>
-            <span className="flex-1 text-sm font-medium" style={{ color: '#d4a84b' }}>{result.b.topCategory ?? '—'}</span>
+          <div className="flex items-center px-5 py-4">
+            <span className="text-sm w-24 shrink-0 font-semibold tracking-widest uppercase" style={{ color: '#6a7a60' }}>주요 카테고리</span>
+            <span className="flex-1 text-base text-right font-medium" style={{ color: '#7a8a70' }}>{result.a.topCategory ?? '—'}</span>
+            <span className="w-16 text-center text-sm" style={{ color: '#4a5a3a' }}>→</span>
+            <span className="flex-1 text-base font-semibold" style={{ color: '#d4a84b' }}>{result.b.topCategory ?? '—'}</span>
           </div>
         </div>
       )}

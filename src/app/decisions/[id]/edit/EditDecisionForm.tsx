@@ -383,7 +383,7 @@ export default function EditDecisionForm({ decision }: { decision: Decision }) {
               ;(e.currentTarget as HTMLButtonElement).style.background = '#141c12'
             }}
           >
-            수정을 저장하다
+            저장하기
           </button>
         </form>
       </div>

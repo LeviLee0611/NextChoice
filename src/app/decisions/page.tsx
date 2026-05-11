@@ -23,7 +23,9 @@ const IMPORTANCE_ACCENT: Record<number, string> = {
   5: '#8a2020',
 }
 
-type SearchParams = { category?: string; reviewed?: string; sort?: string }
+const PAGE_SIZE = 10
+
+type SearchParams = { category?: string; reviewed?: string; sort?: string; page?: string }
 
 export default async function DecisionsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const raw = await searchParams
@@ -31,10 +33,11 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
     ? raw.category : 'all'
   const reviewed = (['all', 'yes', 'no'] as const).includes(raw.reviewed as never)
     ? raw.reviewed as 'all' | 'yes' | 'no' : 'all'
-  const sort = raw.sort === 'oldest' ? 'oldest' : 'newest'
+  const sort = (['oldest', 'importance'] as const).includes(raw.sort as never)
+    ? raw.sort as 'oldest' | 'importance' : 'newest'
+  const page = Math.max(1, parseInt(raw.page ?? '1') || 1)
 
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
@@ -42,7 +45,9 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
     .from('decisions')
     .select('*, decision_reviews(id)')
     .eq('user_id', user.id)
-    .order('created_at', { ascending: sort === 'oldest' })
+    .order(sort === 'importance' ? 'importance_level' : 'created_at', {
+      ascending: sort === 'oldest',
+    })
 
   if (category !== 'all') query = query.eq('category', category)
 
@@ -51,6 +56,11 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
   let decisions = (queryData ?? []) as (Decision & { decision_reviews: { id: string }[] })[]
   if (reviewed === 'yes') decisions = decisions.filter(d => d.decision_reviews?.length > 0)
   if (reviewed === 'no') decisions = decisions.filter(d => !d.decision_reviews?.length)
+
+  const totalCount = decisions.length
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const paged = decisions.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
     <div className="min-h-screen px-4 py-16">
@@ -83,7 +93,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
             activeCategory={category}
             activeReviewed={reviewed}
             activeSort={sort}
-            total={decisions.length}
+            total={totalCount}
           />
         </Suspense>
 
@@ -109,7 +119,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
 
         {/* Decision list */}
         <div className="space-y-3">
-          {decisions.map(decision => {
+          {paged.map(decision => {
             const imp = IMPORTANCE_LABELS[decision.importance_level as ImportanceLevel]
             const catColor = CATEGORY_COLORS[decision.category] ?? '#8a9478'
             const date = new Date(decision.created_at).toLocaleDateString('ko-KR', {
@@ -173,6 +183,46 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
             )
           })}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            {currentPage > 1 && (
+              <Link
+                href={`/decisions?category=${category}&reviewed=${reviewed}&sort=${sort}&page=${currentPage - 1}`}
+                className="text-xs font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors"
+                style={{ border: '1px solid #2d3e28', color: '#8a9a78' }}
+              >
+                ← 이전
+              </Link>
+            )}
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+              <Link
+                key={p}
+                href={`/decisions?category=${category}&reviewed=${reviewed}&sort=${sort}&page=${p}`}
+                className="text-xs font-semibold tracking-widest px-3 py-1.5 rounded-lg transition-colors"
+                style={{
+                  border: `1px solid ${p === currentPage ? '#b8892a' : '#2d3e28'}`,
+                  background: p === currentPage ? 'rgba(184,137,42,0.12)' : 'transparent',
+                  color: p === currentPage ? '#d4a84b' : '#8a9a78',
+                }}
+              >
+                {p}
+              </Link>
+            ))}
+
+            {currentPage < totalPages && (
+              <Link
+                href={`/decisions?category=${category}&reviewed=${reviewed}&sort=${sort}&page=${currentPage + 1}`}
+                className="text-xs font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors"
+                style={{ border: '1px solid #2d3e28', color: '#8a9a78' }}
+              >
+                다음 →
+              </Link>
+            )}
+          </div>
+        )}
 
       </div>
     </div>

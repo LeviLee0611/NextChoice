@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CATEGORIES } from '@/types/decision'
 
@@ -11,14 +12,20 @@ type Props = {
 }
 
 function Pill({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  const [hovered, setHovered] = useState(false)
   return (
     <button
       onClick={onClick}
-      className="text-[11px] font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="text-[11px] font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg whitespace-nowrap"
       style={{
-        background: active ? 'rgba(184,137,42,0.12)' : 'transparent',
-        border: `1px solid ${active ? '#b8892a' : '#2d3e28'}`,
-        color: active ? '#d4a84b' : '#6a7a60',
+        background: active ? 'rgba(184,137,42,0.12)' : hovered ? 'rgba(184,137,42,0.06)' : 'transparent',
+        border: `1px solid ${active ? '#b8892a' : hovered ? '#4a5e38' : '#2d3e28'}`,
+        color: active ? '#d4a84b' : hovered ? '#b8c8a8' : '#6a7a60',
+        transform: hovered && !active ? 'translateY(-1px)' : 'none',
+        transition: 'all 0.15s ease',
+        cursor: 'pointer',
       }}
     >
       {label}
@@ -56,6 +63,7 @@ export default function FilterBar({ activeCategory, activeReviewed, activeSort, 
         <div className="flex items-center gap-2">
           <Pill label="최신순" active={activeSort === 'newest'} onClick={() => update('sort', 'newest')} />
           <Pill label="오래된순" active={activeSort === 'oldest'} onClick={() => update('sort', 'oldest')} />
+          <Pill label="중요순" active={activeSort === 'importance'} onClick={() => update('sort', 'importance')} />
         </div>
       </div>
 

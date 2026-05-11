@@ -37,8 +37,8 @@ function Label({ children, color = '#d4c9a8' }: { children: React.ReactNode; col
   )
 }
 
-function TextInput({ name, required, placeholder, type = 'text' }: {
-  name: string; required?: boolean; placeholder?: string; type?: string
+function TextInput({ name, required, placeholder, type = 'text', defaultValue }: {
+  name: string; required?: boolean; placeholder?: string; type?: string; defaultValue?: string
 }) {
   return (
     <input
@@ -46,6 +46,7 @@ function TextInput({ name, required, placeholder, type = 'text' }: {
       type={type}
       required={required}
       placeholder={placeholder}
+      defaultValue={defaultValue}
       className="w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
       style={{ ...inputStyle, caretColor: '#d4a84b' }}
       onFocus={e => { e.currentTarget.style.borderColor = '#b8892a' }}
@@ -61,10 +62,15 @@ function timePressureColor(value: number): string {
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'] as const
 
-export default function NewDecisionForm() {
-  const [importance, setImportance] = useState<ImportanceLevel>(3)
+type InitialValues = {
+  title?: string; category?: typeof import('@/types/decision').CATEGORIES[number]; option_a?: string
+  option_b?: string; option_c?: string; importance_level?: 1|2|3|4|5; reason?: string; chatSessionId?: string
+}
+
+export default function NewDecisionForm({ initialValues }: { initialValues?: InitialValues }) {
+  const [importance, setImportance] = useState<ImportanceLevel>(initialValues?.importance_level ?? 3)
   const [confidence, setConfidence] = useState(5)
-  const [optionCount, setOptionCount] = useState<2 | 3 | 4>(2)
+  const [optionCount, setOptionCount] = useState<2 | 3 | 4>(initialValues?.option_c ? 3 : 2)
   const [chosenOption, setChosenOption] = useState<string>('')
 
   function removeLastOption() {
@@ -105,13 +111,13 @@ export default function NewDecisionForm() {
           {/* 제목 */}
           <div>
             <Label>어떤 결정인가요</Label>
-            <TextInput name="title" required placeholder="예: 이직 제안을 수락할까" />
+            <TextInput name="title" required placeholder="예: 이직 제안을 수락할까" defaultValue={initialValues?.title} />
           </div>
 
           {/* 카테고리 */}
           <div>
             <Label color="#8a9478">카테고리</Label>
-            <CategorySelect />
+            <CategorySelect defaultValue={initialValues?.category} />
           </div>
 
           {/* 중요도 */}
@@ -156,14 +162,14 @@ export default function NewDecisionForm() {
               {(['A', 'B'] as const).map(letter => (
                 <div key={letter} className="flex items-center gap-2">
                   <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>{letter}</span>
-                  <TextInput name={`option_${letter.toLowerCase()}`} required placeholder={letter === 'A' ? '예: 이직한다' : '예: 현직 유지'} />
+                  <TextInput name={`option_${letter.toLowerCase()}`} required placeholder={letter === 'A' ? '예: 이직한다' : '예: 현직 유지'} defaultValue={letter === 'A' ? initialValues?.option_a : initialValues?.option_b} />
                 </div>
               ))}
               {/* C — 선택적 */}
               {optionCount >= 3 && (
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold w-4 shrink-0" style={{ color: '#5a6a50' }}>C</span>
-                  <TextInput name="option_c" placeholder="예: 6개월 후 재검토" />
+                  <TextInput name="option_c" placeholder="예: 6개월 후 재검토" defaultValue={initialValues?.option_c} />
                   {optionCount === 3 && (
                     <button type="button" onClick={removeLastOption} className="shrink-0 text-sm px-2 py-1 rounded-lg transition-colors" style={{ color: '#5a6a50' }}
                       onMouseEnter={e => { e.currentTarget.style.color = '#c44040' }}
@@ -236,6 +242,7 @@ export default function NewDecisionForm() {
                 name="reason"
                 rows={3}
                 placeholder="왜 이 선택을 했나요?"
+                defaultValue={initialValues?.reason}
                 className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
                 style={{ ...inputStyle, caretColor: '#d4a84b' }}
                 onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
@@ -362,6 +369,10 @@ export default function NewDecisionForm() {
 
           {/* Divider */}
           <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, #2d3e28, transparent)' }} />
+
+          {initialValues?.chatSessionId && (
+            <input type="hidden" name="chat_session_id" value={initialValues.chatSessionId} />
+          )}
 
           {/* Submit */}
           <button
