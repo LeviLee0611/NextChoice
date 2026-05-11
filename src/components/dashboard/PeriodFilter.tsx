@@ -25,7 +25,7 @@ export default function PeriodFilter({ active }: { active: string }) {
             style={{
               background: isActive ? 'rgba(184,137,42,0.12)' : 'transparent',
               border: `1px solid ${isActive ? '#b8892a' : '#2d3e28'}`,
-              color: isActive ? '#d4a84b' : '#5a6a50',
+              color: isActive ? '#d4a84b' : '#8a9a78',
             }}
           >
             {label}

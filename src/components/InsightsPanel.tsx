@@ -42,9 +42,9 @@ function InsightCollapsible({ text }: { text: string }) {
           <button
             onClick={() => setExpanded(v => !v)}
             className="self-start text-[10px] font-medium tracking-widest uppercase flex items-center gap-1 transition-colors"
-            style={{ color: '#5a6a50' }}
+            style={{ color: '#8a9a78' }}
             onMouseEnter={e => { e.currentTarget.style.color = '#8aad7a' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#5a6a50' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#8a9a78' }}
           >
             {expanded ? '접기 ▴' : '펼치기 ▾'}
           </button>

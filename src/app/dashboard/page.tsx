@@ -125,7 +125,7 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
           <g key={v}>
             <line x1={pad.l} y1={y.toFixed(1)} x2={(pad.l+cw).toFixed(1)} y2={y.toFixed(1)}
               stroke={v === 0 ? '#2a3a28' : '#1a2418'} strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 5 ? '3 4' : undefined} />
-            <text x={(pad.l-8).toFixed(1)} y={(y+4).toFixed(1)} textAnchor="end" fontSize="9" fill="#3a4a30" fontFamily="monospace">{v}</text>
+            <text x={(pad.l-8).toFixed(1)} y={(y+4).toFixed(1)} textAnchor="end" fontSize="11" fill="#7a8a70" fontFamily="monospace">{v}</text>
           </g>
         )
       })}
@@ -146,7 +146,7 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
 
       {/* X-axis labels */}
       {pts.map((p, i) => labelIds.has(i) && (
-        <text key={i} x={p.x.toFixed(1)} y={(H - 8).toFixed(1)} textAnchor="middle" fontSize="9" fill="#4a5a3a">{p.label}</text>
+        <text key={i} x={p.x.toFixed(1)} y={(H - 8).toFixed(1)} textAnchor="middle" fontSize="11" fill="#8a9a78">{p.label}</text>
       ))}
     </svg>
   )
@@ -278,7 +278,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {/* ── Section 2: Trend Chart ─────────────────── */}
           <SectionCard title="만족도 추이" accent="#b8892a">
             <div className="px-5 pt-3 pb-1">
-              <p className="text-[10px] mb-2" style={{ color: '#3a4a30' }}>월별 리뷰 완료된 결정의 평균 만족도 (0–10점)</p>
+              <p className="text-xs mb-2" style={{ color: '#6a7a60' }}>월별 리뷰 완료된 결정의 평균 만족도 (0–10점)</p>
               <SatisfactionChart data={trendData} />
             </div>
           </SectionCard>
@@ -288,8 +288,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <div>
               {/* Column header */}
               <div className="flex items-center justify-between px-5 py-2" style={{ borderBottom: '1px solid #1a2418' }}>
-                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#3a4a30' }}>카테고리</span>
-                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#3a4a30' }}>평균 만족도 /10</span>
+                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6a7a60' }}>카테고리</span>
+                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6a7a60' }}>평균 만족도 /10</span>
               </div>
             {categoryStats.map(({ cat, count, avg }, i) => {
               const isLast = i === categoryStats.length - 1
@@ -300,7 +300,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full shrink-0" style={{ background: catColor }} />
                       <span className="text-sm font-medium" style={{ color: catColor }}>{cat}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: '#4a5a3a', background: '#1a2418' }}>{count}건</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: '#8a9a78', background: '#1a2418' }}>{count}건</span>
                     </div>
                     <span className="text-sm font-semibold" style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#3a4a30' }}>
                       {avg ?? '—'}
@@ -324,7 +324,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               accent="#d4a84b"
               action={
                 <Link href="/insights" className="text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 rounded-lg transition-colors"
-                  style={{ color: '#5a6a50', border: '1px solid #2d3e28' }}>
+                  style={{ color: '#8a9a78', border: '1px solid #3a4a30' }}>
                   더 보기 →
                 </Link>
               }
@@ -343,7 +343,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               title="최근 결정"
               accent="#6b8f5e"
               action={
-                <Link href="/decisions" className="text-[10px] font-medium tracking-widest uppercase transition-colors" style={{ color: '#5a6a50' }}>
+                <Link href="/decisions" className="text-[10px] font-medium tracking-widest uppercase transition-colors" style={{ color: '#8a9a78' }}>
                   전체 보기 →
                 </Link>
               }
