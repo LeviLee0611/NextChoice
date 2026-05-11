@@ -14,8 +14,16 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return new Response('Unauthorized', { status: 401 })
 
-  const { messages }: { messages: Message[] } = await req.json()
-  if (!messages?.length) return new Response('No messages', { status: 400 })
+  const body = await req.json()
+  const messages: Message[] = body?.messages
+  if (!Array.isArray(messages) || messages.length === 0) return new Response('No messages', { status: 400 })
+  if (messages.length > 20) return new Response('Too many messages', { status: 400 })
+  const validRoles = new Set(['user', 'assistant'])
+  for (const m of messages) {
+    if (!validRoles.has(m.role)) return new Response('Invalid role', { status: 400 })
+    if (typeof m.content !== 'string' || m.content.length > 2000) return new Response('Message too long', { status: 400 })
+  }
+  if (messages[messages.length - 1].role !== 'user') return new Response('Last message must be user', { status: 400 })
 
   const ctx = await aggregateInsightContext(supabase, user.id)
   const ctxStr = ctx

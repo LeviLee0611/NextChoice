@@ -46,15 +46,18 @@ function Row({ label, aVal, bVal, unit = '', isSatisfaction = false }: {
   )
 }
 
-export default function CompareSection() {
+function getInitialRanges() {
   const today = new Date().toISOString().slice(0, 10)
   const sixMonthsAgo = new Date(Date.now() - 180 * 86400000).toISOString().slice(0, 10)
   const oneYearAgo = new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10)
+  return { today, sixMonthsAgo, oneYearAgo }
+}
 
-  const [aFrom, setAFrom] = useState(oneYearAgo)
-  const [aTo, setATo] = useState(sixMonthsAgo)
-  const [bFrom, setBFrom] = useState(sixMonthsAgo)
-  const [bTo, setBTo] = useState(today)
+export default function CompareSection() {
+  const [aFrom, setAFrom] = useState(() => getInitialRanges().oneYearAgo)
+  const [aTo, setATo] = useState(() => getInitialRanges().sixMonthsAgo)
+  const [bFrom, setBFrom] = useState(() => getInitialRanges().sixMonthsAgo)
+  const [bTo, setBTo] = useState(() => getInitialRanges().today)
 
   const [result, setResult] = useState<{ a: PeriodStats; b: PeriodStats } | null>(null)
   const [loading, setLoading] = useState(false)

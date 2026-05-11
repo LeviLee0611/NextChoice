@@ -43,8 +43,9 @@ export async function aggregateInsightContext(
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
   if (since) q = q.gte('created_at', since)
-  const { data } = await q
+  const { data, error } = await q
 
+  if (error) throw new Error(`aggregateInsightContext: ${error.message}`)
   if (!data || data.length === 0) return null
   const rows = (data as DecisionRow[]).map(d => ({
     ...d,

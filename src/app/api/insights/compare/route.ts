@@ -46,7 +46,20 @@ export async function GET(req: NextRequest) {
     return new Response('Missing params', { status: 400 })
   }
 
-  const [{ data: aData }, { data: bData }] = await Promise.all([
+  const ISO_RE = /^\d{4}-\d{2}-\d{2}(T[\d:.Z+-]+)?$/
+  const MAX_RANGE_MS = 3 * 365 * 86400 * 1000 // 3년
+  const dates = [aFrom, aTo, bFrom, bTo]
+  if (dates.some(d => !ISO_RE.test(d) || isNaN(Date.parse(d)))) {
+    return new Response('Invalid date format', { status: 400 })
+  }
+  if (Date.parse(aTo) < Date.parse(aFrom) || Date.parse(bTo) < Date.parse(bFrom)) {
+    return new Response('from must be before to', { status: 400 })
+  }
+  if (Date.parse(aTo) - Date.parse(aFrom) > MAX_RANGE_MS || Date.parse(bTo) - Date.parse(bFrom) > MAX_RANGE_MS) {
+    return new Response('Range too large', { status: 400 })
+  }
+
+  const [resA, resB] = await Promise.all([
     supabase.from('decisions')
       .select('category, decision_reviews(satisfaction_score, would_choose_again)')
       .eq('user_id', user.id)
@@ -59,8 +72,10 @@ export async function GET(req: NextRequest) {
       .lte('created_at', bTo),
   ])
 
+  if (resA.error || resB.error) return new Response('DB error', { status: 500 })
+
   return Response.json({
-    a: computeStats((aData ?? []) as DecisionRow[]),
-    b: computeStats((bData ?? []) as DecisionRow[]),
+    a: computeStats((resA.data ?? []) as DecisionRow[]),
+    b: computeStats((resB.data ?? []) as DecisionRow[]),
   })
 }

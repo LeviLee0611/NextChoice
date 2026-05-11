@@ -34,7 +34,10 @@ export async function GET(req: NextRequest) {
   if (!apiKey) return new Response('AI not configured', { status: 503 })
 
   const { searchParams } = new URL(req.url)
-  const period = searchParams.get('period') ?? 'all'
+  const rawPeriod = searchParams.get('period') ?? 'all'
+  const VALID_PERIODS = new Set(['all', '1m', '3m', '6m', '1y'])
+  if (!VALID_PERIODS.has(rawPeriod)) return new Response('Invalid period', { status: 400 })
+  const period = rawPeriod
   const since = periodToSince(period)
 
   const supabase = await createClient()
@@ -44,15 +47,18 @@ export async function GET(req: NextRequest) {
   const ctx = await aggregateInsightContext(supabase, user.id, since)
   if (!ctx) return Response.json({ insufficient: true })
 
+  // fingerprint: counts + sum of scores to catch content-only edits
+  const ctxFingerprint = `${ctx.total}:${ctx.reviewed}:${ctx.avg_satisfaction}:${ctx.would_choose_again_pct}`
+
   // Check cache
   const { data: cache } = await supabase
     .from('user_insight_cache')
-    .select('content, decision_count, review_count')
+    .select('content, decision_count, review_count, fingerprint')
     .eq('user_id', user.id)
     .eq('period', period)
     .maybeSingle()
 
-  if (cache && cache.decision_count === ctx.total && cache.review_count === ctx.reviewed) {
+  if (cache && cache.fingerprint === ctxFingerprint) {
     return new Response(cache.content, {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     })
@@ -117,6 +123,7 @@ export async function GET(req: NextRequest) {
           content: fullText,
           decision_count: ctx.total,
           review_count: ctx.reviewed,
+          fingerprint: ctxFingerprint,
           computed_at: new Date().toISOString(),
         }, { onConflict: 'user_id,period' })
       }
