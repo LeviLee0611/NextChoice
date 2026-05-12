@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
@@ -27,7 +28,7 @@ export default function LoginPage() {
         }} />
       </div>
 
-      <div className="w-full max-w-sm relative z-10">
+      <div className="w-full max-w-sm relative z-10 flex flex-col gap-8">
 
         {/* Logo */}
         <div className="text-center mb-12">
@@ -87,6 +88,20 @@ export default function LoginPage() {
             Google로 계속하기
           </button>
         </div>
+
+        <p className="text-center text-[11px]" style={{ color: '#3a4a30' }}>
+          계속 진행하면{' '}
+          <Link href="/terms" className="underline underline-offset-2 transition-colors" style={{ color: '#4a5a3a' }}
+            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { (e.currentTarget as HTMLAnchorElement).style.color = '#d4a84b' }}
+            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { (e.currentTarget as HTMLAnchorElement).style.color = '#4a5a3a' }}>
+            이용약관
+          </Link>{' '}및{' '}
+          <Link href="/privacy" className="underline underline-offset-2 transition-colors" style={{ color: '#4a5a3a' }}
+            onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { (e.currentTarget as HTMLAnchorElement).style.color = '#d4a84b' }}
+            onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { (e.currentTarget as HTMLAnchorElement).style.color = '#4a5a3a' }}>
+            개인정보처리방침
+          </Link>에 동의하는 것으로 간주됩니다.
+        </p>
 
       </div>
     </div>

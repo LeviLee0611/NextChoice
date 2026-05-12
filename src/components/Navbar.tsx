@@ -139,17 +139,28 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Logout — absolutely pinned to far right */}
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="absolute right-6 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-          style={{ color: loggingOut ? '#5a6a50' : '#6a7a60' }}
-          onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-          onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
-        >
-          {loggingOut ? '…' : '로그아웃'}
-        </button>
+        {/* Settings + Logout — absolutely pinned to far right */}
+        <div className="absolute right-6 flex items-center gap-1">
+          <Link
+            href="/settings"
+            className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
+            style={{ color: pathname === '/settings' ? '#d4a84b' : '#6a7a60' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#d4a84b' }}
+            onMouseLeave={e => { e.currentTarget.style.color = pathname === '/settings' ? '#d4a84b' : '#6a7a60' }}
+          >
+            설정
+          </Link>
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
+            style={{ color: loggingOut ? '#5a6a50' : '#6a7a60' }}
+            onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
+          >
+            {loggingOut ? '…' : '로그아웃'}
+          </button>
+        </div>
 
       </div>
     </header>
