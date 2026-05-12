@@ -37,8 +37,6 @@ function SectionCard({ title, accent, action, children }: {
 }
 
 
-export const runtime = 'edge'
-
 type Period = 'all' | '1m' | '3m' | '6m' | '1y'
 type SearchParams = { period?: string }
 
