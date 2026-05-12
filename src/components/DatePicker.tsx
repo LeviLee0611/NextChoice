@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { forwardRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
@@ -34,7 +34,7 @@ const CustomInput = forwardRef<HTMLDivElement, CustomInputProps>(
       <div
         className="w-full rounded-xl px-4 py-2.5 pr-12 text-sm select-none"
         style={{
-          background: '#141c12',
+          background: '#1a2416',
           border: '1px solid #2d3e28',
           minHeight: '42px',
           lineHeight: '1.5',

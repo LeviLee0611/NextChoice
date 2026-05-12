@@ -3,6 +3,7 @@ export const runtime = 'edge'
 import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { aggregateInsightContext, buildInsightPrompt } from '@/lib/insights/aggregate'
+import { checkAndIncrement } from '@/lib/rateLimit'
 
 const SYSTEM_PROMPT = `사용자의 결정 데이터를 보고 짧고 솔직하게 한국어로 피드백을 써주세요. 리포트나 분석 보고서가 아니라, 데이터를 같이 본 친구가 건네는 말처럼요.
 
@@ -64,7 +65,12 @@ export async function GET(req: NextRequest) {
     })
   }
 
-  // Cache miss — call Claude
+  // Cache miss — check rate limit before calling Claude
+  const allowed = await checkAndIncrement(supabase, user.id, 'insight_calls')
+  if (!allowed) {
+    return new Response('오늘 인사이트 생성 한도에 도달했습니다. 내일 다시 시도해주세요.', { status: 429 })
+  }
+
   const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
