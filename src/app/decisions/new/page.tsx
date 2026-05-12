@@ -3,8 +3,6 @@ import { createClient } from '@/lib/supabase/server'
 import NewDecisionForm from './NewDecisionForm'
 import { CATEGORIES } from '@/types/decision'
 
-export const runtime = 'edge'
-
 type SearchParams = {
   title?: string; category?: string; option_a?: string; option_b?: string
   option_c?: string; importance_level?: string; reason?: string; chat_session_id?: string

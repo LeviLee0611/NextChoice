@@ -82,7 +82,7 @@ export default function Navbar() {
           NextChoice
         </Link>
         <div className="flex items-center gap-1">
-          <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
+          <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
           <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
           <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
           <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
@@ -123,7 +123,7 @@ export default function Navbar() {
 
         {/* Nav — centered */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
+          <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
           <DecisionsDropdown pathname={pathname} />
           <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
           <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
