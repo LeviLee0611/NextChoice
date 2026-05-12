@@ -6,12 +6,12 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 function DecisionsDropdown({ pathname }: { pathname: string }) {
-  const [open, setOpen] = useState(false)
   const active = pathname === '/decisions' || pathname.startsWith('/decisions/')
 
   return (
-    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div className="relative group">
       <button
+        type="button"
         className="text-sm font-medium tracking-widest uppercase px-5 py-2 rounded-lg transition-colors"
         style={{
           color: active ? '#d4a84b' : '#9aaa8a',
@@ -21,27 +21,30 @@ function DecisionsDropdown({ pathname }: { pathname: string }) {
         결정 목록
       </button>
 
-      {open && (
-        <div
-          className="absolute top-full left-0 mt-1 rounded-xl overflow-hidden z-50 min-w-[140px]"
-          style={{ background: '#0d150b', border: '1px solid #2d3e28', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
+      <div
+        className="absolute top-full left-0 mt-1 rounded-xl overflow-hidden z-50 min-w-[140px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150"
+        style={{
+          background: 'rgba(15,18,13,0.96)',
+          border: '1px solid rgba(184,137,42,0.2)',
+          backdropFilter: 'blur(20px)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        }}
+      >
+        <Link
+          href="/decisions"
+          className="flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase transition-colors hover:bg-[rgba(184,137,42,0.06)]"
+          style={{ color: '#9aaa8a', borderBottom: '1px solid rgba(184,137,42,0.08)' }}
         >
-          <Link
-            href="/decisions"
-            className="flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase transition-colors hover:bg-[#141c12]"
-            style={{ color: '#9aaa8a', borderBottom: '1px solid #1a2418' }}
-          >
-            나의 결정들
-          </Link>
-          <Link
-            href="/decisions?reviewed=no"
-            className="flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase transition-colors hover:bg-[#141c12]"
-            style={{ color: '#c4903e' }}
-          >
-            ✦ 리뷰 필요
-          </Link>
-        </div>
-      )}
+          나의 결정들
+        </Link>
+        <Link
+          href="/decisions?reviewed=no"
+          className="flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase transition-colors hover:bg-[rgba(184,137,42,0.06)]"
+          style={{ color: '#c4903e' }}
+        >
+          ✦ 리뷰 필요
+        </Link>
+      </div>
     </div>
   )
 }
@@ -62,11 +65,11 @@ export default function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-50 w-full border-b"
+      className="sticky top-0 z-50 w-full"
       style={{
-        background: 'linear-gradient(to right, rgba(184,137,42,0.2), rgba(184,137,42,0.12), rgba(184,137,42,0.2)), rgba(8,12,7,0.92)',
-        borderColor: '#6a5020',
-        backdropFilter: 'blur(12px)',
+        background: 'rgba(17,18,16,0.88)',
+        borderBottom: '1px solid rgba(184,137,42,0.15)',
+        backdropFilter: 'blur(20px)',
       }}
     >
       {/* Mobile layout */}
@@ -82,13 +85,13 @@ export default function Navbar() {
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
           <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
           <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
+          <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
           <Link
             href="/decisions/new"
-            className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-colors"
+            className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-all duration-200"
             style={{
-              background: pathname === '/decisions/new' ? '#1a2416' : '#141c12',
-              border: `1px solid ${pathname === '/decisions/new' ? '#b8892a' : '#6a4e1a'}`,
-              color: '#d4a84b',
+              background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 100%)',
+              color: '#0d1008',
             }}
           >
             + 새 결정
@@ -97,9 +100,9 @@ export default function Navbar() {
             onClick={handleLogout}
             disabled={loggingOut}
             className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-            style={{ color: loggingOut ? '#5a6a50' : '#8a9478' }}
+            style={{ color: loggingOut ? '#5a6a50' : '#6a7a60' }}
             onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#8a9478' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
           >
             {loggingOut ? '…' : '로그아웃'}
           </button>
@@ -123,13 +126,13 @@ export default function Navbar() {
           <NavLink href="/dashboard" label="대시보드" pathname={pathname} />
           <DecisionsDropdown pathname={pathname} />
           <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
+          <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
           <Link
             href="/decisions/new"
-            className="ml-1 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-colors"
+            className="ml-1 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-all duration-200"
             style={{
-              background: pathname === '/decisions/new' ? '#1a2416' : '#141c12',
-              border: `1px solid ${pathname === '/decisions/new' ? '#b8892a' : '#6a4e1a'}`,
-              color: '#d4a84b',
+              background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 100%)',
+              color: '#0d1008',
             }}
           >
             + 새 결정
@@ -141,9 +144,9 @@ export default function Navbar() {
           onClick={handleLogout}
           disabled={loggingOut}
           className="absolute right-6 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-          style={{ color: loggingOut ? '#5a6a50' : '#8a9478' }}
+          style={{ color: loggingOut ? '#5a6a50' : '#6a7a60' }}
           onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-          onMouseLeave={e => { e.currentTarget.style.color = '#8a9478' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
         >
           {loggingOut ? '…' : '로그아웃'}
         </button>

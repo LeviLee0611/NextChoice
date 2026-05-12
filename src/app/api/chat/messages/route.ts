@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
   if (!session) return new Response('Not found', { status: 404 })
 
   for (const m of messages) {
+    if (typeof m !== 'object' || m === null) return new Response('Invalid message', { status: 400 })
     if (!['user', 'assistant'].includes(m.role)) return new Response('Invalid role', { status: 400 })
     if (typeof m.content !== 'string' || m.content.length > 4000) return new Response('Invalid content', { status: 400 })
   }
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
     .from('chat_sessions')
     .update({ updated_at: new Date().toISOString() })
     .eq('id', session_id)
+    .eq('user_id', user.id)
 
   return new Response('OK')
 }

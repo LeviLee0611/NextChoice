@@ -16,44 +16,66 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+
+      {/* Background glow */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <div style={{
+          position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
+          width: '600px', height: '600px',
+          background: 'radial-gradient(ellipse, rgba(184,137,42,0.06) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }} />
+      </div>
+
+      <div className="w-full max-w-sm relative z-10">
 
         {/* Logo */}
-        <div className="text-center mb-10">
-          <h1
-            className="text-3xl tracking-[0.2em] uppercase mb-3"
-            style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b' }}
-          >
+        <div className="text-center mb-12">
+          <h1 style={{
+            fontFamily: 'var(--font-cormorant)',
+            fontSize: '2.8rem',
+            fontWeight: 300,
+            letterSpacing: '0.12em',
+            color: '#d4a84b',
+            marginBottom: '0.75rem',
+          }}>
             NextChoice
           </h1>
-          <div className="w-12 h-px mx-auto mb-4" style={{ background: 'linear-gradient(to right, transparent, #b8892a, transparent)' }} />
-          <p className="text-sm tracking-wide" style={{ color: '#8a9478' }}>
+          <div className="w-16 h-px mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, rgba(184,137,42,0.6), transparent)' }} />
+          <p className="text-sm" style={{ color: '#6a7a60' }}>
             당신의 결정이 당신을 만든다
           </p>
         </div>
 
         {/* Card */}
         <div
-          className="rounded-2xl p-8 border text-center"
+          className="rounded-2xl p-8 text-center"
           style={{
-            background: '#0e1410',
-            borderColor: '#2d3e28',
-            boxShadow: '0 0 60px rgba(184,137,42,0.08)',
+            background: 'rgba(18, 24, 14, 0.7)',
+            border: '1px solid rgba(184,137,42,0.12)',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 0 60px rgba(184,137,42,0.06), 0 20px 60px rgba(0,0,0,0.4)',
           }}
         >
-          <p className="text-sm mb-6 leading-relaxed" style={{ color: '#8a9478' }}>
+          <p className="text-sm mb-8 leading-relaxed" style={{ color: '#6a7a60' }}>
             매 선택의 순간을 기록하고<br />패턴을 발견하세요
           </p>
 
           <button
             onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 rounded-xl px-6 py-3 text-sm font-medium transition-all"
-            style={{ background: '#141c12', border: '1px solid #2d3e28', color: '#e8dfc8' }}
+            className="w-full flex items-center justify-center gap-3 rounded-xl px-6 py-3.5 text-sm font-medium transition-all duration-200"
+            style={{
+              background: 'rgba(184,137,42,0.08)',
+              border: '1px solid rgba(184,137,42,0.2)',
+              color: '#e8dfc8',
+            }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#b8892a'
+              e.currentTarget.style.background = 'rgba(184,137,42,0.14)'
+              e.currentTarget.style.borderColor = 'rgba(184,137,42,0.45)'
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#2d3e28'
+              e.currentTarget.style.background = 'rgba(184,137,42,0.08)'
+              e.currentTarget.style.borderColor = 'rgba(184,137,42,0.2)'
             }}
           >
             <svg width="18" height="18" viewBox="0 0 48 48">

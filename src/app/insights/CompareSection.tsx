@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 
@@ -79,7 +79,7 @@ export default function CompareSection() {
   }
 
   const inputStyle = {
-    background: '#141c12',
+    background: '#1a2416',
     border: '1px solid #2d3e28',
     color: '#e8dfc8',
     borderRadius: '0.75rem',

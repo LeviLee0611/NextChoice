@@ -7,14 +7,14 @@ import { IMPORTANCE_LABELS } from '@/types/decision'
 import type { ExistingReview } from './page'
 
 const inputStyle = {
-  background: '#141c12',
-  border: '1px solid #2d3e28',
+  background: 'rgba(8,12,7,0.8)',
+  border: '1px solid rgba(184,137,42,0.12)',
   color: '#e8dfc8',
 }
 
 function Label({ children, color = '#d4c9a8' }: { children: React.ReactNode; color?: string }) {
   return (
-    <label className="block text-xs font-semibold tracking-widest uppercase mb-2" style={{ color }}>
+    <label className="block text-xs font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: color === '#8a9478' ? '#6a7a60' : color }}>
       {children}
     </label>
   )
@@ -38,28 +38,39 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
       <div className="w-full max-w-xl">
 
         {/* Header */}
-        <div className="text-center mb-10">
-          <p className="text-xs tracking-[0.3em] uppercase mb-3" style={{ color: '#8a9478' }}>
+        <div className="text-center mb-12">
+          <p className="text-xs font-semibold tracking-[0.3em] uppercase mb-4" style={{ color: '#d4a84b' }}>
             Review
           </p>
-          <h1 className="text-2xl mb-4" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
+          <h1 style={{
+            fontFamily: 'var(--font-cormorant)',
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: 300,
+            color: '#e8dfc8',
+            lineHeight: 1.1,
+            marginBottom: '1.5rem',
+          }}>
             {existing ? '기록을 수정하다' : '결과를 돌아보다'}
           </h1>
-          <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
+          <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(to right, transparent, rgba(184,137,42,0.5), rgba(107,143,94,0.2), transparent)' }} />
         </div>
 
         {/* Decision context */}
         <div
-          className="rounded-xl border p-4 mb-8"
-          style={{ background: '#0e1410', borderColor: '#2d3e28' }}
+          className="rounded-xl p-5 mb-8"
+          style={{
+            background: 'rgba(18,24,14,0.5)',
+            border: '1px solid rgba(184,137,42,0.1)',
+            backdropFilter: 'blur(10px)',
+          }}
         >
-          <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#8a9478' }}>
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: '#5a6a50' }}>
             기록한 결정
           </p>
           <p className="text-sm font-medium mb-2" style={{ color: '#e8dfc8' }}>{decision.title}</p>
-          <div className="flex items-center gap-3 text-xs" style={{ color: '#8a9478' }}>
+          <div className="flex items-center gap-3 text-xs" style={{ color: '#5a6a50' }}>
             <span>{imp.emoji} {imp.label}</span>
-            <span style={{ color: '#2d3e28' }}>·</span>
+            <span style={{ color: 'rgba(184,137,42,0.3)' }}>·</span>
             <span>
               선택:{' '}
               <span style={{ color: '#d4a84b' }}>
@@ -72,11 +83,12 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
         {/* Form */}
         <form
           action={action}
-          className="rounded-2xl p-8 space-y-7 border"
+          className="rounded-2xl p-8 space-y-7"
           style={{
-            background: '#0f1a0d',
-            borderColor: '#2d3e28',
-            boxShadow: '0 0 60px rgba(184,137,42,0.08)',
+            background: 'rgba(18,24,14,0.7)',
+            border: '1px solid rgba(184,137,42,0.12)',
+            backdropFilter: 'blur(20px)',
+            boxShadow: '0 0 60px rgba(184,137,42,0.05), 0 20px 60px rgba(0,0,0,0.3)',
           }}
         >
 
@@ -89,10 +101,10 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
               rows={3}
               placeholder="그 선택 이후 실제로 일어난 일을 적어주세요"
               defaultValue={existing?.actual_result ?? ''}
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
+              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-all duration-200"
               style={{ ...inputStyle, caretColor: '#d4a84b' }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#b8892a' }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.45)' }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.12)' }}
             />
           </div>
 
@@ -100,10 +112,10 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
           <div>
             <Label color="#8a9478">
               만족도{' '}
-              <span style={{ fontFamily: 'var(--font-cinzel)', fontSize: '1rem', color: satisfactionColor(satisfaction) }}>
+              <span style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.1rem', color: satisfactionColor(satisfaction) }}>
                 {satisfaction}
               </span>
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}> / 10</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}> / 10</span>
             </Label>
             <input
               type="range"
@@ -113,9 +125,13 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
               value={satisfaction}
               onChange={e => setSatisfaction(Number(e.target.value))}
               className="w-full"
-              style={{ accentColor: satisfactionColor(satisfaction) }}
+              style={{
+                '--progress': `${((satisfaction - 1) / 9) * 100}%`,
+                '--fill-color': satisfactionColor(satisfaction),
+                '--thumb-color': satisfactionColor(satisfaction),
+              } as React.CSSProperties}
             />
-            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#5a6a50' }}>
+            <div className="flex justify-between text-[11px] mt-1.5" style={{ color: '#4a5a3a' }}>
               <span>후회된다</span>
               <span>그럭저럭</span>
               <span>잘했다</span>
@@ -133,17 +149,17 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
                   key={String(val)}
                   type="button"
                   onClick={() => setWouldChooseAgain(val)}
-                  className="flex-1 py-3 rounded-xl border text-sm font-medium transition-all"
+                  className="flex-1 py-3 rounded-xl border text-sm font-medium transition-all duration-200"
                   style={{
                     background: wouldChooseAgain === val
-                      ? val ? 'rgba(138,173,122,0.2)' : 'rgba(196,64,64,0.2)'
-                      : '#141c12',
+                      ? val ? 'rgba(138,173,122,0.15)' : 'rgba(196,64,64,0.15)'
+                      : 'rgba(8,12,7,0.5)',
                     borderColor: wouldChooseAgain === val
-                      ? val ? '#6b8f5e' : '#8a3a3a'
-                      : '#2d3e28',
+                      ? val ? 'rgba(107,143,94,0.5)' : 'rgba(196,64,64,0.4)'
+                      : 'rgba(184,137,42,0.08)',
                     color: wouldChooseAgain === val
                       ? val ? '#8aad7a' : '#c47a7a'
-                      : '#5a6a50',
+                      : '#4a5a3a',
                   }}
                 >
                   {val ? '같은 선택을 할 것이다' : '다른 선택을 할 것이다'}
@@ -161,17 +177,17 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
           <div>
             <Label color="#8a9478">
               예상과 달랐던 점{' '}
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
             </Label>
             <textarea
               name="unexpected_things"
               rows={2}
               placeholder="생각과 다르게 흘러간 부분이 있었나요?"
               defaultValue={existing?.unexpected_things ?? ''}
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
+              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-all duration-200"
               style={{ ...inputStyle, caretColor: '#d4a84b' }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.4)' }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.12)' }}
             />
           </div>
 
@@ -179,43 +195,43 @@ export default function ReviewForm({ decision, existing }: { decision: Decision;
           <div>
             <Label color="#8a9478">
               배운 점{' '}
-              <span className="normal-case tracking-normal font-normal" style={{ color: '#5a6a50' }}>(선택)</span>
+              <span className="normal-case tracking-normal font-normal" style={{ color: '#3a4a30' }}>(선택)</span>
             </Label>
             <textarea
               name="lesson_learned"
               rows={2}
               placeholder="이 경험에서 얻은 것이 있다면"
               defaultValue={existing?.lesson_learned ?? ''}
-              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-colors"
+              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none resize-none transition-all duration-200"
               style={{ ...inputStyle, caretColor: '#d4a84b' }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#6b8f5e' }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#2d3e28' }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.4)' }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.12)' }}
             />
           </div>
 
           {/* Divider */}
-          <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, #2d3e28, transparent)' }} />
+          <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(184,137,42,0.2), transparent)' }} />
 
           {/* Submit */}
           <button
             type="submit"
             disabled={wouldChooseAgain === null}
-            className="w-full rounded-xl py-3.5 text-sm font-semibold tracking-[0.15em] uppercase transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full rounded-xl py-4 text-sm font-semibold tracking-[0.15em] uppercase transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
-              background: '#141c12',
-              border: '1px solid #6a4e1a',
-              color: '#d4a84b',
-              fontFamily: 'var(--font-cinzel)',
+              background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 50%, #b8892a 100%)',
+              backgroundSize: '200% 100%',
+              color: '#0d1008',
+              boxShadow: '0 0 40px rgba(184,137,42,0.3), 0 4px 20px rgba(0,0,0,0.4)',
             }}
             onMouseEnter={e => {
               if (wouldChooseAgain !== null) {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = '#b8892a'
-                ;(e.currentTarget as HTMLButtonElement).style.background = '#1a2416'
+                e.currentTarget.style.boxShadow = '0 0 60px rgba(184,137,42,0.5), 0 4px 20px rgba(0,0,0,0.4)'
+                e.currentTarget.style.transform = 'translateY(-1px)'
               }
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#6a4e1a'
-              ;(e.currentTarget as HTMLButtonElement).style.background = '#141c12'
+              e.currentTarget.style.boxShadow = '0 0 40px rgba(184,137,42,0.3), 0 4px 20px rgba(0,0,0,0.4)'
+              e.currentTarget.style.transform = 'translateY(0)'
             }}
           >
             {existing ? '수정을 마치다' : '기록을 마치다'}

@@ -3,6 +3,7 @@ export const runtime = 'edge'
 import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { aggregateInsightContext, buildInsightPrompt } from '@/lib/insights/aggregate'
+import { checkAndIncrement } from '@/lib/rateLimit'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
@@ -14,21 +15,58 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return new Response('Unauthorized', { status: 401 })
 
-  const body = await req.json()
-  const messages: Message[] = body?.messages
-  if (!Array.isArray(messages) || messages.length === 0) return new Response('No messages', { status: 400 })
-  if (messages.length > 20) return new Response('Too many messages', { status: 400 })
-  const validRoles = new Set(['user', 'assistant'])
-  for (const m of messages) {
-    if (!validRoles.has(m.role)) return new Response('Invalid role', { status: 400 })
-    if (typeof m.content !== 'string' || m.content.length > 2000) return new Response('Message too long', { status: 400 })
+  let body: { session_id?: string; message?: string }
+  try {
+    body = await req.json()
+  } catch {
+    return new Response('Invalid JSON', { status: 400 })
   }
-  if (messages[messages.length - 1].role !== 'user') return new Response('Last message must be user', { status: 400 })
 
-  const ctx = await aggregateInsightContext(supabase, user.id)
-  const ctxStr = ctx
-    ? `이 사용자의 과거 의사결정 데이터:\n${buildInsightPrompt(ctx)}`
-    : '아직 충분한 결정 데이터가 없습니다.'
+  const { session_id, message } = body
+  if (typeof message !== 'string' || !message.trim()) {
+    return new Response('Missing message', { status: 400 })
+  }
+  const userMessage = message.slice(0, 2000)
+
+  // Fetch ownership-verified history from DB (never trust client-sent history)
+  let history: Message[] = []
+  if (session_id) {
+    const { data: sess } = await supabase
+      .from('chat_sessions')
+      .select('id')
+      .eq('id', session_id)
+      .eq('user_id', user.id)
+      .single()
+    if (!sess) return new Response('Session not found', { status: 404 })
+
+    const { data: msgs } = await supabase
+      .from('chat_messages')
+      .select('role, content')
+      .eq('session_id', session_id)
+      .order('created_at', { ascending: true })
+      .order('id', { ascending: true })
+      .limit(40)
+
+    history = (msgs ?? []).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }))
+  }
+
+  const messages: Message[] = [...history, { role: 'user', content: userMessage }]
+  if (messages.length > 42) return new Response('Too many messages', { status: 400 })
+
+  const allowed = await checkAndIncrement(supabase, user.id, 'chat_turns')
+  if (!allowed) {
+    return new Response('오늘 코치 채팅 한도에 도달했습니다. 내일 다시 시도해주세요.', { status: 429 })
+  }
+
+  let ctxStr: string
+  try {
+    const ctx = await aggregateInsightContext(supabase, user.id)
+    ctxStr = ctx
+      ? `이 사용자의 과거 의사결정 데이터:\n${buildInsightPrompt(ctx)}`
+      : '아직 충분한 결정 데이터가 없습니다.'
+  } catch {
+    ctxStr = '아직 충분한 결정 데이터가 없습니다.'
+  }
 
   const systemPrompt = `당신은 NextChoice의 결정 코치입니다. 사용자가 중요한 결정을 앞두고 있을 때 도움을 줍니다.
 
@@ -51,21 +89,26 @@ ${ctxStr}
 
 JSON 외 텍스트 금지. 카테고리는 반드시 위 6개 중 하나.`
 
-  const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1200,
-      stream: true,
-      system: systemPrompt,
-      messages,
-    }),
-  })
+  let anthropicRes: Response
+  try {
+    anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1200,
+        stream: true,
+        system: systemPrompt,
+        messages,
+      }),
+    })
+  } catch {
+    return new Response('AI unreachable', { status: 502 })
+  }
 
   if (!anthropicRes.ok) return new Response('AI error', { status: 502 })
 

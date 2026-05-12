@@ -13,11 +13,21 @@ function SectionCard({ title, accent, action, children }: {
   children: React.ReactNode
 }) {
   return (
-    <div className="rounded-xl overflow-hidden flex flex-col" style={{ background: '#0f1a0d', border: '1px solid #2d3e28' }}>
-      <div className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: '1px solid #1e2a1a', background: '#0b1409' }}>
-        <div className="flex items-center gap-2.5">
+    <div
+      className="rounded-2xl overflow-hidden flex flex-col dashboard-card"
+      style={{
+        background: 'rgba(18, 24, 14, 0.7)',
+        border: '1px solid rgba(184,137,42,0.12)',
+        backdropFilter: 'blur(20px)',
+      }}
+    >
+      <div
+        className="flex items-center justify-between px-6 py-4"
+        style={{ borderBottom: '1px solid rgba(184,137,42,0.08)', background: 'rgba(11, 16, 9, 0.5)' }}
+      >
+        <div className="flex items-center gap-3">
           <span className="w-0.5 h-4 rounded-full" style={{ background: accent }} />
-          <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: accent }}>{title}</p>
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accent }}>{title}</p>
         </div>
         {action}
       </div>
@@ -88,7 +98,6 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
     </div>
   )
 
-  // Smooth cubic bezier path
   function smoothPath(points: { x: number; y: number }[]) {
     if (points.length < 2) return ''
     let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
@@ -105,7 +114,6 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
   const bottom = pad.t + ch
   const areaPath = `${linePath} L ${valid[valid.length-1].x.toFixed(1)} ${bottom.toFixed(1)} L ${valid[0].x.toFixed(1)} ${bottom.toFixed(1)} Z`
 
-  // Show labels only every N to avoid overlap
   const step = data.length > 8 ? 2 : 1
   const labelIds = new Set(data.map((_, i) => i).filter(i => i % step === 0 || i === data.length - 1))
 
@@ -113,40 +121,34 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#b8892a" stopOpacity="0.18" />
+          <stop offset="0%" stopColor="#b8892a" stopOpacity="0.22" />
           <stop offset="100%" stopColor="#b8892a" stopOpacity="0.01" />
         </linearGradient>
       </defs>
 
-      {/* Grid lines */}
       {[0, 5, 10].map(v => {
         const y = pad.t + ch - (v / 10) * ch
         return (
           <g key={v}>
             <line x1={pad.l} y1={y.toFixed(1)} x2={(pad.l+cw).toFixed(1)} y2={y.toFixed(1)}
               stroke={v === 0 ? '#2a3a28' : '#1a2418'} strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 5 ? '3 4' : undefined} />
-            <text x={(pad.l-8).toFixed(1)} y={(y+4).toFixed(1)} textAnchor="end" fontSize="11" fill="#7a8a70" fontFamily="monospace">{v}</text>
+            <text x={(pad.l-8).toFixed(1)} y={(y+4).toFixed(1)} textAnchor="end" fontSize="11" fill="#5a6a50" fontFamily="monospace">{v}</text>
           </g>
         )
       })}
 
-      {/* Area fill */}
       <path d={areaPath} fill="url(#areaGrad)" />
+      <path d={linePath} fill="none" stroke="#d4a84b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 
-      {/* Line */}
-      <path d={linePath} fill="none" stroke="#b8892a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-
-      {/* Dots */}
       {valid.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="5" fill="#0f1a0d" stroke="#b8892a" strokeWidth="1.5" />
-          <circle cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="2.5" fill="#d4a84b" />
+          <circle cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="5" fill="#0f1a0d" stroke="#d4a84b" strokeWidth="1.5" />
+          <circle cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="2.5" fill="#f0cc70" />
         </g>
       ))}
 
-      {/* X-axis labels */}
       {pts.map((p, i) => labelIds.has(i) && (
-        <text key={i} x={p.x.toFixed(1)} y={(H - 8).toFixed(1)} textAnchor="middle" fontSize="11" fill="#8a9a78">{p.label}</text>
+        <text key={i} x={p.x.toFixed(1)} y={(H - 8).toFixed(1)} textAnchor="middle" fontSize="11" fill="#6a7a60">{p.label}</text>
       ))}
     </svg>
   )
@@ -181,12 +183,27 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   if (decisions.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-        <p className="text-4xl mb-4">✦</p>
-        <p className="text-sm mb-1" style={{ color: '#d4c9a8' }}>
+        <p style={{
+          fontFamily: 'var(--font-cormorant)',
+          fontSize: '3rem',
+          fontWeight: 300,
+          color: '#d4a84b',
+          lineHeight: 1,
+          marginBottom: '1.5rem',
+        }}>✦</p>
+        <p className="text-base mb-2" style={{ color: '#d4c9a8' }}>
           {period === 'all' ? '아직 기록된 결정이 없어요' : '해당 기간에 기록된 결정이 없어요'}
         </p>
-        <p className="text-xs mb-8" style={{ color: '#5a6a50' }}>첫 번째 결정을 기록해보세요</p>
-        <Link href="/decisions/new" className="text-xs font-semibold tracking-widest uppercase px-6 py-3 rounded-lg" style={{ background: '#141c12', border: '1px solid #6a4e1a', color: '#d4a84b' }}>
+        <p className="text-sm mb-10" style={{ color: '#5a6a50' }}>첫 번째 결정을 기록해보세요</p>
+        <Link
+          href="/decisions/new"
+          className="text-xs font-semibold tracking-[0.2em] uppercase px-8 py-4 rounded-xl transition-all duration-200"
+          style={{
+            background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 100%)',
+            color: '#0d1008',
+            boxShadow: '0 0 40px rgba(184,137,42,0.3)',
+          }}
+        >
           결정 기록하기
         </Link>
       </div>
@@ -244,31 +261,66 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   ] as const
 
   return (
-    <div className="min-h-screen px-4 py-12">
+    <div className="min-h-screen px-4 py-16 relative overflow-hidden">
+
+      {/* Background glows */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: -1 }}>
+        <div style={{
+          position: 'absolute', top: '15%', left: '5%',
+          width: '500px', height: '500px',
+          background: 'radial-gradient(ellipse, rgba(184,137,42,0.05) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '20%', right: '5%',
+          width: '400px', height: '400px',
+          background: 'radial-gradient(ellipse, rgba(80,160,70,0.04) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }} />
+      </div>
+
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8">
-          <p className="text-xs tracking-[0.3em] uppercase mb-2" style={{ color: '#8a9478' }}>Dashboard</p>
-          <h1 className="text-2xl font-semibold" style={{ fontFamily: 'var(--font-cinzel)', color: '#d4a84b', letterSpacing: '0.08em' }}>
-            My Choices
+        <div className="mb-12">
+          <p className="text-xs font-semibold tracking-[0.3em] uppercase mb-4" style={{ color: '#d4a84b' }}>
+            My Dashboard
+          </p>
+          <h1 style={{
+            fontFamily: 'var(--font-cormorant)',
+            fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
+            fontWeight: 300,
+            color: '#e8dfc8',
+            lineHeight: 1.1,
+          }}>
+            선택의 기록
           </h1>
         </div>
 
-        <div className="w-full h-px mb-8" style={{ background: 'linear-gradient(to right, transparent, #b8892a, #6b8f5e, transparent)' }} />
+        <div className="w-full h-px mb-10" style={{ background: 'linear-gradient(to right, transparent, rgba(184,137,42,0.4), rgba(107,143,94,0.2), transparent)' }} />
 
         {/* 2x2 Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
           {/* ── Section 1: Stats ───────────────────────── */}
           <SectionCard title="통계" accent="#c4903e">
-            <div className="p-5 flex flex-col gap-4">
+            <div className="p-6 flex flex-col gap-5">
               <PeriodFilter active={period} />
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 {statItems.map(({ label, value, color }) => (
-                  <div key={label} className="rounded-xl px-4 py-4 text-center" style={{ background: '#0d150b', border: '1px solid #1e2a1a' }}>
-                    <p className="text-2xl font-semibold mb-1" style={{ fontFamily: 'var(--font-cinzel)', color }}>{value}</p>
-                    <p className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#4a5a3a' }}>{label}</p>
+                  <div key={label} className="rounded-xl px-4 py-5 text-center" style={{ background: 'rgba(13, 21, 11, 0.6)', border: '1px solid rgba(184,137,42,0.08)' }}>
+                    <p style={{
+                      fontFamily: 'var(--font-cormorant)',
+                      fontSize: 'clamp(2rem, 3.5vw, 2.8rem)',
+                      fontWeight: 300,
+                      lineHeight: 1,
+                      marginBottom: '0.5rem',
+                      background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}>{value}</p>
+                    <p className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#4a5a3a' }}>{label}</p>
                   </div>
                 ))}
               </div>
@@ -277,8 +329,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
           {/* ── Section 2: Trend Chart ─────────────────── */}
           <SectionCard title="만족도 추이" accent="#b8892a">
-            <div className="px-5 pt-3 pb-1">
-              <p className="text-xs mb-2" style={{ color: '#6a7a60' }}>월별 리뷰 완료된 결정의 평균 만족도 (0–10점)</p>
+            <div className="px-6 pt-4 pb-2">
+              <p className="text-xs mb-3" style={{ color: '#5a6a50' }}>월별 리뷰 완료된 결정의 평균 만족도 (0–10점)</p>
               <SatisfactionChart data={trendData} />
             </div>
           </SectionCard>
@@ -286,50 +338,54 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {/* ── Section 3: Category Stats ──────────────── */}
           <SectionCard title="카테고리별" accent="#7a9a8a">
             <div>
-              {/* Column header */}
-              <div className="flex items-center justify-between px-5 py-2" style={{ borderBottom: '1px solid #1a2418' }}>
-                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6a7a60' }}>카테고리</span>
-                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: '#6a7a60' }}>평균 만족도 /10</span>
+              <div className="flex items-center justify-between px-6 py-3" style={{ borderBottom: '1px solid rgba(184,137,42,0.06)' }}>
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#4a5a3a' }}>카테고리</span>
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#4a5a3a' }}>평균 만족도 /10</span>
               </div>
-            {categoryStats.map(({ cat, count, avg }, i) => {
-              const isLast = i === categoryStats.length - 1
-              const catColor = CATEGORY_COLORS[cat] ?? '#8a9478'
-              return (
-                <div key={cat} className="px-5 py-3.5" style={{ borderBottom: isLast ? 'none' : '1px solid #1a2418' }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: catColor }} />
-                      <span className="text-sm font-medium" style={{ color: catColor }}>{cat}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: '#8a9a78', background: '#1a2418' }}>{count}건</span>
+              {categoryStats.map(({ cat, count, avg }, i) => {
+                const isLast = i === categoryStats.length - 1
+                const catColor = CATEGORY_COLORS[cat] ?? '#8a9478'
+                return (
+                  <div key={cat} className="px-6 py-4" style={{ borderBottom: isLast ? 'none' : '1px solid rgba(184,137,42,0.05)' }}>
+                    <div className="flex items-center justify-between mb-2.5">
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: catColor }} />
+                        <span className="text-sm font-medium" style={{ color: catColor }}>{cat}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: '#6a7a60', background: 'rgba(184,137,42,0.06)' }}>{count}건</span>
+                      </div>
+                      <span style={{
+                        fontFamily: 'var(--font-cormorant)',
+                        fontSize: '1.3rem',
+                        fontWeight: 400,
+                        color: avg ? satisfactionColor(avg) : '#3a4a30',
+                      }}>
+                        {avg ?? '—'}
+                      </span>
                     </div>
-                    <span className="text-sm font-semibold" style={{ fontFamily: 'var(--font-cinzel)', color: avg ? satisfactionColor(avg) : '#3a4a30' }}>
-                      {avg ?? '—'}
-                    </span>
+                    <div className="w-full rounded-full h-1.5" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                      <div className="h-1.5 rounded-full transition-all" style={{ width: avg ? `${(avg/10)*100}%` : '0%', background: avg ? satisfactionColor(avg) : 'transparent', opacity: avg ? 0.75 : 0 }} />
+                    </div>
                   </div>
-                  <div className="w-full rounded-full h-1" style={{ background: '#1a2418' }}>
-                    <div className="h-1 rounded-full transition-all" style={{ width: avg ? `${(avg/10)*100}%` : '0%', background: avg ? satisfactionColor(avg) : 'transparent' }} />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
             </div>
           </SectionCard>
 
           {/* ── Section 4: AI Insights + Recent ───────── */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
 
             {/* AI Insights */}
             <SectionCard
               title="AI 인사이트 요약"
               accent="#d4a84b"
               action={
-                <Link href="/insights" className="text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 rounded-lg transition-colors"
-                  style={{ color: '#8a9a78', border: '1px solid #3a4a30' }}>
+                <Link href="/insights" className="text-[10px] font-semibold tracking-[0.15em] uppercase px-3 py-1.5 rounded-lg transition-all duration-200"
+                  style={{ color: '#8a9a78', border: '1px solid rgba(184,137,42,0.2)' }}>
                   더 보기 →
                 </Link>
               }
             >
-              <div className="p-5">
+              <div className="p-6">
                 {insightCache?.content ? (
                   <InsightSummary content={insightCache.content} />
                 ) : (
@@ -343,7 +399,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               title="최근 결정"
               accent="#6b8f5e"
               action={
-                <Link href="/decisions" className="text-[10px] font-medium tracking-widest uppercase transition-colors" style={{ color: '#8a9a78' }}>
+                <Link href="/decisions" className="text-[10px] font-semibold tracking-[0.15em] uppercase transition-colors" style={{ color: '#6a7a60' }}>
                   전체 보기 →
                 </Link>
               }
@@ -354,14 +410,17 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 const isLast = i === recent.length - 1
                 return (
                   <Link key={d.id} href={`/decisions/${d.id}`}
-                    className="flex items-center justify-between px-5 py-3 transition-colors hover:bg-[#141c12]"
-                    style={{ borderBottom: isLast ? 'none' : '1px solid #1a2418' }}
+                    className="flex items-center justify-between px-6 py-3.5 transition-colors"
+                    style={{
+                      borderBottom: isLast ? 'none' : '1px solid rgba(184,137,42,0.05)',
+                    }}
+                    onMouseEnter={undefined}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <span className="text-sm shrink-0">{imp.emoji}</span>
-                      <p className="text-sm truncate" style={{ color: '#e8dfc8' }}>{d.title}</p>
+                      <p className="text-sm truncate" style={{ color: '#d4c9a8' }}>{d.title}</p>
                     </div>
-                    <span className="shrink-0 text-[10px] font-semibold tracking-widest uppercase ml-3" style={{ color: hasReview ? '#6b8f5e' : '#3a4a30' }}>
+                    <span className="shrink-0 text-[10px] font-semibold tracking-widest uppercase ml-3" style={{ color: hasReview ? '#6b8f5e' : '#2a3a20' }}>
                       {hasReview ? '✓' : '—'}
                     </span>
                   </Link>

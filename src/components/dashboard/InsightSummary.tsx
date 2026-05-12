@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 
@@ -32,7 +32,7 @@ export default function InsightSummary({ content }: { content: string }) {
       {bullets.length > 0 && (
         <>
           {expanded && (
-            <ul className="flex flex-col gap-2 pt-1" style={{ borderTop: '1px solid #1e2a1a' }}>
+            <ul className="flex flex-col gap-2 pt-1" style={{ borderTop: '1px solid rgba(184,137,42,0.08)' }}>
               {bullets.map((text, i) => (
                 <li key={i} className="flex items-start gap-2.5">
                   <span className="mt-[7px] w-1 h-1 rounded-full shrink-0" style={{ background: '#b8892a' }} />

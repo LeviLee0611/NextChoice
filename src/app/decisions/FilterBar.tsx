@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -21,7 +21,7 @@ function Pill({ label, active, onClick }: { label: string; active: boolean; onCl
       className="text-[11px] font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg whitespace-nowrap"
       style={{
         background: active ? 'rgba(184,137,42,0.12)' : hovered ? 'rgba(184,137,42,0.06)' : 'transparent',
-        border: `1px solid ${active ? '#b8892a' : hovered ? '#4a5e38' : '#2d3e28'}`,
+        border: `1px solid ${active ? '#b8892a' : hovered ? 'rgba(184,137,42,0.25)' : 'rgba(184,137,42,0.12)'}`,
         color: active ? '#d4a84b' : hovered ? '#b8c8a8' : '#6a7a60',
         transform: hovered && !active ? 'translateY(-1px)' : 'none',
         transition: 'all 0.15s ease',

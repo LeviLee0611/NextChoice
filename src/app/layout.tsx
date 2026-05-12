@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Geist } from "next/font/google"
 import { Cormorant_Garamond } from "next/font/google"
 import "./globals.css"
-import Navbar from "@/components/Navbar"
+import ConditionalNavbar from "@/components/ConditionalNavbar"
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${geist.variable} ${cormorant.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
-        <Navbar />
+        <ConditionalNavbar />
         {children}
       </body>
     </html>
