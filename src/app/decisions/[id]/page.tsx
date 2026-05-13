@@ -53,6 +53,7 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
         .from('chat_messages')
         .select('role, content')
         .eq('session_id', decision.chat_session_id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: true })
         .order('id', { ascending: true })
       ).data ?? []

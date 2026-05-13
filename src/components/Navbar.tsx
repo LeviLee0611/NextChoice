@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 function DecisionsDropdown({ pathname }: { pathname: string }) {
@@ -49,6 +49,20 @@ function DecisionsDropdown({ pathname }: { pathname: string }) {
   )
 }
 
+function InsightsNavLinks({ pathname }: { pathname: string }) {
+  const searchParams = useSearchParams()
+  const onInsights = pathname === '/insights'
+  const compareActive = onInsights && searchParams.get('tab') === 'compare'
+  const coachActive = onInsights && !compareActive
+
+  return (
+    <>
+      <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase active={coachActive} />
+      <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} active={compareActive} />
+    </>
+  )
+}
+
 export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
@@ -84,8 +98,14 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
           <NavLink href="/decisions" label="선택 목록" pathname={pathname} />
-          <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
-          <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
+          <Suspense fallback={
+            <>
+              <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
+              <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
+            </>
+          }>
+            <InsightsNavLinks pathname={pathname} />
+          </Suspense>
           <Link
             href="/decisions/new"
             className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-all duration-200"
@@ -125,8 +145,14 @@ export default function Navbar() {
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
           <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
           <DecisionsDropdown pathname={pathname} />
-          <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
-          <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
+          <Suspense fallback={
+            <>
+              <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
+              <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
+            </>
+          }>
+            <InsightsNavLinks pathname={pathname} />
+          </Suspense>
           <Link
             href="/decisions/new"
             className="ml-1 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-lg transition-all duration-200"
@@ -167,8 +193,9 @@ export default function Navbar() {
   )
 }
 
-function NavLink({ href, label, pathname, noUppercase }: { href: string; label: string; pathname: string; noUppercase?: boolean }) {
-  const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href))
+function NavLink({ href, label, pathname, noUppercase, active: activeOverride }: { href: string; label: string; pathname: string; noUppercase?: boolean; active?: boolean }) {
+  const defaultActive = pathname === href || (href !== '/dashboard' && href.split('?')[0] !== '/insights' && pathname.startsWith(href))
+  const active = activeOverride !== undefined ? activeOverride : defaultActive
   return (
     <Link
       href={href}

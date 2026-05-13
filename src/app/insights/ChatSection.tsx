@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
@@ -80,15 +82,17 @@ export default function ChatSection({ sessionId }: { sessionId: string | null })
   const [streaming, setStreaming] = useState(false)
   const [draft, setDraft] = useState<Draft | null>(null)
   const [loading, setLoading] = useState(false)
+  const [linkedDecisionId, setLinkedDecisionId] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
-  const activeSessionRef = useRef<string | null>(sessionId)
+  const activeSessionRef = useRef<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
     function handleNewChat() {
       setMessages([])
       setDraft(null)
+      setLinkedDecisionId(null)
       activeSessionRef.current = null
     }
     window.addEventListener('new-chat', handleNewChat)
@@ -99,11 +103,13 @@ export default function ChatSection({ sessionId }: { sessionId: string | null })
     if (!sessionId) {
       setMessages([])
       setDraft(null)
+      setLinkedDecisionId(null)
       activeSessionRef.current = null
       return
     }
     if (sessionId === activeSessionRef.current) return
     setDraft(null)
+    setLinkedDecisionId(null)
     activeSessionRef.current = sessionId
     setLoading(true)
     fetch(`/api/chat/messages?session_id=${sessionId}`)
@@ -113,6 +119,18 @@ export default function ChatSection({ sessionId }: { sessionId: string | null })
       })
       .catch(() => setMessages([]))
       .finally(() => setLoading(false))
+
+    const supabase = createClient()
+    ;(async () => {
+      try {
+        const { data } = await supabase
+          .from('decisions')
+          .select('id')
+          .eq('chat_session_id', sessionId)
+          .maybeSingle()
+        setLinkedDecisionId(data?.id ?? null)
+      } catch { /* ignore */ }
+    })()
   }, [sessionId])
 
   useEffect(() => {
@@ -340,6 +358,22 @@ export default function ChatSection({ sessionId }: { sessionId: string | null })
 
             {draft && !streaming && (
               <DraftCard draft={draft} onConfirm={confirmDraft} onCancel={() => setDraft(null)} />
+            )}
+
+            {linkedDecisionId && !streaming && !draft && (
+              <div className="flex justify-center pt-2">
+                <Link
+                  href={`/decisions/${linkedDecisionId}`}
+                  className="text-xs font-semibold tracking-[0.15em] uppercase px-5 py-2.5 rounded-xl transition-all duration-200"
+                  style={{
+                    background: 'rgba(184,137,42,0.06)',
+                    border: '1px solid rgba(184,137,42,0.2)',
+                    color: '#d4a84b',
+                  }}
+                >
+                  만든 계획 보러가기 →
+                </Link>
+              </div>
             )}
 
             <div ref={bottomRef} />

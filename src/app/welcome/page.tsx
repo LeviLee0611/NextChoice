@@ -1,13 +1,12 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import WelcomeInit from './WelcomeInit'
 
 export default async function WelcomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
-
-  await supabase.auth.updateUser({ data: { welcomed: true } })
 
   const fullName: string = user.user_metadata?.full_name || user.user_metadata?.name || ''
   const firstName = fullName.split(' ')[0] || '반갑습니다'
@@ -22,6 +21,7 @@ export default async function WelcomePage() {
       justifyContent: 'center',
       padding: '2rem',
     }}>
+      <WelcomeInit />
       <div style={{ textAlign: 'center', maxWidth: '480px', width: '100%' }}>
 
         <p style={{

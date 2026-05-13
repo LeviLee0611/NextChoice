@@ -75,7 +75,7 @@ export default async function SettingsPage() {
           }}
         >
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: '#d4a84b' }}>AI 사용량 (오늘)</p>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: '#d4a84b' }}>AI 사용량 (오늘 · UTC 기준)</p>
             <p className="text-[10px]" style={{ color: '#6a7a60' }}>매일 자정에 초기화</p>
           </div>
 

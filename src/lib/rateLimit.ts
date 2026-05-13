@@ -19,6 +19,9 @@ export async function checkAndIncrement(
     p_field: field,
     p_limit: RATE_LIMITS[field],
   })
-  if (error) return true
+  if (error) {
+    console.error('[rateLimit] RPC error, failing open', { userId, field, error: error.message })
+    return true
+  }
   return data === true
 }

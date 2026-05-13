@@ -27,7 +27,7 @@ export default function DeleteAccountSection({ email }: { email: string }) {
       const res = await fetch('/api/account/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ confirm: true }),
+        body: JSON.stringify({ confirm_phrase: CONFIRM_PHRASE }),
       })
       if (!res.ok) {
         setError('삭제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
