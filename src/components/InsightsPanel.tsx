@@ -96,18 +96,18 @@ export default function InsightsPanel({ compact = false, period = 'all' }: { com
     return (
       <div>
         {(status === 'loading' || status === 'streaming') && (
-          <p className="text-xs" style={{ color: '#5a6a50' }}>분석 중…</p>
+          <p className="text-xs" style={{ color: '#8a9a78' }}>분석 중…</p>
         )}
         {status === 'done' && text.length > 0 && (
           <InsightCollapsible text={text} />
         )}
         {status === 'insufficient' && (
-          <p className="text-xs" style={{ color: '#8a9478' }}>
+          <p className="text-xs" style={{ color: '#9aaa88' }}>
             이 기간에 <span style={{ color: '#d4a84b' }}>리뷰 완료된 결정이 3개 이상</span> 필요해요.
           </p>
         )}
         {status === 'error' && (
-          <p className="text-xs" style={{ color: '#5a6a50' }}>인사이트를 불러올 수 없어요</p>
+          <p className="text-xs" style={{ color: '#8a9a78' }}>인사이트를 불러올 수 없어요</p>
         )}
       </div>
     )
@@ -119,41 +119,41 @@ export default function InsightsPanel({ compact = false, period = 'all' }: { com
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span style={{ color: '#d4a84b', fontSize: '0.7rem' }}>✦</span>
-          <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#8a9478' }}>AI 인사이트</p>
+          <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#9aaa88' }}>AI 인사이트</p>
         </div>
         <div className="flex items-center gap-2">
           {(status === 'idle' || status === 'error' || status === 'done') && (
             <button
               onClick={fetchInsights}
               className="text-[10px] font-medium tracking-widest uppercase px-2.5 py-1 rounded-lg transition-colors"
-              style={{ color: '#8a9478', border: '1px solid #2d3e28' }}
+              style={{ color: '#9aaa88', border: '1px solid #2d3e28' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#6a5020'; e.currentTarget.style.color = '#d4a84b' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#2d3e28'; e.currentTarget.style.color = '#8a9478' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#2d3e28'; e.currentTarget.style.color = '#9aaa88' }}
             >
               {status === 'done' ? '새로고침' : '분석하기'}
             </button>
           )}
           {(status === 'loading' || status === 'streaming') && (
-            <span className="text-[10px]" style={{ color: '#5a6a50' }}>분석 중…</span>
+            <span className="text-[10px]" style={{ color: '#8a9a78' }}>분석 중…</span>
           )}
         </div>
       </div>
 
       {status === 'idle' && (
-        <p className="text-xs" style={{ color: '#4a5a3a' }}>리뷰가 쌓이면 내 결정 패턴을 분석해드려요</p>
+        <p className="text-xs" style={{ color: '#8a9a78' }}>리뷰가 쌓이면 내 결정 패턴을 분석해드려요</p>
       )}
       {status === 'insufficient' && (
         <div>
-          <p className="text-xs mb-3" style={{ color: '#8a9478' }}>
+          <p className="text-xs mb-3" style={{ color: '#9aaa88' }}>
             인사이트를 보려면 <span style={{ color: '#d4a84b' }}>리뷰 완료된 결정이 3개 이상</span> 필요해요.
           </p>
-          <Link href="/decisions" className="text-[10px] font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg inline-block" style={{ border: '1px solid #2d3e28', color: '#8a9478' }}>
+          <Link href="/decisions" className="text-[10px] font-medium tracking-widest uppercase px-3 py-1.5 rounded-lg inline-block" style={{ border: '1px solid #2d3e28', color: '#9aaa88' }}>
             결정 목록 보기 →
           </Link>
         </div>
       )}
       {status === 'loading' && (
-        <p className="text-xs" style={{ color: '#5a6a50' }}>데이터를 불러오는 중…</p>
+        <p className="text-xs" style={{ color: '#8a9a78' }}>데이터를 불러오는 중…</p>
       )}
       {(status === 'streaming' || status === 'done') && text.length > 0 && (
         <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: '#c8d8b8' }}>
@@ -164,7 +164,7 @@ export default function InsightsPanel({ compact = false, period = 'all' }: { com
         </p>
       )}
       {status === 'error' && (
-        <p className="text-xs" style={{ color: '#5a6a50' }}>인사이트를 불러올 수 없어요</p>
+        <p className="text-xs" style={{ color: '#8a9a78' }}>인사이트를 불러올 수 없어요</p>
       )}
     </div>
   )

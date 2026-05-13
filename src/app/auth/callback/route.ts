@@ -10,6 +10,11 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (error) return NextResponse.redirect(`${origin}/login?error=auth_failed`)
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user && !user.user_metadata?.welcomed) {
+      return NextResponse.redirect(`${origin}/welcome`)
+    }
   }
 
   return NextResponse.redirect(`${origin}/dashboard`)

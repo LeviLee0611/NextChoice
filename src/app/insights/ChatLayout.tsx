@@ -23,7 +23,7 @@ export default function ChatLayout({ sessionId }: { sessionId: string | null }) 
       {/* Sidebar */}
       <div
         className="shrink-0 overflow-hidden transition-all duration-200"
-        style={{ width: open ? '240px' : '0px' }}
+        style={{ width: open ? '280px' : '0px' }}
       >
         <SessionSidebar sessionId={sessionId} onToggle={toggle} />
       </div>

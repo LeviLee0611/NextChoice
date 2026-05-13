@@ -36,7 +36,7 @@ export default function InsightSummary({ content }: { content: string }) {
               {bullets.map((text, i) => (
                 <li key={i} className="flex items-start gap-2.5">
                   <span className="mt-[7px] w-1 h-1 rounded-full shrink-0" style={{ background: '#b8892a' }} />
-                  <span className="text-xs leading-relaxed" style={{ color: '#a8b898' }}>{text}</span>
+                  <span className="text-xs leading-relaxed" style={{ color: '#c8d8b8' }}>{text}</span>
                 </li>
               ))}
             </ul>

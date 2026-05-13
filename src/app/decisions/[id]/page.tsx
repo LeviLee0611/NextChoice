@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { IMPORTANCE_LABELS, type Decision, type ImportanceLevel } from '@/types/decision'
 import DeleteButton from './DeleteButton'
+import ChatHistorySection from './ChatHistorySection'
 
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -46,6 +47,16 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
     .single()
 
   if (!decision) notFound()
+
+  const chatMessages = decision.chat_session_id
+    ? (await supabase
+        .from('chat_messages')
+        .select('role, content')
+        .eq('session_id', decision.chat_session_id)
+        .order('created_at', { ascending: true })
+        .order('id', { ascending: true })
+      ).data ?? []
+    : []
 
   const d = decision as Decision & { decision_reviews: {
     id: string
@@ -288,6 +299,13 @@ export default async function DecisionDetailPage({ params }: { params: Promise<{
           >
             {reviewOverdue ? '결과 기록하기 →' : '리뷰 작성하기'}
           </Link>
+        )}
+
+        {decision.chat_session_id && (
+          <ChatHistorySection
+            messages={chatMessages}
+            sessionId={decision.chat_session_id}
+          />
         )}
 
       </div>

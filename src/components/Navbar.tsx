@@ -18,7 +18,7 @@ function DecisionsDropdown({ pathname }: { pathname: string }) {
           background: active ? 'rgba(184,137,42,0.08)' : 'transparent',
         }}
       >
-        결정 목록
+        선택 목록
       </button>
 
       <div
@@ -76,14 +76,14 @@ export default function Navbar() {
       <div className="flex md:hidden w-full px-4 h-14 items-center justify-between">
         <Link
           href="/dashboard"
-          className="text-xl"
-          style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 600, letterSpacing: '0.04em', color: '#d4a84b' }}
+          className="text-xl font-light tracking-widest uppercase"
+          style={{ fontFamily: 'var(--font-cormorant)', fontWeight: 300, letterSpacing: '0.15em', color: '#d4a84b' }}
         >
           NextChoice
         </Link>
         <div className="flex items-center gap-1">
           <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
-          <NavLink href="/decisions" label="결정 목록" pathname={pathname} />
+          <NavLink href="/decisions" label="선택 목록" pathname={pathname} />
           <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
           <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
           <Link
@@ -100,9 +100,9 @@ export default function Navbar() {
             onClick={handleLogout}
             disabled={loggingOut}
             className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-            style={{ color: loggingOut ? '#5a6a50' : '#6a7a60' }}
+            style={{ color: loggingOut ? '#7a8a70' : '#9aaa88' }}
             onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#9aaa88' }}
           >
             {loggingOut ? '…' : '로그아웃'}
           </button>
@@ -115,8 +115,8 @@ export default function Navbar() {
         {/* Logo — far left */}
         <Link
           href="/dashboard"
-          className="text-3xl mr-6"
-          style={{ fontFamily: 'var(--font-cormorant)', fontStyle: 'italic', fontWeight: 600, letterSpacing: '0.04em', color: '#d4a84b' }}
+          className="text-3xl mr-6 font-light tracking-widest uppercase"
+          style={{ fontFamily: 'var(--font-cormorant)', fontWeight: 300, letterSpacing: '0.15em', color: '#d4a84b' }}
         >
           NextChoice
         </Link>
@@ -144,9 +144,9 @@ export default function Navbar() {
           <Link
             href="/settings"
             className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
-            style={{ color: pathname === '/settings' ? '#d4a84b' : '#6a7a60' }}
+            style={{ color: pathname === '/settings' ? '#d4a84b' : '#9aaa88' }}
             onMouseEnter={e => { e.currentTarget.style.color = '#d4a84b' }}
-            onMouseLeave={e => { e.currentTarget.style.color = pathname === '/settings' ? '#d4a84b' : '#6a7a60' }}
+            onMouseLeave={e => { e.currentTarget.style.color = pathname === '/settings' ? '#d4a84b' : '#9aaa88' }}
           >
             설정
           </Link>
@@ -154,9 +154,9 @@ export default function Navbar() {
             onClick={handleLogout}
             disabled={loggingOut}
             className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-            style={{ color: loggingOut ? '#5a6a50' : '#6a7a60' }}
+            style={{ color: loggingOut ? '#7a8a70' : '#9aaa88' }}
             onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#6a7a60' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#9aaa88' }}
           >
             {loggingOut ? '…' : '로그아웃'}
           </button>

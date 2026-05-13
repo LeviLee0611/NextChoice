@@ -243,6 +243,14 @@ input[type="range"]::-moz-range-thumb {
   color: #d4a84b;
 }
 
+.settings-link {
+  color: #8a9a78;
+  transition: color 0.15s;
+}
+.settings-link:hover {
+  color: #d4a84b;
+}
+
 .dashboard-card {
   transition: border-color 0.3s, box-shadow 0.3s;
 }

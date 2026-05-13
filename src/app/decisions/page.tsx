@@ -43,7 +43,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
 
   let query = supabase
     .from('decisions')
-    .select('*, decision_reviews(id)')
+    .select('*, decision_reviews(id), chat_session_id')
     .eq('user_id', user.id)
     .order(sort === 'importance' ? 'importance_level' : 'created_at', {
       ascending: sort === 'oldest',
@@ -155,17 +155,16 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
               : (decision.option_d ?? '')
 
             return (
-              <Link
+              <div
                 key={decision.id}
-                href={`/decisions/${decision.id}`}
-                className="block rounded-2xl overflow-hidden transition-all duration-200 dashboard-card"
+                className="rounded-2xl overflow-hidden dashboard-card"
                 style={{
                   background: 'rgba(18,24,14,0.7)',
                   border: '1px solid rgba(184,137,42,0.1)',
                   backdropFilter: 'blur(20px)',
                 }}
               >
-                <div className="flex">
+                <Link href={`/decisions/${decision.id}`} className="flex transition-all duration-200">
                   {/* 중요도 컬러 액센트 */}
                   <div className="w-1 shrink-0" style={{ background: accentColor }} />
 
@@ -175,7 +174,7 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
                       <span className="text-[11px] font-semibold tracking-[0.15em] uppercase" style={{ color: catColor }}>
                         {decision.category}
                       </span>
-                      <span className="text-[11px]" style={{ color: '#4a5a3a' }}>{date}</span>
+                      <span className="text-[11px]" style={{ color: '#8a9a78' }}>{date}</span>
                     </div>
 
                     {/* 제목 */}
@@ -206,8 +205,23 @@ export default async function DecisionsPage({ searchParams }: { searchParams: Pr
                       ) : null}
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+
+                {decision.chat_session_id && (
+                  <Link
+                    href={`/insights?tab=chat&session=${decision.chat_session_id}`}
+                    className="flex items-center gap-2 px-4 py-2.5 transition-colors"
+                    style={{ borderTop: '1px solid rgba(184,137,42,0.07)' }}
+                    onMouseEnter={undefined}
+                  >
+                    <span style={{ color: '#b8892a', fontSize: '0.65rem' }}>✦</span>
+                    <span className="text-[11px] font-medium tracking-[0.08em]" style={{ color: '#9aaa78' }}>
+                      AI 코치 대화 보기
+                    </span>
+                    <span className="text-[10px] ml-auto" style={{ color: '#6a7a58' }}>→</span>
+                  </Link>
+                )}
+              </div>
             )
           })}
         </div>

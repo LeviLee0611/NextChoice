@@ -92,7 +92,7 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
 
   if (valid.length < 2) return (
     <div className="flex items-center justify-center" style={{ height: H }}>
-      <p className="text-xs" style={{ color: '#3a4a30' }}>데이터가 더 쌓이면 보여요</p>
+      <p className="text-xs" style={{ color: '#6a7a58' }}>데이터가 더 쌓이면 보여요</p>
     </div>
   )
 
@@ -130,7 +130,7 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
           <g key={v}>
             <line x1={pad.l} y1={y.toFixed(1)} x2={(pad.l+cw).toFixed(1)} y2={y.toFixed(1)}
               stroke={v === 0 ? '#2a3a28' : '#1a2418'} strokeWidth={v === 0 ? 1 : 0.5} strokeDasharray={v === 5 ? '3 4' : undefined} />
-            <text x={(pad.l-8).toFixed(1)} y={(y+4).toFixed(1)} textAnchor="end" fontSize="11" fill="#5a6a50" fontFamily="monospace">{v}</text>
+            <text x={(pad.l-8).toFixed(1)} y={(y+4).toFixed(1)} textAnchor="end" fontSize="11" fill="#8a9a78" fontFamily="monospace">{v}</text>
           </g>
         )
       })}
@@ -146,7 +146,7 @@ function SatisfactionChart({ data }: { data: Array<{ label: string; avg: number 
       ))}
 
       {pts.map((p, i) => labelIds.has(i) && (
-        <text key={i} x={p.x.toFixed(1)} y={(H - 8).toFixed(1)} textAnchor="middle" fontSize="11" fill="#6a7a60">{p.label}</text>
+        <text key={i} x={p.x.toFixed(1)} y={(H - 8).toFixed(1)} textAnchor="middle" fontSize="11" fill="#9aaa88">{p.label}</text>
       ))}
     </svg>
   )
@@ -192,7 +192,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <p className="text-base mb-2" style={{ color: '#d4c9a8' }}>
           {period === 'all' ? '아직 기록된 결정이 없어요' : '해당 기간에 기록된 결정이 없어요'}
         </p>
-        <p className="text-sm mb-10" style={{ color: '#5a6a50' }}>첫 번째 결정을 기록해보세요</p>
+        <p className="text-sm mb-10" style={{ color: '#8a9a78' }}>첫 번째 결정을 기록해보세요</p>
         <Link
           href="/decisions/new"
           className="text-xs font-semibold tracking-[0.2em] uppercase px-8 py-4 rounded-xl transition-all duration-200"
@@ -254,7 +254,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const statItems = [
     { label: '총 결정', value: String(total), color: '#d4a84b' },
     { label: '리뷰 완료', value: `${reviewedCount}/${total}`, color: '#8aad7a' },
-    { label: '평균 만족도', value: avgSatisfaction != null ? String(avgSatisfaction) : '—', color: avgSatisfaction != null ? satisfactionColor(avgSatisfaction) : '#3a4a30' },
+    { label: '평균 만족도', value: avgSatisfaction != null ? String(avgSatisfaction) : '—', color: avgSatisfaction != null ? satisfactionColor(avgSatisfaction) : '#6a7a58' },
     { label: '재선택', value: wouldChoosePct != null ? `${wouldChoosePct}%` : '—', color: '#7a9a8a' },
   ] as const
 
@@ -318,7 +318,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text',
                     }}>{value}</p>
-                    <p className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#4a5a3a' }}>{label}</p>
+                    <p className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#8a9a78' }}>{label}</p>
                   </div>
                 ))}
               </div>
@@ -328,7 +328,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {/* ── Section 2: Trend Chart ─────────────────── */}
           <SectionCard title="만족도 추이" accent="#b8892a">
             <div className="px-6 pt-4 pb-2">
-              <p className="text-xs mb-3" style={{ color: '#5a6a50' }}>월별 리뷰 완료된 결정의 평균 만족도 (0–10점)</p>
+              <p className="text-xs mb-3" style={{ color: '#8a9a78' }}>월별 리뷰 완료된 결정의 평균 만족도 (0–10점)</p>
               <SatisfactionChart data={trendData} />
             </div>
           </SectionCard>
@@ -337,8 +337,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <SectionCard title="카테고리별" accent="#7a9a8a">
             <div>
               <div className="flex items-center justify-between px-6 py-3" style={{ borderBottom: '1px solid rgba(184,137,42,0.06)' }}>
-                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#4a5a3a' }}>카테고리</span>
-                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#4a5a3a' }}>평균 만족도 /10</span>
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#8a9a78' }}>카테고리</span>
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase" style={{ color: '#8a9a78' }}>평균 만족도 /10</span>
               </div>
               {categoryStats.map(({ cat, count, avg }, i) => {
                 const isLast = i === categoryStats.length - 1
@@ -349,13 +349,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                       <div className="flex items-center gap-2.5">
                         <span className="w-2 h-2 rounded-full shrink-0" style={{ background: catColor }} />
                         <span className="text-sm font-medium" style={{ color: catColor }}>{cat}</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: '#6a7a60', background: 'rgba(184,137,42,0.06)' }}>{count}건</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: '#9aaa88', background: 'rgba(184,137,42,0.06)' }}>{count}건</span>
                       </div>
                       <span style={{
                         fontFamily: 'var(--font-cormorant)',
                         fontSize: '1.3rem',
                         fontWeight: 400,
-                        color: avg ? satisfactionColor(avg) : '#3a4a30',
+                        color: avg ? satisfactionColor(avg) : '#6a7a58',
                       }}>
                         {avg ?? '—'}
                       </span>
@@ -397,7 +397,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               title="최근 결정"
               accent="#6b8f5e"
               action={
-                <Link href="/decisions" className="text-[10px] font-semibold tracking-[0.15em] uppercase transition-colors" style={{ color: '#6a7a60' }}>
+                <Link href="/decisions" className="text-[10px] font-semibold tracking-[0.15em] uppercase transition-colors" style={{ color: '#9aaa88' }}>
                   전체 보기 →
                 </Link>
               }
@@ -418,7 +418,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                       <span className="text-sm shrink-0">{imp.emoji}</span>
                       <p className="text-sm truncate" style={{ color: '#d4c9a8' }}>{d.title}</p>
                     </div>
-                    <span className="shrink-0 text-[10px] font-semibold tracking-widest uppercase ml-3" style={{ color: hasReview ? '#6b8f5e' : '#2a3a20' }}>
+                    <span className="shrink-0 text-[10px] font-semibold tracking-widest uppercase ml-3" style={{ color: hasReview ? '#6b8f5e' : '#4a5a38' }}>
                       {hasReview ? '✓' : '—'}
                     </span>
                   </Link>

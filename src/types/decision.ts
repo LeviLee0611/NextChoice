@@ -33,4 +33,5 @@ export interface Decision {
   time_pressure: number | null
   review_date: string | null
   created_at: string
+  chat_session_id: string | null
 }

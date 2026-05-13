@@ -19,6 +19,6 @@ export async function checkAndIncrement(
     p_field: field,
     p_limit: RATE_LIMITS[field],
   })
-  if (error) return false
+  if (error) return true
   return data === true
 }
