@@ -73,7 +73,14 @@ export default function ChatHistorySection({
             </div>
           ))}
 
-          <div className="flex justify-end pt-2">
+          <div className="flex items-center justify-between pt-2">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="text-[10px] font-semibold tracking-[0.15em] uppercase px-3 py-1.5 rounded-lg transition-colors"
+              style={{ border: '1px solid rgba(184,137,42,0.15)', color: '#d4a84b' }}
+            >
+              ↑ 선택으로 가기
+            </button>
             <Link
               href={`/insights?tab=chat&session=${sessionId}`}
               className="text-[10px] font-semibold tracking-[0.15em] uppercase px-3 py-1.5 rounded-lg transition-colors"

@@ -250,20 +250,47 @@ export default function ChatSection({ sessionId }: { sessionId: string | null })
 
         {messages.length === 0 && (
           <div className="h-full flex items-center justify-center p-8">
-            <div className="text-center max-w-sm">
-              <p style={{
-                fontFamily: 'var(--font-cormorant)',
-                fontSize: '2.5rem',
-                fontWeight: 300,
-                color: '#d4a84b',
-                lineHeight: 1,
-                marginBottom: '1rem',
-              }}>✦</p>
-              <p className="text-base font-medium mb-2" style={{ color: '#e8dfc8' }}>결정 코치</p>
-              <p className="text-sm leading-relaxed" style={{ color: '#8a9a78' }}>
-                지금 어떤 결정 앞에 서 있나요?<br />
-                상황을 이야기해주시면 같이 생각해드릴게요.
+            <div className="max-w-md w-full">
+              <div className="text-center mb-8">
+                <p style={{
+                  fontFamily: 'var(--font-cormorant)',
+                  fontSize: '2rem',
+                  fontWeight: 300,
+                  color: '#d4a84b',
+                  lineHeight: 1,
+                  marginBottom: '0.75rem',
+                }}>✦</p>
+                <p style={{
+                  fontFamily: 'var(--font-cormorant)',
+                  fontSize: '1.5rem',
+                  fontWeight: 300,
+                  color: '#e8dfc8',
+                }}>어서오세요</p>
+              </div>
+
+              <p className="text-sm leading-relaxed mb-6 text-center" style={{ color: '#9aaa88' }}>
+                아래 내용을 포함해 이야기해주시면<br />더 정확하게 도와드릴 수 있어요.
               </p>
+
+              <div className="flex flex-col gap-3">
+                {[
+                  { label: '어떤 결정인가요?', desc: '상황과 배경을 간단히 설명해주세요' },
+                  { label: '선택지가 있나요?', desc: 'A안, B안처럼 고민 중인 옵션들을 알려주세요' },
+                  { label: '기대하는 결과는?', desc: '각 선택이 가져올 것 같은 효과나 우려를 말씀해주세요' },
+                ].map(({ label, desc }) => (
+                  <div
+                    key={label}
+                    className="flex items-start gap-3 rounded-xl px-4 py-3"
+                    style={{ background: 'rgba(184,137,42,0.04)', border: '1px solid rgba(184,137,42,0.08)' }}
+                  >
+                    <span style={{ color: '#b8892a', fontSize: '0.6rem', marginTop: '4px', flexShrink: 0 }}>✦</span>
+                    <div>
+                      <p className="text-xs font-semibold mb-0.5" style={{ color: '#d4c9a8' }}>{label}</p>
+                      <p className="text-xs leading-relaxed" style={{ color: '#6a7a58' }}>{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -299,7 +326,7 @@ export default function ChatSection({ sessionId }: { sessionId: string | null })
             {showRecordBtn && (
               <div className="flex justify-start">
                 <button
-                  onClick={() => send('네')}
+                  onClick={() => send('계획을 만들어줘.')}
                   className="text-xs font-semibold tracking-[0.15em] uppercase px-5 py-2.5 rounded-xl transition-all duration-200"
                   style={{
                     background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 100%)',
