@@ -12,7 +12,7 @@ const CATEGORY_COLORS: Record<Category, string> = {
   '기타':   '#8a9478',
 }
 
-export default function CategorySelect({ defaultValue }: { defaultValue?: Category }) {
+export default function CategorySelect({ defaultValue, onChange }: { defaultValue?: Category; onChange?: (cat: Category) => void }) {
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Category>(defaultValue ?? CATEGORIES[0])
   const ref = useRef<HTMLDivElement>(null)
@@ -59,7 +59,7 @@ export default function CategorySelect({ defaultValue }: { defaultValue?: Catego
               <button
                 key={cat}
                 type="button"
-                onClick={() => { setSelected(cat); setOpen(false) }}
+                onClick={() => { setSelected(cat); setOpen(false); onChange?.(cat) }}
                 className="w-full px-4 py-2.5 text-sm flex items-center gap-2.5 transition-colors"
                 style={{
                   background: isSelected ? 'rgba(184,137,42,0.1)' : 'transparent',

@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { createDecision } from '../actions'
-import { IMPORTANCE_LABELS, type ImportanceLevel } from '@/types/decision'
+import { IMPORTANCE_LABELS, CATEGORIES, type ImportanceLevel, type Category, type PastDecisionInsight } from '@/types/decision'
 import DatePicker from '@/components/DatePicker'
 import CategorySelect from '@/components/CategorySelect'
 
@@ -62,15 +63,18 @@ function timePressureColor(value: number): string {
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'] as const
 
 type InitialValues = {
-  title?: string; category?: typeof import('@/types/decision').CATEGORIES[number]; option_a?: string
+  title?: string; category?: Category; option_a?: string
   option_b?: string; option_c?: string; importance_level?: 1|2|3|4|5; reason?: string; chatSessionId?: string
 }
 
-export default function NewDecisionForm({ initialValues }: { initialValues?: InitialValues }) {
+export default function NewDecisionForm({ initialValues, pastDecisions = [] }: { initialValues?: InitialValues; pastDecisions?: PastDecisionInsight[] }) {
   const [importance, setImportance] = useState<ImportanceLevel>(initialValues?.importance_level ?? 3)
   const [confidence, setConfidence] = useState(5)
   const [optionCount, setOptionCount] = useState<2 | 3 | 4>(initialValues?.option_c ? 3 : 2)
   const [chosenOption, setChosenOption] = useState<string>('')
+  const [selectedCategory, setSelectedCategory] = useState<Category>(initialValues?.category ?? CATEGORIES[0])
+
+  const categoryPast = pastDecisions.filter(d => d.category === selectedCategory).slice(0, 3)
 
   function removeLastOption() {
     const removedLetter = OPTION_LETTERS[optionCount - 1]
@@ -124,8 +128,45 @@ export default function NewDecisionForm({ initialValues }: { initialValues?: Ini
           {/* 카테고리 */}
           <div>
             <Label color="#8a9478">카테고리</Label>
-            <CategorySelect defaultValue={initialValues?.category} />
+            <CategorySelect defaultValue={initialValues?.category} onChange={setSelectedCategory} />
           </div>
+
+          {/* 카테고리 인사이트 */}
+          {categoryPast.length > 0 && (
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{ border: '1px solid rgba(184,137,42,0.08)', background: 'rgba(8,12,7,0.4)' }}
+            >
+              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase px-4 pt-3 pb-2" style={{ color: '#5a6a50' }}>
+                {selectedCategory} 카테고리의 지난 결정들
+              </p>
+              {categoryPast.map((d, i) => (
+                <Link
+                  key={d.id}
+                  href={`/decisions/${d.id}`}
+                  className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-[rgba(184,137,42,0.04)]"
+                  style={{ borderTop: i === 0 ? '1px solid rgba(184,137,42,0.06)' : '1px solid rgba(184,137,42,0.04)' }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs truncate" style={{ color: '#c8bc98' }}>{d.title}</p>
+                    <p className="text-[10px] mt-0.5 truncate" style={{ color: '#4a5a3a' }}>
+                      {d.chosen_option}안 — {d.chosen_text}
+                    </p>
+                  </div>
+                  {d.satisfaction !== null ? (
+                    <span
+                      className="text-xs font-semibold shrink-0"
+                      style={{ color: d.satisfaction >= 7 ? '#8aad7a' : d.satisfaction >= 4 ? '#c4903e' : '#c44040' }}
+                    >
+                      {d.satisfaction}/10
+                    </span>
+                  ) : (
+                    <span className="text-[10px] shrink-0" style={{ color: '#3a4a30' }}>리뷰 전</span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
 
           {/* 중요도 */}
           <div>

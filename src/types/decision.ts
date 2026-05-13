@@ -15,6 +15,15 @@ export const CATEGORIES: Category[] = ['커리어', '관계', '재정', '건강'
 export const OPTION_KEYS = ['A', 'B', 'C', 'D'] as const
 export type OptionKey = typeof OPTION_KEYS[number]
 
+export type PastDecisionInsight = {
+  id: string
+  title: string
+  category: string
+  chosen_option: string
+  chosen_text: string
+  satisfaction: number | null
+}
+
 export interface Decision {
   id: string
   user_id: string

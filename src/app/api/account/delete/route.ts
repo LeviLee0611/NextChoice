@@ -24,22 +24,22 @@ export async function POST(req: Request) {
 
   const uid = user.id
 
-  // 4. Delete app data — decisions first (cascades decision_reviews), then chat data, then misc
+  // 4. Delete app data via admin client (bypasses RLS, no policy gap risk)
   const deletes: Array<{ table: string; error: unknown }> = []
 
-  const { error: decErr } = await supabase.from('decisions').delete().eq('user_id', uid)
+  const { error: decErr } = await admin.from('decisions').delete().eq('user_id', uid)
   if (decErr) deletes.push({ table: 'decisions', error: decErr })
 
-  const { error: msgErr } = await supabase.from('chat_messages').delete().eq('user_id', uid)
+  const { error: msgErr } = await admin.from('chat_messages').delete().eq('user_id', uid)
   if (msgErr) deletes.push({ table: 'chat_messages', error: msgErr })
 
-  const { error: sessErr } = await supabase.from('chat_sessions').delete().eq('user_id', uid)
+  const { error: sessErr } = await admin.from('chat_sessions').delete().eq('user_id', uid)
   if (sessErr) deletes.push({ table: 'chat_sessions', error: sessErr })
 
-  const { error: cacheErr } = await supabase.from('user_insight_cache').delete().eq('user_id', uid)
+  const { error: cacheErr } = await admin.from('user_insight_cache').delete().eq('user_id', uid)
   if (cacheErr) deletes.push({ table: 'user_insight_cache', error: cacheErr })
 
-  const { error: usageErr } = await supabase.from('api_usage').delete().eq('user_id', uid)
+  const { error: usageErr } = await admin.from('api_usage').delete().eq('user_id', uid)
   if (usageErr) deletes.push({ table: 'api_usage', error: usageErr })
 
   if (deletes.length > 0) {
