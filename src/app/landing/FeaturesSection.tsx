@@ -77,12 +77,6 @@ function FeatureCard({ f, i }: { f: typeof features[0]; i: number }) {
         </p>
       </div>
 
-      <div className="mt-auto pt-2 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase transition-colors duration-200"
-        style={{ color: '#b8892a' }}
-      >
-        자세히 보기
-        <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
-      </div>
     </motion.div>
   )
 }

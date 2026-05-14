@@ -67,6 +67,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
   const [loggingOut, setLoggingOut] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   if (pathname === '/login') return null
 
@@ -95,39 +96,48 @@ export default function Navbar() {
         >
           NextChoice
         </Link>
-        <div className="flex items-center gap-1">
-          <NavLink href="/dashboard" label="Dashboard" pathname={pathname} />
-          <NavLink href="/decisions" label="선택 목록" pathname={pathname} />
-          <Suspense fallback={
-            <>
-              <NavLink href="/insights" label="AI Choice 코치" pathname={pathname} noUppercase />
-              <NavLink href="/insights?tab=compare" label="분석" pathname={pathname} />
-            </>
-          }>
-            <InsightsNavLinks pathname={pathname} />
-          </Suspense>
+        <div className="flex items-center gap-2">
           <Link
             href="/decisions/new"
-            className="ml-1 text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg transition-all duration-200"
-            style={{
-              background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 100%)',
-              color: '#0d1008',
-            }}
+            className="text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-lg"
+            style={{ background: 'linear-gradient(135deg, #b8892a 0%, #d4a84b 100%)', color: '#0d1008' }}
           >
             + 새 결정
           </Link>
           <button
-            onClick={handleLogout}
+            onClick={() => setMenuOpen(v => !v)}
+            className="flex flex-col gap-1.5 p-2"
+            aria-label="메뉴"
+          >
+            <span className="block w-5 h-0.5 transition-all" style={{ background: menuOpen ? '#d4a84b' : '#9aaa8a' }} />
+            <span className="block w-5 h-0.5 transition-all" style={{ background: menuOpen ? '#d4a84b' : '#9aaa8a' }} />
+            <span className="block w-5 h-0.5 transition-all" style={{ background: menuOpen ? '#d4a84b' : '#9aaa8a' }} />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div
+          className="flex md:hidden flex-col px-4 pb-4 gap-1"
+          style={{ borderTop: '1px solid rgba(184,137,42,0.1)' }}
+        >
+          <MobileNavLink href="/dashboard" label="Dashboard" pathname={pathname} onClick={() => setMenuOpen(false)} />
+          <MobileNavLink href="/decisions" label="선택 목록" pathname={pathname} onClick={() => setMenuOpen(false)} />
+          <MobileNavLink href="/insights" label="AI Choice 코치" pathname={pathname} onClick={() => setMenuOpen(false)} />
+          <MobileNavLink href="/insights?tab=compare" label="분석" pathname={pathname} onClick={() => setMenuOpen(false)} />
+          <MobileNavLink href="/feedback" label="피드백" pathname={pathname} onClick={() => setMenuOpen(false)} />
+          <MobileNavLink href="/settings" label="설정" pathname={pathname} onClick={() => setMenuOpen(false)} />
+          <button
+            onClick={() => { setMenuOpen(false); handleLogout() }}
             disabled={loggingOut}
-            className="ml-1 text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors disabled:opacity-40"
-            style={{ color: loggingOut ? '#7a8a70' : '#9aaa88' }}
-            onMouseEnter={e => { if (!loggingOut) e.currentTarget.style.color = '#c44040' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#9aaa88' }}
+            className="text-xs font-medium tracking-widest uppercase px-3 py-3 rounded-lg transition-colors disabled:opacity-40 text-left"
+            style={{ color: '#9aaa88' }}
           >
             {loggingOut ? '…' : '로그아웃'}
           </button>
         </div>
-      </div>
+      )}
 
       {/* Desktop layout */}
       <div className="hidden md:flex w-full px-6 h-14 relative items-center">
@@ -199,6 +209,20 @@ export default function Navbar() {
 
       </div>
     </header>
+  )
+}
+
+function MobileNavLink({ href, label, pathname, onClick }: { href: string; label: string; pathname: string; onClick: () => void }) {
+  const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href.split('?')[0]))
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="text-sm font-medium tracking-widest uppercase px-3 py-3 rounded-lg transition-colors"
+      style={{ color: active ? '#d4a84b' : '#9aaa8a', background: active ? 'rgba(184,137,42,0.08)' : 'transparent' }}
+    >
+      {label}
+    </Link>
   )
 }
 
