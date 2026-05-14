@@ -69,10 +69,10 @@ function FeatureCard({ f, i }: { f: typeof features[0]; i: number }) {
       <span style={{ fontSize: '1.6rem', color: '#d4a84b' }}>{f.icon}</span>
 
       <div>
-        <h3 className="text-lg font-semibold mb-2" style={{ color: '#e8dfc8', fontFamily: 'var(--font-geist-sans)' }}>
+        <h3 className="text-lg font-semibold mb-2" style={{ color: '#f5f0e8', fontFamily: 'var(--font-geist-sans)' }}>
           {f.title}
         </h3>
-        <p className="text-sm leading-relaxed" style={{ color: '#6a7a60' }}>
+        <p className="text-sm leading-relaxed" style={{ color: '#c8d5bc' }}>
           {f.description}
         </p>
       </div>
@@ -119,11 +119,11 @@ export default function FeaturesSection() {
             fontFamily: 'var(--font-cormorant)',
             fontSize: 'clamp(2.2rem, 5vw, 4rem)',
             fontWeight: 300,
-            color: '#e8dfc8',
+            color: '#f5f0e8',
             lineHeight: 1.15,
           }}>
-            자신 있게 선택하기 위한<br />
-            <em style={{ fontStyle: 'italic', color: '#d4a84b' }}>모든 도구가 여기에</em>
+            최고의 선택을 위한<br />
+            <em style={{ fontStyle: 'italic', color: '#d4a84b' }}>모든 도구들</em>
           </h2>
         </motion.div>
 

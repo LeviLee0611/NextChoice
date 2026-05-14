@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 
+
 export default function LandingNav() {
   return (
     <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-8 py-5"
@@ -15,12 +16,20 @@ export default function LandingNav() {
       <div className="flex items-center gap-6">
         <a href="#features"
           className="text-xs font-semibold tracking-widest uppercase transition-colors hidden sm:block"
-          style={{ color: '#5a6a50' }}
+          style={{ color: '#ffffff' }}
           onMouseEnter={e => e.currentTarget.style.color = '#d4a84b'}
-          onMouseLeave={e => e.currentTarget.style.color = '#5a6a50'}
+          onMouseLeave={e => e.currentTarget.style.color = '#ffffff'}
         >
-          기능
+          서비스
         </a>
+        <Link href="/pricing"
+          className="text-xs font-semibold tracking-widest uppercase transition-colors hidden sm:block"
+          style={{ color: '#ffffff' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#d4a84b'}
+          onMouseLeave={e => e.currentTarget.style.color = '#ffffff'}
+        >
+          가격
+        </Link>
         <Link
           href="/login"
           className="text-xs font-semibold tracking-widest uppercase px-5 py-2.5 rounded-lg transition-all duration-200"

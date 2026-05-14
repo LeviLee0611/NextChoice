@@ -1,4 +1,4 @@
-// Server-only: never import this in client components (contains service role key)
+import 'server-only'
 import { createClient } from '@supabase/supabase-js'
 
 export function createAdminClient() {

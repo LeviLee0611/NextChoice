@@ -10,6 +10,7 @@ export default async function SettingsPage() {
   if (!user) redirect('/login')
 
   const email = user.email ?? ''
+  const isAdmin = email === process.env.ADMIN_EMAIL
 
   const today = new Date().toISOString().slice(0, 10)
   const { data: usage } = await supabase
@@ -127,6 +128,25 @@ export default async function SettingsPage() {
             </Link>
           </div>
         </div>
+
+        {/* Admin panel — only visible to admin */}
+        {isAdmin && (
+          <div
+            className="rounded-2xl p-6 mb-6 flex flex-col gap-3"
+            style={{
+              background: 'rgba(18,24,14,0.7)',
+              border: '1px solid rgba(196,64,64,0.15)',
+              backdropFilter: 'blur(20px)',
+            }}
+          >
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: '#c44040' }}>관리자</p>
+            <Link href="/admin/feedback" className="text-sm transition-colors" style={{ color: '#9aaa8a' }}
+              onMouseEnter={undefined}
+            >
+              피드백 관리 →
+            </Link>
+          </div>
+        )}
 
         {/* Delete account */}
         <DeleteAccountSection email={email} />

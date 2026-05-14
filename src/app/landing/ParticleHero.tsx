@@ -21,7 +21,7 @@ export default function ParticleHero() {
     const ctx = c.getContext('2d') as CanvasRenderingContext2D
     if (!ctx) return
 
-    const colors = ['#d4a84b', '#b8892a', '#8aad7a', '#e8dfc8', '#6b8f5e']
+    const colors = ['#d4a84b', '#b8892a', '#8aad7a', '#f5f0e8', '#6b8f5e']
 
     function resize() {
       c.width = window.innerWidth
@@ -31,13 +31,13 @@ export default function ParticleHero() {
     window.addEventListener('resize', resize)
 
     // Init particles
-    particlesRef.current = Array.from({ length: 120 }, () => ({
+    particlesRef.current = Array.from({ length: 220 }, () => ({
       x: Math.random() * c.width,
       y: Math.random() * c.height,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
-      size: Math.random() * 1.5 + 0.3,
-      opacity: Math.random() * 0.5 + 0.1,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 2.0 + 0.4,
+      opacity: Math.random() * 0.6 + 0.15,
       color: colors[Math.floor(Math.random() * colors.length)],
     }))
 
@@ -51,9 +51,9 @@ export default function ParticleHero() {
         const dx = mx - p.x
         const dy = my - p.y
         const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 200 && dist > 0) {
-          p.vx += (dx / dist) * 0.008
-          p.vy += (dy / dist) * 0.008
+        if (dist < 260 && dist > 0) {
+          p.vx += (dx / dist) * 0.018
+          p.vy += (dy / dist) * 0.018
         }
 
         p.vx *= 0.99
@@ -82,13 +82,13 @@ export default function ParticleHero() {
           const dx = a.x - b.x
           const dy = a.y - b.y
           const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 100) {
+          if (dist < 130) {
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
             ctx.lineTo(b.x, b.y)
             ctx.strokeStyle = '#d4a84b'
-            ctx.globalAlpha = (1 - dist / 100) * 0.08
-            ctx.lineWidth = 0.5
+            ctx.globalAlpha = (1 - dist / 130) * 0.15
+            ctx.lineWidth = 0.6
             ctx.stroke()
           }
         }
@@ -154,7 +154,7 @@ export default function ParticleHero() {
             fontWeight: 300,
             lineHeight: 1.08,
             letterSpacing: '-0.01em',
-            color: '#e8dfc8',
+            color: '#f5f0e8',
           }}
         >
           Make Better<br />
@@ -172,7 +172,7 @@ export default function ParticleHero() {
         <motion.p
           custom={2} variants={fadeUp} initial="hidden" animate="show"
           className="mt-8 text-lg leading-relaxed max-w-xl mx-auto"
-          style={{ color: '#a0b090', fontFamily: 'var(--font-geist-sans)' }}
+          style={{ color: '#c8d5bc', fontFamily: 'var(--font-geist-sans)' }}
         >
           커리어, 재정, 관계, 일상의 모든 선택을 위한 개인 AI 코치.
           결정을 기록하고, 결과에서 배우고, 매번 더 나은 선택을.
@@ -202,7 +202,7 @@ export default function ParticleHero() {
             style={{
               background: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(184,137,42,0.25)',
-              color: '#e8dfc8',
+              color: '#f5f0e8',
               backdropFilter: 'blur(10px)',
             }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(184,137,42,0.6)'; e.currentTarget.style.background = 'rgba(184,137,42,0.08)' }}

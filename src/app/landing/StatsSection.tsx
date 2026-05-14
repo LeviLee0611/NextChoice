@@ -52,15 +52,6 @@ export default function StatsSection() {
       </div>
 
       <div className="max-w-5xl mx-auto">
-        <motion.p
-          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center text-xs font-semibold tracking-[0.3em] uppercase mb-16"
-          style={{ color: '#d4a84b' }}
-        >
-          숫자로 보는 NextChoice
-        </motion.p>
-
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-6">
           {stats.map((s, i) => (
             <motion.div
@@ -82,8 +73,8 @@ export default function StatsSection() {
               }}>
                 <CountUp target={s.value} suffix={s.suffix} active={inView} />
               </div>
-              <p className="mt-3 text-base font-semibold" style={{ color: '#e8dfc8' }}>{s.label}</p>
-              <p className="mt-1 text-xs tracking-wide" style={{ color: '#5a6a50' }}>{s.sublabel}</p>
+              <p className="mt-3 text-base font-semibold" style={{ color: '#f5f0e8' }}>{s.label}</p>
+              <p className="mt-1 text-xs tracking-wide" style={{ color: '#9aaa8a' }}>{s.sublabel}</p>
             </motion.div>
           ))}
         </div>

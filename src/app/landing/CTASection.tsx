@@ -41,10 +41,10 @@ export default function CTASection() {
             fontSize: 'clamp(2.5rem, 6vw, 5rem)',
             fontWeight: 300,
             lineHeight: 1.1,
-            color: '#e8dfc8',
+            color: '#f5f0e8',
           }}
         >
-          다음 선택이<br />
+          현명한 선택이<br />
           <em style={{ fontStyle: 'italic', color: '#d4a84b' }}>당신의 미래를 만듭니다.</em>
         </motion.h2>
 
@@ -53,9 +53,10 @@ export default function CTASection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
           className="mt-6 text-base leading-relaxed max-w-lg mx-auto"
-          style={{ color: '#6a7a60' }}
+          style={{ color: '#c8d5bc' }}
         >
-          더 현명한 선택을 만들어가는 사람들과 함께하세요. AI 코칭, 실제 데이터, 그리고 솔직한 자기 성찰로.
+          결정을 기록하고, 결과를 돌아보고,<br />
+          최고의 선택을 하게 됩니다.
         </motion.p>
 
         <motion.div
@@ -93,9 +94,9 @@ export default function CTASection() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-6 text-xs"
-          style={{ color: '#3a4a30' }}
+          style={{ color: '#7a8a70' }}
         >
-          신용카드 불필요 · Google 로그인 · 무료 시작
+          Google 로그인 · 얼리버드 100명 Pro 평생 무료
         </motion.p>
       </div>
     </section>

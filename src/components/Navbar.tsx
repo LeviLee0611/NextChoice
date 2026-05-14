@@ -168,6 +168,15 @@ export default function Navbar() {
         {/* Settings + Logout — absolutely pinned to far right */}
         <div className="absolute right-6 flex items-center gap-1">
           <Link
+            href="/feedback"
+            className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
+            style={{ color: pathname === '/feedback' ? '#d4a84b' : '#9aaa88' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#d4a84b' }}
+            onMouseLeave={e => { e.currentTarget.style.color = pathname === '/feedback' ? '#d4a84b' : '#9aaa88' }}
+          >
+            피드백
+          </Link>
+          <Link
             href="/settings"
             className="text-xs font-medium tracking-widest uppercase px-3 py-2 rounded-lg transition-colors"
             style={{ color: pathname === '/settings' ? '#d4a84b' : '#9aaa88' }}

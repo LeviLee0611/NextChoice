@@ -5,6 +5,6 @@ import Navbar from './Navbar'
 
 export default function ConditionalNavbar() {
   const pathname = usePathname()
-  if (pathname === '/' || pathname === '/welcome') return null
+  if (pathname === '/' || pathname === '/welcome' || pathname === '/pricing') return null
   return <Navbar />
 }
