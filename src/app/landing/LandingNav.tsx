@@ -22,6 +22,14 @@ export default function LandingNav() {
         >
           서비스
         </a>
+        <Link href="/how-it-works"
+          className="text-xs font-semibold tracking-widest uppercase transition-colors hidden sm:block"
+          style={{ color: '#ffffff' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#d4a84b'}
+          onMouseLeave={e => e.currentTarget.style.color = '#ffffff'}
+        >
+          작동 원리
+        </Link>
         <Link href="/pricing"
           className="text-xs font-semibold tracking-widest uppercase transition-colors hidden sm:block"
           style={{ color: '#ffffff' }}

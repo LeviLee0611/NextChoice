@@ -1,6 +1,7 @@
 import LandingNav from './landing/LandingNav'
 import ParticleHero from './landing/ParticleHero'
 import FeaturesSection from './landing/FeaturesSection'
+import HowItWorksSection from './landing/HowItWorksSection'
 import StatsSection from './landing/StatsSection'
 import PricingSection from './landing/PricingSection'
 import CTASection from './landing/CTASection'
@@ -14,6 +15,8 @@ export default function Home() {
       <ParticleHero />
       <SectionDivider label="서비스" />
       <FeaturesSection />
+      <SectionDivider label="작동 원리" />
+      <HowItWorksSection />
       <SectionDivider label="성과" />
       <StatsSection />
       <SectionDivider label="요금제" />
@@ -24,6 +27,8 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-12 px-8 text-center flex flex-col gap-3" style={{ borderTop: '1px solid rgba(184,137,42,0.08)' }}>
         <div className="flex items-center justify-center gap-4 text-xs">
+          <a href="/how-it-works" className="footer-link">작동 원리</a>
+          <span style={{ color: '#5a6a50' }}>·</span>
           <a href="/privacy" className="footer-link">개인정보처리방침</a>
           <span style={{ color: '#5a6a50' }}>·</span>
           <a href="/terms" className="footer-link">이용약관</a>
