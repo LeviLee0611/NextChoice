@@ -161,7 +161,21 @@ export async function updateDecision(id: string, formData: FormData) {
 
   if (error || !data) notFound()
 
-  const embeddingText = buildDecisionText({ title: fields.title, category: fields.category, chosenOption: fields.chosen_option, reason: fields.reason })
+  // 기존 리뷰 조회해서 lesson_learned 포함 재임베딩
+  const { data: existingReview } = await supabase
+    .from('decision_reviews')
+    .select('actual_result, lesson_learned')
+    .eq('decision_id', id)
+    .maybeSingle()
+
+  const embeddingText = buildDecisionText({
+    title: fields.title,
+    category: fields.category,
+    chosenOption: fields.chosen_option,
+    reason: fields.reason,
+    actualResult: existingReview?.actual_result ?? null,
+    lessonLearned: existingReview?.lesson_learned ?? null,
+  })
   const embedding = await generateEmbedding(embeddingText)
   if (embedding) await supabase.from('decisions').update({ embedding }).eq('id', id)
 

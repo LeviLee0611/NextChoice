@@ -17,7 +17,8 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
     if (!res.ok) return null
     const data = await res.json()
     return data.data[0].embedding as number[]
-  } catch {
+  } catch (err) {
+    console.error('[embeddings] generateEmbedding failed', err)
     return null
   }
 }
