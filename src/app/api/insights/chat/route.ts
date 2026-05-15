@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { aggregateInsightContext, buildInsightPrompt } from '@/lib/insights/aggregate'
 import { checkAndIncrement } from '@/lib/rateLimit'
+import { generateEmbedding } from '@/lib/embeddings'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
     return new Response('오늘 코치 채팅 한도에 도달했습니다. 내일 다시 시도해주세요.', { status: 429 })
   }
 
+  // 통계 컨텍스트
   let ctxStr: string
   try {
     const ctx = await aggregateInsightContext(supabase, user.id)
@@ -68,9 +70,33 @@ export async function POST(req: NextRequest) {
     ctxStr = '아직 충분한 결정 데이터가 없습니다.'
   }
 
+  // RAG: 현재 질문과 의미적으로 유사한 과거 결정 검색
+  let ragStr = ''
+  try {
+    const queryEmbedding = await generateEmbedding(userMessage)
+    if (queryEmbedding) {
+      const { data: similar } = await supabase.rpc('match_decisions', {
+        query_embedding: queryEmbedding,
+        p_user_id: user.id,
+        match_count: 5,
+      })
+      const hits = (similar ?? []).filter((r: { lesson_learned: string | null; actual_result: string | null }) => r.lesson_learned || r.actual_result)
+      if (hits.length > 0) {
+        const lines = hits.map((r: { title: string; satisfaction_score: number | null; actual_result: string | null; lesson_learned: string | null }, i: number) => {
+          const parts = [`${i + 1}. "${r.title}"`]
+          if (r.satisfaction_score) parts.push(`만족도 ${r.satisfaction_score}/10`)
+          if (r.actual_result) parts.push(`결과: ${r.actual_result}`)
+          if (r.lesson_learned) parts.push(`배운 점: ${r.lesson_learned}`)
+          return parts.join(' | ')
+        })
+        ragStr = `\n\n[아래는 사용자의 과거 결정 중 현재 고민과 가장 유사한 것들입니다. 관련 있다면 자연스럽게 언급하세요.]\n${lines.join('\n')}\n[끝]`
+      }
+    }
+  } catch {}
+
   const systemPrompt = `당신은 NextChoice의 결정 코치입니다. 사용자가 중요한 결정을 앞두고 있을 때 도움을 줍니다.
 
-${ctxStr}
+${ctxStr}${ragStr}
 
 역할:
 - 사용자의 고민을 듣고 구체적인 시각과 선택지를 제시해주세요

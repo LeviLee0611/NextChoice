@@ -3,6 +3,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES } from '@/types/decision'
+import { generateEmbedding, buildDecisionText } from '@/lib/embeddings'
 
 const VALID_CATEGORIES = new Set(CATEGORIES)
 
@@ -67,12 +68,16 @@ export async function createDecision(formData: FormData) {
     if (ownedSession) chatSessionId = rawSessionId
   }
 
-  const { error } = await supabase.from('decisions').insert({
+  const { data: created, error } = await supabase.from('decisions').insert({
     user_id: user.id,
     ...fields,
     ...(chatSessionId ? { chat_session_id: chatSessionId } : {}),
-  })
-  if (error) throw new Error('결정을 저장하지 못했습니다. 다시 시도해주세요.')
+  }).select('id').single()
+  if (error || !created) throw new Error('결정을 저장하지 못했습니다. 다시 시도해주세요.')
+
+  const embeddingText = buildDecisionText({ title: fields.title, category: fields.category, chosenOption: fields.chosen_option, reason: fields.reason })
+  const embedding = await generateEmbedding(embeddingText)
+  if (embedding) await supabase.from('decisions').update({ embedding }).eq('id', created.id)
 
   redirect('/decisions')
 }
@@ -85,7 +90,7 @@ export async function createReview(decisionId: string, formData: FormData) {
   // Verify ownership
   const { data: decision } = await supabase
     .from('decisions')
-    .select('id')
+    .select('id, title, category, chosen_option, reason')
     .eq('id', decisionId)
     .eq('user_id', user.id)
     .single()
@@ -124,6 +129,18 @@ export async function createReview(decisionId: string, formData: FormData) {
 
   if (error) throw new Error('리뷰를 저장하지 못했습니다. 다시 시도해주세요.')
 
+  // 리뷰가 붙으면 lesson_learned 포함해서 재임베딩
+  const embeddingText = buildDecisionText({
+    title: decision.title,
+    category: decision.category,
+    chosenOption: decision.chosen_option,
+    reason: decision.reason,
+    actualResult,
+    lessonLearned,
+  })
+  const embedding = await generateEmbedding(embeddingText)
+  if (embedding) await supabase.from('decisions').update({ embedding }).eq('id', decisionId)
+
   redirect(`/decisions/${decisionId}`)
 }
 
@@ -143,6 +160,10 @@ export async function updateDecision(id: string, formData: FormData) {
     .single()
 
   if (error || !data) notFound()
+
+  const embeddingText = buildDecisionText({ title: fields.title, category: fields.category, chosenOption: fields.chosen_option, reason: fields.reason })
+  const embedding = await generateEmbedding(embeddingText)
+  if (embedding) await supabase.from('decisions').update({ embedding }).eq('id', id)
 
   redirect(`/decisions/${id}`)
 }
