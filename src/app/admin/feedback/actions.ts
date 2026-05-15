@@ -19,7 +19,7 @@ export async function updateFeedbackStatus(id: string, status: string) {
 
   const admin = createAdminClient()
   const { error } = await admin.from('feedback').update({ status }).eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) throw new Error('저장에 실패했습니다. 다시 시도해주세요.')
 
   revalidatePath('/admin/feedback')
 }
@@ -38,7 +38,7 @@ export async function saveAdminReply(id: string, reply: string) {
       replied_at: trimmed ? new Date().toISOString() : null,
     })
     .eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) throw new Error('저장에 실패했습니다. 다시 시도해주세요.')
 
   revalidatePath('/admin/feedback')
 }

@@ -72,7 +72,7 @@ export async function createDecision(formData: FormData) {
     ...fields,
     ...(chatSessionId ? { chat_session_id: chatSessionId } : {}),
   })
-  if (error) throw new Error(error.message)
+  if (error) throw new Error('결정을 저장하지 못했습니다. 다시 시도해주세요.')
 
   redirect('/decisions')
 }
@@ -122,7 +122,7 @@ export async function createReview(decisionId: string, formData: FormData) {
     ? await supabase.from('decision_reviews').update(reviewData).eq('id', existing.id)
     : await supabase.from('decision_reviews').insert({ decision_id: decisionId, ...reviewData })
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error('리뷰를 저장하지 못했습니다. 다시 시도해주세요.')
 
   redirect(`/decisions/${decisionId}`)
 }
@@ -169,7 +169,7 @@ export async function deleteDecision(id: string) {
     .eq('id', id)
     .eq('user_id', user.id)
 
-  if (error) throw new Error(error.message)
+  if (error) throw new Error('삭제하지 못했습니다. 다시 시도해주세요.')
 
   redirect('/decisions')
 }

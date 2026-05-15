@@ -45,7 +45,7 @@ export async function aggregateInsightContext(
   if (since) q = q.gte('created_at', since)
   const { data, error } = await q
 
-  if (error) throw new Error(`aggregateInsightContext: ${error.message}`)
+  if (error) throw new Error('인사이트 데이터를 불러오지 못했습니다.')
   if (!data || data.length === 0) return null
   const rows = (data as DecisionRow[]).map(d => ({
     ...d,
